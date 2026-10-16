@@ -1907,13 +1907,22 @@
       try {
         if (GAS_URL && GAS_URL !== 'YOUR_GAS_WEB_APP_URL_HERE') {
           // 透過 fetch POST 呼叫 Google Apps Script Web App
+          // 注意：GAS Web App 會做 302 redirect，需加 redirect: 'follow'
           const response = await fetch(GAS_URL, {
             method: 'POST',
+            redirect: 'follow',
+            headers: { 'Content-Type': 'text/plain' },
             body: JSON.stringify({ action, ...params })
           });
+          if (!response.ok) {
+            throw new Error(`HTTP 錯誤 ${response.status}，請確認 GAS 部署設定`);
+          }
           const data = await response.json();
-          if (!data.success && data.error) {
-            throw new Error(data.error);
+          // GAS 後端用 data.message 傳錯誤訊息（非 data.error）
+          if (data.success === false) {
+            const errMsg = data.message || '操作失敗，請稍後再試';
+            showToast(errMsg, 'error');
+            throw new Error(errMsg);
           }
           return data;
         } else {
@@ -1923,7 +1932,13 @@
         }
       } catch (err) {
         console.error('API Error:', err);
-        showToast(err.message || '連線錯誤，請稍後再試', 'error');
+        // 避免重複顯示 toast（success:false 已在上方顯示）
+        if (!err.message || (!err.message.includes('HTTP 錯誤') && err.message !== '操作失敗，請稍後再試')) {
+          const isAlreadyShown = err.message && (err.message.includes('找不到') || err.message.includes('密碼') || err.message.includes('重複'));
+          if (!isAlreadyShown) {
+            showToast(err.message || '連線錯誤，請稍後再試', 'error');
+          }
+        }
         throw err;
       } finally {
         showLoading(false);

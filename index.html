@@ -1,0 +1,3798 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>東吳管樂社 管理系統 | Soochow Wind Band</title>
+  <style>
+    :root {
+      --primary: #1a237e;
+      --primary-light: #283593;
+      --primary-dark: #0d1642;
+      --accent: #ffd700;
+      --accent-hover: #ffca28;
+      --bg: #f5f5f5;
+      --card-bg: #ffffff;
+      --text: #1e293b;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --border-focus: #1a237e;
+
+      /* 狀態 Badge 色彩標準 */
+      --status-blue-text: #1565c0;
+      --status-blue-bg: #e3f2fd;
+      --status-blue-border: #90caf9;
+
+      --status-green-text: #2e7d32;
+      --status-green-bg: #e8f5e9;
+      --status-green-border: #a5d6a7;
+
+      --status-red-text: #c62828;
+      --status-red-bg: #ffebee;
+      --status-red-border: #ef9a9a;
+
+      --status-orange-text: #e65100;
+      --status-orange-bg: #fff3e0;
+      --status-orange-border: #ffcc80;
+
+      --radius-lg: 12px;
+      --radius-md: 8px;
+      --radius-sm: 4px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+      --shadow-md: 0 4px 14px rgba(0,0,0,0.08);
+      --shadow-lg: 0 10px 25px rgba(26,35,126,0.12);
+      --transition: all 0.25s ease;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", "PingFang TC", "Microsoft JhengHei", sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* 按鈕元件樣式 */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 9px 18px;
+      border-radius: var(--radius-md);
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: var(--transition);
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .btn:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+    .btn-primary {
+      background-color: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+    }
+    .btn-primary:hover:not(:disabled) {
+      background-color: var(--primary-light);
+      box-shadow: 0 4px 12px rgba(26,35,126,0.25);
+    }
+    .btn-accent {
+      background-color: var(--accent);
+      color: #1a237e;
+      border-color: var(--accent);
+    }
+    .btn-accent:hover:not(:disabled) {
+      background-color: var(--accent-hover);
+    }
+    .btn-secondary {
+      background-color: #f1f5f9;
+      color: #334155;
+      border-color: #cbd5e1;
+    }
+    .btn-secondary:hover:not(:disabled) {
+      background-color: #e2e8f0;
+    }
+    .btn-outline {
+      background-color: transparent;
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+    .btn-outline:hover:not(:disabled) {
+      background-color: rgba(26,35,126,0.06);
+    }
+    .btn-danger {
+      background-color: #dc2626;
+      color: #ffffff;
+    }
+    .btn-danger:hover:not(:disabled) {
+      background-color: #b91c1c;
+    }
+    .btn-sm {
+      padding: 5px 12px;
+      font-size: 0.85rem;
+      border-radius: var(--radius-sm);
+    }
+
+    /* 狀態 Badge 樣式 (已收件=blue, 已通過=green, 未通過=red, 無教室=orange) */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 10px;
+      border-radius: 9999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      border: 1px solid transparent;
+      white-space: nowrap;
+    }
+    .badge-received {
+      background-color: var(--status-blue-bg);
+      color: var(--status-blue-text);
+      border-color: var(--status-blue-border);
+    }
+    .badge-approved {
+      background-color: var(--status-green-bg);
+      color: var(--status-green-text);
+      border-color: var(--status-green-border);
+    }
+    .badge-rejected {
+      background-color: var(--status-red-bg);
+      color: var(--status-red-text);
+      border-color: var(--status-red-border);
+    }
+    .badge-noroom {
+      background-color: var(--status-orange-bg);
+      color: var(--status-orange-text);
+      border-color: var(--status-orange-border);
+    }
+    .badge-admin {
+      background-color: #fff9c4;
+      color: #b78103;
+      border-color: #fbc02d;
+    }
+    .badge-member {
+      background-color: #e0f2fe;
+      color: #0369a1;
+      border-color: #bae6fd;
+    }
+
+    /* 卡片與容器 */
+    .card {
+      background-color: var(--card-bg);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--border);
+      margin-bottom: 24px;
+      transition: var(--transition);
+    }
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #f1f5f9;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .card-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .card-desc {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-top: 2px;
+    }
+
+    /* 表單元件 */
+    .form-group {
+      margin-bottom: 18px;
+    }
+    .form-label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+      font-size: 0.92rem;
+      color: #334155;
+    }
+    .form-label .required {
+      color: #dc2626;
+      margin-left: 2px;
+    }
+    .form-control {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-md);
+      font-size: 0.95rem;
+      color: var(--text);
+      background-color: #ffffff;
+      transition: var(--transition);
+      outline: none;
+    }
+    .form-control:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(26,35,126,0.12);
+    }
+    textarea.form-control {
+      resize: vertical;
+      min-height: 80px;
+    }
+    .form-row {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .form-col {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    /* 節次選擇 Chip 元件 */
+    .period-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 8px;
+      margin-top: 6px;
+    }
+    .period-chip {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 10px;
+      background-color: #f8fafc;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      user-select: none;
+      transition: var(--transition);
+      font-size: 0.88rem;
+    }
+    .period-chip:hover {
+      background-color: #f1f5f9;
+      border-color: #cbd5e1;
+    }
+    .period-chip.selected {
+      background-color: #e8eaf6;
+      border-color: var(--primary);
+      color: var(--primary);
+      font-weight: 600;
+    }
+    .period-chip input[type="checkbox"] {
+      cursor: pointer;
+      accent-color: var(--primary);
+    }
+
+    /* 表格樣式 */
+    .table-container {
+      width: 100%;
+      overflow-x: auto;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      background: #ffffff;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.92rem;
+    }
+    th {
+      background-color: #f8fafc;
+      color: #475569;
+      padding: 12px 16px;
+      font-weight: 600;
+      border-bottom: 1.5px solid var(--border);
+      white-space: nowrap;
+    }
+    td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text);
+      vertical-align: middle;
+    }
+    tbody tr:hover {
+      background-color: #fcfcfd;
+    }
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    /* 導航列 Navbar */
+    .navbar {
+      background-color: var(--primary);
+      color: #ffffff;
+      padding: 0 24px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #ffffff;
+      text-decoration: none;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+    }
+    .nav-brand .music-note {
+      color: var(--accent);
+      font-size: 1.4rem;
+    }
+    .nav-menu {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      list-style: none;
+    }
+    .nav-item {
+      padding: 8px 14px;
+      border-radius: var(--radius-md);
+      font-size: 0.95rem;
+      font-weight: 500;
+      cursor: pointer;
+      color: #e0e7ff;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      user-select: none;
+    }
+    .nav-item:hover {
+      background-color: rgba(255,255,255,0.12);
+      color: #ffffff;
+    }
+    .nav-item.active {
+      background-color: rgba(255,215,0,0.22);
+      color: var(--accent);
+      font-weight: 700;
+    }
+    .nav-user {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.92rem;
+    }
+    .nav-hamburger {
+      display: none;
+      background: none;
+      border: none;
+      color: #ffffff;
+      font-size: 1.6rem;
+      cursor: pointer;
+    }
+
+    /* 行動版漢堡抽屜選單 */
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      top: 64px;
+      left: 0;
+      right: 0;
+      background-color: var(--primary);
+      padding: 16px 20px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+      z-index: 99;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .mobile-menu.open {
+      display: flex;
+    }
+    .mobile-menu .nav-item {
+      padding: 12px 16px;
+      border-radius: var(--radius-md);
+      width: 100%;
+    }
+
+    /* 主要內容容器 */
+    .main-content {
+      flex: 1;
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 24px 16px;
+    }
+
+    /* 頁面切換控制 (SPA sections) */
+    .page-section {
+      display: none;
+    }
+    .page-section.active {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+
+    /* 登入頁樣式 */
+    .login-container {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #0d1642 0%, #1a237e 60%, #283593 100%);
+      padding: 20px;
+    }
+    .login-card {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 40px 32px;
+      width: 100%;
+      max-width: 440px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+      text-align: center;
+    }
+    .login-logo {
+      width: 64px;
+      height: 64px;
+      background: linear-gradient(135deg, #1a237e, #283593);
+      color: var(--accent);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      margin: 0 auto 16px;
+      box-shadow: 0 4px 12px rgba(26,35,126,0.3);
+    }
+    .login-title {
+      font-size: 1.55rem;
+      font-weight: 800;
+      color: var(--primary);
+      margin-bottom: 6px;
+    }
+    .login-subtitle {
+      font-size: 0.92rem;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+    }
+    .login-hint {
+      background-color: #fffbeb;
+      border: 1px solid #fde68a;
+      border-radius: var(--radius-md);
+      padding: 10px 14px;
+      font-size: 0.88rem;
+      color: #92400e;
+      margin-top: 18px;
+      text-align: left;
+      line-height: 1.4;
+    }
+    .demo-users {
+      margin-top: 20px;
+      padding-top: 16px;
+      border-top: 1px dashed var(--border);
+      text-align: left;
+    }
+    .demo-users-title {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+    .demo-btn-group {
+      display: flex;
+      gap: 8px;
+    }
+
+    /* 首頁看板樣式 */
+    .welcome-banner {
+      background: linear-gradient(135deg, #1a237e, #283593);
+      color: #ffffff;
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow-md);
+      position: relative;
+      overflow: hidden;
+    }
+    .welcome-banner::after {
+      content: '🎵';
+      position: absolute;
+      right: 20px;
+      bottom: -10px;
+      font-size: 8rem;
+      opacity: 0.08;
+      pointer-events: none;
+    }
+    .welcome-title {
+      font-size: 1.6rem;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+    .welcome-subtitle {
+      font-size: 1rem;
+      opacity: 0.9;
+    }
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+    .stat-card {
+      background: #ffffff;
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .stat-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: var(--radius-md);
+      background-color: #e8eaf6;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+    }
+    .stat-value {
+      font-size: 1.45rem;
+      font-weight: 800;
+      color: var(--primary);
+    }
+    .stat-label {
+      font-size: 0.86rem;
+      color: var(--text-muted);
+    }
+
+    /* 團練卡片 */
+    .practice-card {
+      border: 1.5px solid #e2e8f0;
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      margin-bottom: 16px;
+      background: #ffffff;
+      box-shadow: var(--shadow-sm);
+      transition: var(--transition);
+    }
+    .practice-card:hover {
+      border-color: var(--primary-light);
+      box-shadow: var(--shadow-md);
+    }
+    .practice-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .practice-date {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+    .practice-notes {
+      background: #f8fafc;
+      padding: 10px 14px;
+      border-radius: var(--radius-md);
+      font-size: 0.9rem;
+      color: #334155;
+      margin-bottom: 16px;
+      border-left: 3px solid var(--accent);
+    }
+    .practice-deadline-badge {
+      font-size: 0.82rem;
+      color: #b45309;
+      background: #fef3c7;
+      padding: 4px 10px;
+      border-radius: 9999px;
+      font-weight: 600;
+    }
+
+    /* 後台子分頁 Subtabs */
+    .subtabs {
+      display: flex;
+      gap: 8px;
+      border-bottom: 2px solid var(--border);
+      margin-bottom: 24px;
+      overflow-x: auto;
+      padding-bottom: 2px;
+    }
+    .subtab-item {
+      padding: 10px 18px;
+      border-radius: var(--radius-md) var(--radius-md) 0 0;
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: #64748b;
+      cursor: pointer;
+      user-select: none;
+      transition: var(--transition);
+      white-space: nowrap;
+    }
+    .subtab-item:hover {
+      color: var(--primary);
+      background-color: #f1f5f9;
+    }
+    .subtab-item.active {
+      color: var(--primary);
+      border-bottom: 3px solid var(--primary);
+      background-color: #e8eaf6;
+    }
+    .subtab-content {
+      display: none;
+    }
+    .subtab-content.active {
+      display: block;
+      animation: fadeIn 0.25s ease;
+    }
+
+    /* 座位表容器與 SVG */
+    .seating-controls {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .seating-wrapper {
+      background: #ffffff;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 16px;
+      box-shadow: var(--shadow-md);
+      overflow-x: auto;
+      text-align: center;
+    }
+    .seating-svg {
+      max-width: 100%;
+      height: auto;
+      min-width: 720px;
+      display: inline-block;
+    }
+    .seating-legend {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+      margin-top: 16px;
+      font-size: 0.88rem;
+      color: #475569;
+      flex-wrap: wrap;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .legend-circle {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+    }
+    .legend-present {
+      background-color: #1a237e;
+      border: 1px solid #ffd700;
+    }
+    .legend-absent {
+      background-color: #b0bec5;
+      border: 1px solid #78909c;
+      position: relative;
+    }
+    .legend-absent::after {
+      content: '✕';
+      position: absolute;
+      font-size: 10px;
+      color: #ffffff;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    /* Modal 視窗 */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 16px;
+    }
+    .modal-overlay.open {
+      display: flex;
+      animation: fadeIn 0.2s ease;
+    }
+    .modal-card {
+      background: #ffffff;
+      border-radius: var(--radius-lg);
+      width: 100%;
+      max-width: 520px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+      overflow: hidden;
+      animation: modalSlide 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .modal-header {
+      padding: 18px 24px;
+      background: var(--primary);
+      color: #ffffff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .modal-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .modal-close {
+      background: transparent;
+      border: none;
+      color: #ffffff;
+      font-size: 1.4rem;
+      cursor: pointer;
+      opacity: 0.8;
+      transition: var(--transition);
+    }
+    .modal-close:hover {
+      opacity: 1;
+    }
+    .modal-body {
+      padding: 24px;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+    .modal-footer {
+      padding: 14px 24px;
+      background: #f8fafc;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    /* Toast 通知 */
+    .toast-container {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      pointer-events: none;
+    }
+    .toast {
+      min-width: 280px;
+      max-width: 400px;
+      padding: 14px 18px;
+      border-radius: var(--radius-md);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.18);
+      color: #ffffff;
+      font-weight: 500;
+      font-size: 0.92rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      pointer-events: auto;
+      animation: toastIn 0.3s ease;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+    .toast.hide {
+      opacity: 0;
+      transform: translateX(30px);
+    }
+    .toast-success {
+      background-color: #15803d;
+      border-left: 5px solid #4ade80;
+    }
+    .toast-error {
+      background-color: #b91c1c;
+      border-left: 5px solid #f87171;
+    }
+    .toast-info {
+      background-color: #1d4ed8;
+      border-left: 5px solid #60a5fa;
+    }
+
+    /* Loading Overlay */
+    .loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(15, 23, 42, 0.45);
+      backdrop-filter: blur(2px);
+      z-index: 9998;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 12px;
+      color: #ffffff;
+    }
+    .loading-overlay.active {
+      display: flex;
+    }
+    .spinner {
+      width: 48px;
+      height: 48px;
+      border: 4px solid rgba(255, 215, 0, 0.3);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    /* 關鍵影格動畫 */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes modalSlide {
+      from { opacity: 0; transform: scale(0.95) translateY(-10px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    @keyframes toastIn {
+      from { opacity: 0; transform: translateX(40px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* 響應式佈局支援 */
+    @media (max-width: 860px) {
+      .nav-menu, .user-name-text {
+        display: none;
+      }
+      .nav-hamburger {
+        display: block;
+      }
+      .form-row {
+        flex-direction: column;
+        gap: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Toast 通知容器 -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <!-- 全域 Loading 遮罩 -->
+  <div id="loadingOverlay" class="loading-overlay">
+    <div class="spinner"></div>
+    <div style="font-weight:600; font-size:1rem; letter-spacing:1px;">資料處理中，請稍候...</div>
+  </div>
+
+  <!-- ==================== 1. 登入頁面 (LOGIN PAGE) ==================== -->
+  <div id="loginPage" class="login-container">
+    <div class="login-card">
+      <div class="login-logo">🎺</div>
+      <h1 class="login-title">東吳管樂社 管理系統</h1>
+      <p class="login-subtitle">Soochow University Wind Band Management</p>
+      
+      <form id="loginForm" onsubmit="handleLoginSubmit(event)">
+        <div class="form-group" style="text-align: left;">
+          <label class="form-label">學校電子郵件 (Email)<span class="required">*</span></label>
+          <input type="email" id="loginEmail" class="form-control" placeholder="例如：band@scu.edu.tw" required autofocus>
+        </div>
+        
+        <div class="form-group" style="text-align: left;">
+          <label class="form-label">登入密碼 (Password)<span class="required">*</span></label>
+          <input type="password" id="loginPassword" class="form-control" placeholder="請輸入密碼" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px; font-size: 1rem; margin-top: 8px;">
+          登入系統 Sign In
+        </button>
+      </form>
+
+      <div class="login-hint">
+        💡 <strong>系統提示：</strong> 首次登入預設密碼為 <strong>0000</strong>，登入後系統將引導修改密碼。
+      </div>
+
+      <div class="demo-users">
+        <div class="demo-users-title">快速測試帳號：</div>
+        <div class="demo-btn-group">
+          <button type="button" class="btn btn-secondary btn-sm" onclick="fillDemoUser('admin@scu.edu.tw', '0000')">👑 社團幹部 (Admin)</button>
+          <button type="button" class="btn btn-secondary btn-sm" onclick="fillDemoUser('member@scu.edu.tw', '0000')">👤 一般社員 (Member)</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 2. 社員主儀表板 (MEMBER DASHBOARD) ==================== -->
+  <div id="mainApp" style="display: none; flex-direction: column; min-height: 100vh;">
+    <!-- 導航列 -->
+    <header class="navbar">
+      <div class="nav-brand" onclick="showTab('tabHome')">
+        <span class="music-note">🎵</span>
+        <span>東吳管樂社 管理系統</span>
+      </div>
+
+      <!-- 電腦版選單 -->
+      <ul class="nav-menu">
+        <li class="nav-item active" id="navItem-tabHome" onclick="showTab('tabHome')">首頁</li>
+        <li class="nav-item" id="navItem-tabRoom" onclick="showTab('tabRoom')">借教室</li>
+        <li class="nav-item" id="navItem-tabAbsence" onclick="showTab('tabAbsence')">請假</li>
+        <li class="nav-item" id="navItem-tabSeating" onclick="showTab('tabSeating')">座位表</li>
+        <li class="nav-item" id="navItem-tabAdmin" style="display: none;" onclick="showTab('tabAdmin')">幹部後台</li>
+      </ul>
+
+      <!-- 使用者狀態與操作 -->
+      <div class="nav-user">
+        <div class="user-info">
+          <span id="navRoleBadge" class="badge badge-member">社員</span>
+          <span id="navUserName" class="user-name-text" style="font-weight: 600;">使用者</span>
+        </div>
+        <button type="button" class="btn btn-secondary btn-sm" onclick="openProfileModal()" title="個人資料">👤</button>
+        <button type="button" class="btn btn-secondary btn-sm" onclick="handleLogout()" title="登出">🚪 登出</button>
+        <button type="button" class="nav-hamburger" onclick="toggleMobileMenu()" aria-label="切換選單">☰</button>
+      </div>
+    </header>
+
+    <!-- 行動版下拉選單 -->
+    <div id="mobileMenu" class="mobile-menu">
+      <div class="nav-item active" id="mobNavItem-tabHome" onclick="showTab('tabHome'); toggleMobileMenu();">首頁</div>
+      <div class="nav-item" id="mobNavItem-tabRoom" onclick="showTab('tabRoom'); toggleMobileMenu();">借教室</div>
+      <div class="nav-item" id="mobNavItem-tabAbsence" onclick="showTab('tabAbsence'); toggleMobileMenu();">請假</div>
+      <div class="nav-item" id="mobNavItem-tabSeating" onclick="showTab('tabSeating'); toggleMobileMenu();">座位表</div>
+      <div class="nav-item" id="mobNavItem-tabAdmin" style="display: none;" onclick="showTab('tabAdmin'); toggleMobileMenu();">幹部後台</div>
+    </div>
+
+    <!-- 主要內容區 -->
+    <main class="main-content">
+
+      <!-- ================= 1. 首頁 (Dashboard Home) ================= -->
+      <div id="tabHome" class="page-section active">
+        <!-- 歡迎卡片 (Welcome card) -->
+        <div class="welcome-banner">
+          <h2 class="welcome-title" id="homeWelcomeTitle">歡迎回來，同學！🎶</h2>
+          <p class="welcome-subtitle" id="homeWelcomeSubtitle">東吳管樂社團務資訊與教室管理已就緒，祝練習愉快！</p>
+        </div>
+
+        <div class="form-row">
+          <!-- 下次團練卡片 (Upcoming practice card) -->
+          <div class="form-col" style="flex: 1.2;">
+            <div class="card">
+              <div class="card-header">
+                <div>
+                  <h3 class="card-title">🎺 下次團練資訊</h3>
+                  <div class="card-desc">合奏排程與重要時程公告</div>
+                </div>
+                <button class="btn btn-outline btn-sm" onclick="showTab('tabAbsence')">我要請假</button>
+              </div>
+              <div id="homeUpcomingPracticeContent">
+                <p style="color: var(--text-muted);">載入團練資料中...</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- 快速操作按鈕 (Quick action buttons) -->
+          <div class="form-col" style="flex: 0.8;">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">⚡ 快速功能捷徑</h3>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 10px;">
+                <button class="btn btn-secondary" style="justify-content: flex-start; padding: 12px;" onclick="showTab('tabRoom')">
+                  🚪 我要借教室 (預約練琴室)
+                </button>
+                <button class="btn btn-secondary" style="justify-content: flex-start; padding: 12px;" onclick="showTab('tabAbsence')">
+                  📝 我要請假 (團練假單登記)
+                </button>
+                <button class="btn btn-secondary" style="justify-content: flex-start; padding: 12px;" onclick="showTab('tabSeating')">
+                  🎼 查看座位表 (視覺化配置)
+                </button>
+                <button class="btn btn-secondary" style="justify-content: flex-start; padding: 12px;" onclick="openProfileModal()">
+                  👤 個人檔案與通知設定
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 最近 3 筆借教室記錄 (Recent room requests, last 3) -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h3 class="card-title">📅 最近借教室申請 (Recent Requests)</h3>
+              <div class="card-desc">顯示您最近 3 次預約之審核進度</div>
+            </div>
+            <button class="btn btn-primary btn-sm" onclick="showTab('tabRoom')">查看全部申請</button>
+          </div>
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>借用日期</th>
+                  <th>星期</th>
+                  <th>節次</th>
+                  <th>類別</th>
+                  <th>狀態</th>
+                  <th>分配教室</th>
+                </tr>
+              </thead>
+              <tbody id="homeRecentRoomsTableBody">
+                <tr><td colspan="6" style="text-align:center; color:var(--text-muted);">載入中...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= 2. 借教室 (Room Booking) ================= -->
+      <div id="tabRoom" class="page-section">
+        <!-- 借教室申請表單 -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title">🚪 借用排練教室 / 琴房</h2>
+              <div class="card-desc">填寫欲借用之日期、節次與練習類別，幹部將進行審查與教室指派。</div>
+            </div>
+          </div>
+
+          <form id="roomRequestForm" onsubmit="handleRoomRequestSubmit(event)">
+            <div class="form-row">
+              <div class="form-col">
+                <div class="form-group">
+                  <label class="form-label">借用日期 (Date)<span class="required">*</span></label>
+                  <input type="date" id="roomDateInput" class="form-control" required onchange="handleRoomDateChange()">
+                  <!-- 日期輸入後自動顯示中文星期 (Auto show weekday in Chinese) -->
+                  <div id="roomWeekdayIndicator" style="font-size: 0.88rem; font-weight: 700; color: var(--primary); margin-top: 6px;">
+                    請選擇借用日期
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-col">
+                <div class="form-group">
+                  <label class="form-label">練習類別 (Category)<span class="required">*</span></label>
+                  <select id="roomCategorySelect" class="form-control" required>
+                    <option value="自主練習">自主練習</option>
+                    <option value="木管組練">木管組練</option>
+                    <option value="銅管組練">銅管組練</option>
+                    <option value="打擊組練">打擊組練</option>
+                    <option value="重奏組練">重奏組練</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-col">
+                <div class="form-group">
+                  <label class="form-label">使用人數 (Headcount)<span class="required">*</span></label>
+                  <input type="number" id="roomHeadcount" class="form-control" min="1" max="100" value="1" required>
+                </div>
+              </div>
+            </div>
+
+            <!-- 節次多選 Checkbox (Period checkboxes) -->
+            <div class="form-group">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                <label class="form-label" style="margin-bottom:0;">借用節次 (Periods)<span class="required">*</span></label>
+                <div>
+                  <button type="button" class="btn btn-secondary btn-sm" onclick="toggleAllPeriods(true)">全選</button>
+                  <button type="button" class="btn btn-secondary btn-sm" onclick="toggleAllPeriods(false)">清空</button>
+                </div>
+              </div>
+              <div id="roomPeriodGrid" class="period-grid">
+                <!-- 動態注入平日 1..B 或週末開放節次 -->
+              </div>
+              <div id="roomPeriodWeekendNote" style="display: none; font-size: 0.85rem; color: #b45309; margin-top: 6px;">
+                ⚠️ 假日僅開放幹部後台「系統設定」所勾選之節次。
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label style="display: inline-flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 600;">
+                <input type="checkbox" id="roomNeedAc" style="width: 18px; height: 18px; accent-color: var(--primary);">
+                <span>需要開啟冷氣空調 (Need AC)</span>
+              </label>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">備註事項 (Notes)</label>
+              <textarea id="roomNotes" class="form-control" placeholder="例如：需借用定音鼓、低音單簧管，或重奏組團員名單"></textarea>
+            </div>
+
+            <div style="text-align: right;">
+              <button type="submit" class="btn btn-primary" style="padding: 10px 24px;">
+                🚀 送出借用申請
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- 我的申請記錄表格 (My requests table: Date, Weekday, Periods, Category, Status, Assigned Room) -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h3 class="card-title">📋 我的申請記錄 (My Requests)</h3>
+              <div class="card-desc">已收件(藍)、已通過(綠)、未通過(紅)、無教室(橘)</div>
+            </div>
+            <button class="btn btn-secondary btn-sm" onclick="loadMyRoomRequests()">🔄 重新整理</button>
+          </div>
+
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>借用日期</th>
+                  <th>星期</th>
+                  <th>節次</th>
+                  <th>類別</th>
+                  <th>狀態</th>
+                  <th>分配教室</th>
+                  <th>備註</th>
+                </tr>
+              </thead>
+              <tbody id="myRoomRequestsTableBody">
+                <tr><td colspan="7" style="text-align:center; color:var(--text-muted);">載入中...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= 3. 請假 (Absence) ================= -->
+      <div id="tabAbsence" class="page-section">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title">📝 團練請假登記 (Practice Absence)</h2>
+              <div class="card-desc">團員若因故無法出席，請務必於截止日前填寫假單；請假狀態將同步反應於座位表。</div>
+            </div>
+          </div>
+
+          <!-- 各場團練卡片與請假按鈕 -->
+          <div id="upcomingPracticesList">
+            <p style="color:var(--text-muted); text-align:center; padding: 20px;">載入排練場次中...</p>
+          </div>
+        </div>
+
+        <!-- 我的請假歷史記錄 (My absence history below) -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h3 class="card-title">📖 我的請假記錄 (My Absence History)</h3>
+              <div class="card-desc">過往所有請假、遲到與早退登記表記</div>
+            </div>
+          </div>
+
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>團練日期</th>
+                  <th>星期</th>
+                  <th>團練說明</th>
+                  <th>假別種類</th>
+                  <th>請假原因事由</th>
+                  <th>登記時間</th>
+                  <th>狀態</th>
+                </tr>
+              </thead>
+              <tbody id="myAbsenceHistoryTableBody">
+                <tr><td colspan="7" style="text-align:center; color:var(--text-muted);">載入中...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= 4. 座位表 (Visual SVG Seating Chart) ================= -->
+      <div id="tabSeating" class="page-section">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title">🎼 團練視覺化座位表 (Visual Seating Chart)</h2>
+              <div class="card-desc">基於管樂團真實編制空間配置，實時標示各聲部席位與請假狀態。</div>
+            </div>
+            
+            <div class="seating-controls">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <label style="font-weight: 600; font-size: 0.9rem;">團練場次：</label>
+                <select id="seatingPracticeSelect" class="form-control" style="width: auto;" onchange="handleSeatingChange()">
+                  <!-- 動態載入團練選項 -->
+                </select>
+              </div>
+
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <label style="font-weight: 600; font-size: 0.9rem;">編制模板：</label>
+                <select id="seatingTemplateSelect" class="form-control" style="width: auto;" onchange="handleSeatingChange()">
+                  <!-- 動態載入模板選項 -->
+                </select>
+              </div>
+
+              <button class="btn btn-secondary btn-sm" onclick="handleSeatingChange()">🔄 刷新視圖</button>
+            </div>
+          </div>
+
+          <!-- SVG 圖表容器 -->
+          <div class="seating-wrapper" id="seatingChartContainer">
+            <!-- 由 renderSeatingChart() 注入 -->
+          </div>
+
+          <!-- 圖例標示 -->
+          <div class="seating-legend">
+            <div class="legend-item">
+              <div class="legend-circle legend-present"></div>
+              <span><strong>出席席位 (Present)</strong>：深藍色圓形</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-circle legend-absent"></div>
+              <span><strong>請假/缺席 (Absent)</strong>：灰色打叉圓形</span>
+            </div>
+            <div class="legend-item">
+              <span style="font-size:1.1rem;">🎼</span>
+              <span>指揮講臺 (Conductor)</span>
+            </div>
+            <div class="legend-item">
+              <span style="font-size:1.1rem;">🚪</span>
+              <span>前門/後門 (Doors)</span>
+            </div>
+            <div class="legend-item">
+              <span style="font-size:1.1rem;">🪟</span>
+              <span>對外窗 (Windows)</span>
+            </div>
+          </div>
+
+          <!-- 各聲部出席狀態小卡 -->
+          <div id="seatingSectionSummary" style="margin-top: 24px; display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px;">
+            <!-- 動態注入各組出席比例 -->
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= 5. 幹部後台 (ADMIN PANEL - ADMIN ONLY) ================= -->
+      <div id="tabAdmin" class="page-section">
+        <div class="card" style="padding: 16px 20px 8px;">
+          <div class="card-header" style="margin-bottom: 12px; border: none; padding-bottom: 0;">
+            <div>
+              <h2 class="card-title">⚙️ 東吳管樂社 幹部後台管理</h2>
+              <div class="card-desc">社團借教室審批、團練排程、請假統計、座位表編制、社員名冊與系統參數設定。</div>
+            </div>
+          </div>
+
+          <!-- 後台 Subtabs: 借教室管理 | 團練管理 | 請假統計 | 座位表設定 | 社員管理 | 系統設定 -->
+          <div class="subtabs">
+            <div class="subtab-item active" id="subtabBtn-adminRoom" onclick="showAdminTab('adminRoom')">借教室管理</div>
+            <div class="subtab-item" id="subtabBtn-adminPractice" onclick="showAdminTab('adminPractice')">團練管理</div>
+            <div class="subtab-item" id="subtabBtn-adminAbsence" onclick="showAdminTab('adminAbsence')">請假統計</div>
+            <div class="subtab-item" id="subtabBtn-adminSeating" onclick="showAdminTab('adminSeating')">座位表設定</div>
+            <div class="subtab-item" id="subtabBtn-adminMembers" onclick="showAdminTab('adminMembers')">社員管理</div>
+            <div class="subtab-item" id="subtabBtn-adminSettings" onclick="showAdminTab('adminSettings')">系統設定</div>
+          </div>
+        </div>
+
+        <!-- 5.1 借教室管理: Full table, filter by status/date, inline edit status+room, export CSV -->
+        <div id="subtab-adminRoom" class="subtab-content active">
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">🚪 全社借教室申請審查</h3>
+                <div class="card-desc">可篩選狀態與日期，線上編輯審核狀態與指派教室，並支援 CSV 報表匯出。</div>
+              </div>
+              <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                <select id="adminRoomFilterStatus" class="form-control" style="width: auto;" onchange="renderAdminRoomTable()">
+                  <option value="ALL">全部狀態</option>
+                  <option value="已收件">已收件</option>
+                  <option value="已通過">已通過</option>
+                  <option value="未通過">未通過</option>
+                  <option value="無教室">無教室</option>
+                </select>
+                <input type="date" id="adminRoomFilterDate" class="form-control" style="width: auto;" onchange="renderAdminRoomTable()">
+                <button class="btn btn-secondary btn-sm" onclick="exportRoomRequestsCSV()">📥 匯出 CSV</button>
+              </div>
+            </div>
+
+            <div class="table-container">
+              <table>
+                <thead>
+                  <tr>
+                    <th>申請ID</th>
+                    <th>申請人</th>
+                    <th>聲部</th>
+                    <th>日期</th>
+                    <th>星期</th>
+                    <th>節次</th>
+                    <th>類別</th>
+                    <th>冷氣</th>
+                    <th>審核狀態</th>
+                    <th>分配教室</th>
+                    <th>備註</th>
+                    <th>操作</th>
+                  </tr>
+                </thead>
+                <tbody id="adminRoomTableBody">
+                  <!-- 動態注入全體申請 -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5.2 團練管理: Create/edit/delete practice sessions (date, time, location, deadline, notes) -->
+        <div id="subtab-adminPractice" class="subtab-content">
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">🎺 團練場次排程管理</h3>
+                <div class="card-desc">新增、編輯或刪除全團合奏排練資訊。</div>
+              </div>
+              <button class="btn btn-primary btn-sm" onclick="openPracticeModal()">➕ 新增團練場次</button>
+            </div>
+
+            <div class="table-container">
+              <table>
+                <thead>
+                  <tr>
+                    <th>場次代碼</th>
+                    <th>排練日期</th>
+                    <th>星期</th>
+                    <th>排練時間</th>
+                    <th>地點</th>
+                    <th>請假截止時間</th>
+                    <th>備註說明</th>
+                    <th>操作</th>
+                  </tr>
+                </thead>
+                <tbody id="adminPracticesTableBody">
+                  <!-- 動態注入團練列表 -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5.3 請假統計: Select practice -> summary cards (total/absent/present/rate) + by-section breakdown + detail table + export CSV -->
+        <div id="subtab-adminAbsence" class="subtab-content">
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">📊 團練請假與出席統計</h3>
+                <div class="card-desc">選取團練場次，即時統計全體與各聲部出缺席狀態，並可匯出 CSV。</div>
+              </div>
+              <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                <label style="font-weight: 600; font-size: 0.9rem;">選取團練：</label>
+                <select id="adminAbsencePracticeSelect" class="form-control" style="width: auto;" onchange="renderAdminAbsenceStats()">
+                  <!-- 動態注入團練選項 -->
+                </select>
+                <button class="btn btn-secondary btn-sm" onclick="exportAbsenceCSV()">📥 匯出假單 CSV</button>
+              </div>
+            </div>
+
+            <!-- Summary KPI cards (total/absent/present/rate) -->
+            <div class="dashboard-grid" style="margin-bottom: 20px;">
+              <div class="stat-card">
+                <div class="stat-icon">👥</div>
+                <div>
+                  <div class="stat-value" id="adminStatTotalMembers">0 人</div>
+                  <div class="stat-label">應到人數 (Total)</div>
+                </div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-icon" style="background:#e8f5e9; color:#2e7d32;">✅</div>
+                <div>
+                  <div class="stat-value" id="adminStatPresent">0 人</div>
+                  <div class="stat-label">實際出席 (Present)</div>
+                </div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-icon" style="background:#ffebee; color:#c62828;">❌</div>
+                <div>
+                  <div class="stat-value" id="adminStatAbsent">0 人</div>
+                  <div class="stat-label">登記請假 (Absent)</div>
+                </div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-icon" style="background:#fff9c4; color:#b78103;">📈</div>
+                <div>
+                  <div class="stat-value" id="adminStatRate">0%</div>
+                  <div class="stat-label">出席率 (Rate)</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- By-section breakdown -->
+            <h4 style="margin-bottom: 12px; color: var(--primary); font-size: 1.05rem;">聲部出席率分佈 (By-Section Breakdown)</h4>
+            <div id="adminSectionBreakdownGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; margin-bottom: 24px;">
+              <!-- 動態生成聲部統計條 -->
+            </div>
+
+            <!-- Detail table -->
+            <h4 style="margin-bottom: 12px; color: var(--primary); font-size: 1.05rem;">請假詳細名冊 (Detail Table)</h4>
+            <div class="table-container">
+              <table>
+                <thead>
+                  <tr>
+                    <th>社員姓名</th>
+                    <th>聲部</th>
+                    <th>樂器</th>
+                    <th>假別</th>
+                    <th>請假事由</th>
+                    <th>登記時間</th>
+                  </tr>
+                </thead>
+                <tbody id="adminAbsenceDetailTableBody">
+                  <!-- 動態注入假單 -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5.4 座位表設定: Layout templates CRUD, set section positions (x%, y%) & default count, preview -->
+        <div id="subtab-adminSeating" class="subtab-content">
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">🎼 座位表編制模板設定 (Seating Layout Config)</h3>
+                <div class="card-desc">配置各聲部 (Cl, Fl, Ob, Sax, Hn, Tpt, Tbn, Euph, Perc) 在排練室平面之百分比座標 (x%, y%) 與席位人數。</div>
+              </div>
+              <div style="display: flex; gap: 8px;">
+                <button class="btn btn-secondary btn-sm" onclick="addNewSeatingTemplatePrompt()">➕ 新增模板</button>
+                <button class="btn btn-danger btn-sm" onclick="deleteCurrentSeatingTemplate()">🗑️ 刪除目前模板</button>
+              </div>
+            </div>
+
+            <div class="form-row" style="margin-bottom: 16px;">
+              <div class="form-col">
+                <label class="form-label">選擇模板：</label>
+                <select id="adminSeatingTemplateSelect" class="form-control" onchange="loadAdminSeatingTemplateFields()">
+                  <!-- 模板選單 -->
+                </select>
+              </div>
+              <div class="form-col">
+                <label class="form-label">模板名稱：</label>
+                <input type="text" id="adminSeatingTemplateName" class="form-control">
+              </div>
+            </div>
+
+            <div class="table-container" style="margin-bottom: 20px;">
+              <table>
+                <thead>
+                  <tr>
+                    <th>聲部代號</th>
+                    <th>聲部名稱</th>
+                    <th>X 座標 (%)</th>
+                    <th>Y 座標 (%)</th>
+                    <th>預設人數 (Count)</th>
+                    <th>排列走向</th>
+                  </tr>
+                </thead>
+                <tbody id="adminSeatingConfigTableBody">
+                  <!-- 動態注入 Cl, Fl, Ob, Sax, Hn, Tpt, Tbn, Euph, Perc 欄位 -->
+                </tbody>
+              </table>
+            </div>
+
+            <div style="display: flex; justify-content: flex-end; gap: 10px; margin-bottom: 24px;">
+              <button type="button" class="btn btn-secondary" onclick="previewAdminSeatingChart()">👁️ 預覽座位表</button>
+              <button type="button" class="btn btn-primary" onclick="saveAdminSeatingTemplate()">💾 儲存模板設定</button>
+            </div>
+
+            <!-- Preview of seating chart -->
+            <h4 style="margin-bottom: 12px; color: var(--primary);">座位表即時預覽 (Live Preview)</h4>
+            <div class="seating-wrapper" id="adminSeatingPreviewContainer">
+              <!-- SVG 預覽圖 -->
+            </div>
+          </div>
+        </div>
+
+        <!-- 5.5 社員管理: Members table, change role, reset password to 0000, add new member -->
+        <div id="subtab-adminMembers" class="subtab-content">
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">👥 全社社員名冊管理</h3>
+                <div class="card-desc">檢視社員清單、變更角色權限 (一般社員/幹部)、重設密碼為 0000 或建立新社員。</div>
+              </div>
+              <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                <input type="text" id="adminMemberSearchInput" class="form-control" placeholder="搜尋姓名、Email、樂器..." style="width: 220px;" oninput="renderAdminMembersTable()">
+                <button class="btn btn-primary btn-sm" onclick="openAddMemberModal()">➕ 新增社員</button>
+              </div>
+            </div>
+
+            <div class="table-container">
+              <table>
+                <thead>
+                  <tr>
+                    <th>姓名</th>
+                    <th>電子郵件 (Email)</th>
+                    <th>聲部</th>
+                    <th>樂器</th>
+                    <th>身分角色</th>
+                    <th>密碼狀態</th>
+                    <th>管理操作</th>
+                  </tr>
+                </thead>
+                <tbody id="adminMembersTableBody">
+                  <!-- 動態注入社員名單 -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5.6 系統設定: Saturday available periods, Sunday available periods, save settings -->
+        <div id="subtab-adminSettings" class="subtab-content">
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">⚙️ 假日借用開放節次設定 (System Settings)</h3>
+                <div class="card-desc">設定週六與週日允許社員申請之節次；未勾選者於借教室頁面將不予開放。</div>
+              </div>
+              <button class="btn btn-primary" onclick="saveSystemSettings()">💾 儲存設定</button>
+            </div>
+
+            <div style="margin-bottom: 24px;">
+              <h4 style="font-size: 1.05rem; color: var(--primary); margin-bottom: 10px; display: flex; align-items: center; gap: 8px;">
+                <span>📅 星期六開放節次 (Saturday Available Periods)</span>
+                <button type="button" class="btn btn-secondary btn-sm" onclick="toggleWeekendPeriods('sat', true)">全選</button>
+                <button type="button" class="btn btn-secondary btn-sm" onclick="toggleWeekendPeriods('sat', false)">全關</button>
+              </h4>
+              <div id="settingsSatPeriodsGrid" class="period-grid">
+                <!-- 動態注入週六 12 個節次 Checkbox -->
+              </div>
+            </div>
+
+            <hr style="border: 0; border-top: 1px solid var(--border); margin: 24px 0;">
+
+            <div style="margin-bottom: 16px;">
+              <h4 style="font-size: 1.05rem; color: var(--primary); margin-bottom: 10px; display: flex; align-items: center; gap: 8px;">
+                <span>📅 星期日開放節次 (Sunday Available Periods)</span>
+                <button type="button" class="btn btn-secondary btn-sm" onclick="toggleWeekendPeriods('sun', true)">全選</button>
+                <button type="button" class="btn btn-secondary btn-sm" onclick="toggleWeekendPeriods('sun', false)">全關</button>
+              </h4>
+              <div id="settingsSunPeriodsGrid" class="period-grid">
+                <!-- 動態注入週日 12 個節次 Checkbox -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- ==================== 彈出視窗組 (MODALS) ==================== -->
+
+  <!-- 1. 修改密碼 Modal (初次以 0000 登入強制彈出) -->
+  <div id="modalChangePassword" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title">🔐 修改登入密碼</div>
+        <button type="button" id="closeChangePwBtn" class="modal-close" onclick="closeChangePasswordModal()">✕</button>
+      </div>
+      <form id="changePasswordForm" onsubmit="handleChangePasswordSubmit(event)">
+        <div class="modal-body">
+          <div id="changePwForcedNotice" style="display: none; background: #fff3cd; border: 1px solid #ffeeba; border-radius: var(--radius-md); padding: 10px 14px; color: #856404; font-size: 0.9rem; margin-bottom: 16px;">
+            ⚠️ <strong>安全性提示：</strong> 您的帳號目前使用預設密碼 <strong>0000</strong>，首次登入請務必修改密碼以確保帳號安全！
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">目前密碼 (Old Password)<span class="required">*</span></label>
+            <input type="password" id="pwOldInput" class="form-control" placeholder="請輸入舊密碼 (預設為 0000)" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">新設定密碼 (New Password)<span class="required">*</span></label>
+            <input type="password" id="pwNewInput" class="form-control" placeholder="請輸入新密碼 (不得繼續使用 0000)" required minlength="4">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">確認新密碼 (Confirm Password)<span class="required">*</span></label>
+            <input type="password" id="pwConfirmInput" class="form-control" placeholder="請再次輸入新密碼" required minlength="4">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="cancelChangePwBtn" class="btn btn-secondary" onclick="closeChangePasswordModal()">取消</button>
+          <button type="submit" class="btn btn-primary">確認修改密碼</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 2. 個人資料與偏好設定 Modal (Profile) -->
+  <div id="modalProfile" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title">👤 個人資料與通知偏好</div>
+        <button type="button" class="modal-close" onclick="closeProfileModal()">✕</button>
+      </div>
+      <form id="profileForm" onsubmit="handleProfileSubmit(event)">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">社員姓名</label>
+            <input type="text" id="profNameInput" class="form-control" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">電子信箱 (學校帳號)</label>
+            <input type="email" id="profEmailInput" class="form-control" readonly style="background-color: #f1f5f9; cursor: not-allowed;">
+          </div>
+
+          <div class="form-row">
+            <div class="form-col">
+              <div class="form-group">
+                <label class="form-label">所屬聲部 (Section)<span class="required">*</span></label>
+                <select id="profSectionSelect" class="form-control" required>
+                  <option value="Cl.">豎笛 (Cl.)</option>
+                  <option value="Fl.">長笛 (Fl.)</option>
+                  <option value="Ob.">雙簧管 (Ob.)</option>
+                  <option value="Sax.">薩克斯風 (Sax.)</option>
+                  <option value="Hn.">法國號 (Hn.)</option>
+                  <option value="Tpt.">小號 (Tpt.)</option>
+                  <option value="Tbn.">長號 (Tbn.)</option>
+                  <option value="Euph.">上低音號 (Euph.)</option>
+                  <option value="Perc.">打擊 (Perc.)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-col">
+              <div class="form-group">
+                <label class="form-label">專長樂器 (Instrument)<span class="required">*</span></label>
+                <input type="text" id="profInstrumentInput" class="form-control" placeholder="如：降B調豎笛、長笛" required>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">身分權限</label>
+            <input type="text" id="profRoleInput" class="form-control" readonly style="background-color: #f1f5f9; cursor: not-allowed;">
+          </div>
+
+          <div class="form-group" style="margin-top: 10px;">
+            <label style="display: inline-flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 600;">
+              <input type="checkbox" id="profNotifyEmail" style="width: 18px; height: 18px; accent-color: var(--primary);">
+              <span>接收審核通過與排練異動之 Email 通知 (notifyEmail)</span>
+            </label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="openChangePasswordModal(false)">修改密碼</button>
+          <button type="submit" class="btn btn-primary">儲存個人設定</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 3. 新增/編輯團練場次 Modal (Admin) -->
+  <div id="modalPractice" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title" id="practiceModalTitle">➕ 新增團練場次</div>
+        <button type="button" class="modal-close" onclick="closePracticeModal()">✕</button>
+      </div>
+      <form id="practiceForm" onsubmit="handlePracticeSubmit(event)">
+        <div class="modal-body">
+          <input type="hidden" id="practiceEditId">
+
+          <div class="form-group">
+            <label class="form-label">團練日期 (Date)<span class="required">*</span></label>
+            <input type="date" id="pracDateInput" class="form-control" required>
+          </div>
+
+          <div class="form-row">
+            <div class="form-col">
+              <div class="form-group">
+                <label class="form-label">開始時間<span class="required">*</span></label>
+                <input type="time" id="pracStartTime" class="form-control" value="18:30" required>
+              </div>
+            </div>
+            <div class="form-col">
+              <div class="form-group">
+                <label class="form-label">結束時間<span class="required">*</span></label>
+                <input type="time" id="pracEndTime" class="form-control" value="21:30" required>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">團練地點 (Location)<span class="required">*</span></label>
+            <input type="text" id="pracLocationInput" class="form-control" placeholder="例如：樂活棟 B201 團練室" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">請假登記截止時間 (Deadline)<span class="required">*</span></label>
+            <input type="datetime-local" id="pracDeadlineInput" class="form-control" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">排練曲目與重要備註 (Notes)</label>
+            <textarea id="pracNotesInput" class="form-control" placeholder="例如：合奏期末公演曲目、打擊組提早15分鐘到位定位"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closePracticeModal()">取消</button>
+          <button type="submit" class="btn btn-primary">儲存團練資料</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 4. 新增社員 Modal (Admin) -->
+  <div id="modalAddMember" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title">➕ 新增樂團社員</div>
+        <button type="button" class="modal-close" onclick="closeAddMemberModal()">✕</button>
+      </div>
+      <form id="addMemberForm" onsubmit="handleAddMemberSubmit(event)">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">社員姓名<span class="required">*</span></label>
+            <input type="text" id="newMemberName" class="form-control" placeholder="請輸入姓名" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">學校電子郵件 (Email)<span class="required">*</span></label>
+            <input type="email" id="newMemberEmail" class="form-control" placeholder="user@scu.edu.tw" required>
+          </div>
+
+          <div class="form-row">
+            <div class="form-col">
+              <div class="form-group">
+                <label class="form-label">所屬聲部<span class="required">*</span></label>
+                <select id="newMemberSection" class="form-control" required>
+                  <option value="Cl.">豎笛 (Cl.)</option>
+                  <option value="Fl.">長笛 (Fl.)</option>
+                  <option value="Ob.">雙簧管 (Ob.)</option>
+                  <option value="Sax.">薩克斯風 (Sax.)</option>
+                  <option value="Hn.">法國號 (Hn.)</option>
+                  <option value="Tpt.">小號 (Tpt.)</option>
+                  <option value="Tbn.">長號 (Tbn.)</option>
+                  <option value="Euph.">上低音號 (Euph.)</option>
+                  <option value="Perc.">打擊 (Perc.)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-col">
+              <div class="form-group">
+                <label class="form-label">負責樂器<span class="required">*</span></label>
+                <input type="text" id="newMemberInstrument" class="form-control" placeholder="例如：降B調豎笛、小號" required>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">系統角色身分<span class="required">*</span></label>
+            <select id="newMemberRole" class="form-control" required>
+              <option value="member">一般社員 (Member)</option>
+              <option value="admin">幹部管理員 (Admin)</option>
+            </select>
+          </div>
+
+          <p style="font-size: 0.85rem; color: var(--text-muted);">
+            💡 系統預設密碼為 <strong>0000</strong>，首次登入將提示修改。
+          </p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeAddMemberModal()">取消</button>
+          <button type="submit" class="btn btn-primary">建立社員帳號</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 5. 登記請假 Modal (Submit Absence) -->
+  <div id="modalSubmitAbsence" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title">📝 團練假單登記</div>
+        <button type="button" class="modal-close" onclick="closeSubmitAbsenceModal()">✕</button>
+      </div>
+      <form id="submitAbsenceForm" onsubmit="handleAbsenceSubmit(event)">
+        <div class="modal-body">
+          <input type="hidden" id="absenceTargetPracticeId">
+          <div id="absencePracticeInfo" style="background: #f1f5f9; padding: 12px; border-radius: var(--radius-md); margin-bottom: 16px; font-size: 0.92rem; font-weight: 600; color: var(--primary);">
+            團練場次載入中...
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">假別種類 (Type)<span class="required">*</span></label>
+            <div style="display: flex; gap: 20px; margin-top: 6px;">
+              <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
+                <input type="radio" name="absenceTypeRadio" value="請假" checked style="accent-color: var(--primary);">
+                <span style="font-weight: 600;">請假</span>
+              </label>
+              <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
+                <input type="radio" name="absenceTypeRadio" value="遲到" style="accent-color: var(--primary);">
+                <span style="font-weight: 600;">遲到</span>
+              </label>
+              <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
+                <input type="radio" name="absenceTypeRadio" value="早退" style="accent-color: var(--primary);">
+                <span style="font-weight: 600;">早退</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">請假事由 (Reason)<span class="required">*</span></label>
+            <textarea id="absenceReasonText" class="form-control" placeholder="請詳述請假原因 (如：系上必修考試衝堂、就醫等)" required></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeSubmitAbsenceModal()">取消</button>
+          <button type="submit" class="btn btn-primary">送出假單</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==================== JAVASCRIPT LOGIC ==================== -->
+  <script>
+    /**
+     * 東吳管樂社 管理系統 (Soochow Wind Band Club Management System)
+     */
+    const GAS_URL = 'YOUR_GAS_WEB_APP_URL_HERE';
+
+    // 節次定義與標籤
+    const PERIOD_LABELS = {
+      '1': '1節',
+      '2': '2節',
+      '3': '3節',
+      '4': '4節',
+      'E': 'E節(午休)',
+      '5': '5節',
+      '6': '6節',
+      '7': '7節',
+      '8': '8節',
+      '9': '9節',
+      'A': 'A節(第10節)',
+      'B': 'B節(第11節)'
+    };
+    const ALL_PERIOD_KEYS = ['1', '2', '3', '4', 'E', '5', '6', '7', '8', '9', 'A', 'B'];
+
+    // 9大樂器聲部規格
+    // Cl.(豎笛), Fl.(長笛), Ob.(雙簧管), Sax.(薩克斯風), Hn.(法國號), Tpt.(小號), Tbn.(長號), Euph.(上低音號), Perc.(打擊)
+    const SECTION_DEFS = [
+      { id: 'Cl',   name: '豎笛',    en: 'Clarinet',    abbr: 'Cl.',   defaultCount: 8, x: 28, y: 56, dir: 'arc' },
+      { id: 'Fl',   name: '長笛',    en: 'Flute',       abbr: 'Fl.',   defaultCount: 6, x: 40, y: 72, dir: 'arc' },
+      { id: 'Ob',   name: '雙簧管',  en: 'Oboe',        abbr: 'Ob.',   defaultCount: 2, x: 62, y: 72, dir: 'row' },
+      { id: 'Sax',  name: '薩克斯風', en: 'Saxophone',   abbr: 'Sax.',  defaultCount: 5, x: 50, y: 52, dir: 'arc' },
+      { id: 'Euph', name: '上低音號', en: 'Euphonium',   abbr: 'Euph.', defaultCount: 3, x: 68, y: 56, dir: 'row' },
+      { id: 'Hn',   name: '法國號',  en: 'Horn',        abbr: 'Hn.',   defaultCount: 4, x: 80, y: 46, dir: 'col' },
+      { id: 'Tpt',  name: '小號',    en: 'Trumpet',     abbr: 'Tpt.',  defaultCount: 5, x: 34, y: 24, dir: 'row' },
+      { id: 'Tbn',  name: '長號',    en: 'Trombone',    abbr: 'Tbn.',  defaultCount: 4, x: 64, y: 24, dir: 'row' },
+      { id: 'Perc', name: '打擊',    en: 'Percussion',  abbr: 'Perc.', defaultCount: 4, x: 12, y: 38, dir: 'col' }
+    ];
+
+    // 全域 Session 物件
+    let session = null;
+
+    /**
+     * API 呼叫包裝函式
+     */
+    async function api(action, params = {}) {
+      showLoading(true);
+      try {
+        if (GAS_URL && GAS_URL !== 'YOUR_GAS_WEB_APP_URL_HERE') {
+          // 透過 fetch POST 呼叫 Google Apps Script Web App
+          const response = await fetch(GAS_URL, {
+            method: 'POST',
+            body: JSON.stringify({ action, ...params })
+          });
+          const data = await response.json();
+          if (!data.success && data.error) {
+            throw new Error(data.error);
+          }
+          return data;
+        } else {
+          // 本機模擬引擎 (支援無後端時完整測試)
+          await new Promise(r => setTimeout(r, 150));
+          return executeMockApi(action, params);
+        }
+      } catch (err) {
+        console.error('API Error:', err);
+        showToast(err.message || '連線錯誤，請稍後再試', 'error');
+        throw err;
+      } finally {
+        showLoading(false);
+      }
+    }
+
+    /**
+     * Toast 通知顯示函式 (top-right, 3s auto-dismiss, green=success, red=error)
+     */
+    function showToast(msg, type = 'info') {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = 'toast toast-' + (type === 'success' ? 'success' : type === 'error' ? 'error' : 'info');
+
+      let icon = '🔔';
+      if (type === 'success') icon = '✅';
+      if (type === 'error') icon = '⚠️';
+
+      toast.innerHTML = '<span style="font-size:1.15rem;">' + icon + '</span><span>' + msg + '</span>';
+      container.appendChild(toast);
+
+      setTimeout(() => {
+        toast.classList.add('hide');
+        setTimeout(() => toast.remove(), 320);
+      }, 3000);
+    }
+
+    function showLoading(show) {
+      const overlay = document.getElementById('loadingOverlay');
+      if (show) overlay.classList.add('active');
+      else overlay.classList.remove('active');
+    }
+
+    /**
+     * 頁面切換控制 (loginPage vs mainApp)
+     */
+    function showPage(pageId) {
+      document.getElementById('loginPage').style.display = (pageId === 'loginPage') ? 'flex' : 'none';
+      document.getElementById('mainApp').style.display = (pageId === 'mainApp') ? 'flex' : 'none';
+    }
+
+    /**
+     * 分頁切換 (首頁 | 借教室 | 請假 | 座位表 | 幹部後台)
+     */
+    function showTab(tabId) {
+      const tabs = ['tabHome', 'tabRoom', 'tabAbsence', 'tabSeating', 'tabAdmin'];
+      tabs.forEach(t => {
+        const el = document.getElementById(t);
+        const navEl = document.getElementById('navItem-' + t);
+        const mobNavEl = document.getElementById('mobNavItem-' + t);
+        if (el) el.classList.remove('active');
+        if (navEl) navEl.classList.remove('active');
+        if (mobNavEl) mobNavEl.classList.remove('active');
+      });
+
+      const target = document.getElementById(tabId);
+      const targetNav = document.getElementById('navItem-' + tabId);
+      const targetMobNav = document.getElementById('mobNavItem-' + tabId);
+      if (target) target.classList.add('active');
+      if (targetNav) targetNav.classList.add('active');
+      if (targetMobNav) targetMobNav.classList.add('active');
+
+      if (tabId === 'tabHome') loadDashboard();
+      if (tabId === 'tabRoom') initRoomTab();
+      if (tabId === 'tabAbsence') loadAbsenceTab();
+      if (tabId === 'tabSeating') loadSeatingTab();
+      if (tabId === 'tabAdmin') {
+        if (!session || session.role !== 'admin') {
+          showToast('您無權限進入幹部後台', 'error');
+          showTab('tabHome');
+          return;
+        }
+        initAdminTab();
+      }
+    }
+
+    /**
+     * 幹部後台子分頁切換
+     */
+    function showAdminTab(subtabId) {
+      const subtabs = ['adminRoom', 'adminPractice', 'adminAbsence', 'adminSeating', 'adminMembers', 'adminSettings'];
+      subtabs.forEach(st => {
+        const btn = document.getElementById('subtabBtn-' + st);
+        const content = document.getElementById('subtab-' + st);
+        if (btn) btn.classList.remove('active');
+        if (content) content.classList.remove('active');
+      });
+
+      const targetBtn = document.getElementById('subtabBtn-' + subtabId);
+      const targetContent = document.getElementById('subtab-' + subtabId);
+      if (targetBtn) targetBtn.classList.add('active');
+      if (targetContent) targetContent.classList.add('active');
+
+      if (subtabId === 'adminRoom') renderAdminRoomTable();
+      if (subtabId === 'adminPractice') renderAdminPracticesTable();
+      if (subtabId === 'adminAbsence') renderAdminAbsenceStats();
+      if (subtabId === 'adminSeating') loadAdminSeatingTab();
+      if (subtabId === 'adminMembers') renderAdminMembersTable();
+      if (subtabId === 'adminSettings') renderAdminSettingsTab();
+    }
+
+    /**
+     * 取得中文字串的星期 (一/二/三/四/五/六/日)
+     */
+    function getWeekday(dateStr) {
+      if (!dateStr) return '';
+      const parts = dateStr.split('-');
+      if (parts.length < 3) return '';
+      const d = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
+      const map = ['日', '一', '二', '三', '四', '五', '六'];
+      return map[d.getDay()] || '';
+    }
+
+    function toggleMobileMenu() {
+      const mobMenu = document.getElementById('mobileMenu');
+      mobMenu.classList.toggle('open');
+    }
+
+    // ==========================================
+    // 登入與身分狀態
+    // ==========================================
+    function fillDemoUser(email, pw) {
+      document.getElementById('loginEmail').value = email;
+      document.getElementById('loginPassword').value = pw;
+    }
+
+    async function handleLoginSubmit(e) {
+      e.preventDefault();
+      const email = document.getElementById('loginEmail').value.trim();
+      const password = document.getElementById('loginPassword').value;
+
+      try {
+        const res = await api('login', { email, password });
+        if (res.success) {
+          session = res.user;
+          localStorage.setItem('band_session', JSON.stringify(session));
+
+          showToast('登入成功，歡迎 ' + session.name, 'success');
+          setupUserSessionUI();
+          showPage('mainApp');
+          showTab('tabHome');
+
+          // 若以預設密碼 '0000' 登入，跳出修改密碼對話框
+          if (password === '0000' || res.mustChangePassword) {
+            setTimeout(() => {
+              openChangePasswordModal(true);
+            }, 400);
+          }
+        }
+      } catch (err) {}
+    }
+
+    function handleLogout() {
+      session = null;
+      localStorage.removeItem('band_session');
+      document.getElementById('loginPassword').value = '';
+      showToast('已登出系統', 'info');
+      showPage('loginPage');
+    }
+
+    function setupUserSessionUI() {
+      if (!session) return;
+      document.getElementById('navUserName').innerText = session.name + ' (' + session.instrument + ')';
+
+      const roleBadge = document.getElementById('navRoleBadge');
+      const adminNav = document.getElementById('navItem-tabAdmin');
+      const mobAdminNav = document.getElementById('mobNavItem-tabAdmin');
+
+      if (session.role === 'admin') {
+        roleBadge.className = 'badge badge-admin';
+        roleBadge.innerText = '幹部 Admin';
+        adminNav.style.display = 'flex';
+        mobAdminNav.style.display = 'block';
+      } else {
+        roleBadge.className = 'badge badge-member';
+        roleBadge.innerText = '社員 Member';
+        adminNav.style.display = 'none';
+        mobAdminNav.style.display = 'none';
+      }
+    }
+
+    // ==========================================
+    // 首頁 (HOME)
+    // ==========================================
+    async function loadDashboard() {
+      if (!session) return;
+      document.getElementById('homeWelcomeTitle').innerText = '歡迎回來，' + session.name + '！🎶';
+      document.getElementById('homeWelcomeSubtitle').innerText = '東吳管樂社 ' + session.section + ' 聲部・負責樂器：' + session.instrument;
+
+      const data = await api('getDashboard', { email: session.email });
+
+      // 下次團練卡片
+      const nextPrac = data.nextPractice;
+      const upcomingEl = document.getElementById('homeUpcomingPracticeContent');
+      if (nextPrac) {
+        const myAbsence = data.myNextPracticeAbsence;
+        let statusBadgeHtml = '<span class="badge badge-approved" style="font-size:0.85rem;">✅ 出席預定</span>';
+        if (myAbsence) {
+          statusBadgeHtml = '<span class="badge badge-rejected" style="font-size:0.85rem;">⚠️ 已登記' + myAbsence.type + ' (' + myAbsence.reason + ')</span>';
+        }
+
+        upcomingEl.innerHTML = `
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:8px;">
+            <div style="font-size:1.15rem; font-weight:700; color:var(--primary);">
+              📅 ` + nextPrac.date + ` (週` + getWeekday(nextPrac.date) + `) ` + (nextPrac.startTime || '18:30') + ` - ` + (nextPrac.endTime || '21:30') + `
+            </div>
+            ` + statusBadgeHtml + `
+          </div>
+          <div style="font-size:0.92rem; color:#475569; margin-bottom:8px;">
+            📍 地點：<strong>` + nextPrac.location + `</strong> &nbsp;|&nbsp; 截止登記：<span style="color:#b45309; font-weight:600;">` + nextPrac.deadline + `</span>
+          </div>
+          <div class="practice-notes">
+            <strong>🎵 排練曲目與備註：</strong>` + (nextPrac.notes || '請各聲部準時到場定位調音。') + `
+          </div>
+        `;
+      } else {
+        upcomingEl.innerHTML = '<p style="color:var(--text-muted);">目前無即將進行之排練場次。</p>';
+      }
+
+      // 最近 3 筆借教室記錄 (last 3)
+      const recentTable = document.getElementById('homeRecentRoomsTableBody');
+      const recentList = data.recentRoomRequests || [];
+      if (recentList.length === 0) {
+        recentTable.innerHTML = '<tr><td colspan="6" style="text-align:center; color:var(--text-muted);">尚無借教室記錄</td></tr>';
+      } else {
+        recentTable.innerHTML = recentList.map(item => `
+          <tr>
+            <td><strong>` + item.date + `</strong></td>
+            <td>週` + getWeekday(item.date) + `</td>
+            <td>` + item.periods.join(', ') + `節</td>
+            <td>` + item.category + `</td>
+            <td>` + getStatusBadgeHtml(item.status) + `</td>
+            <td><strong style="color:var(--primary);">` + (item.assignedRoom || '尚未分配') + `</strong></td>
+          </tr>
+        `).join('');
+      }
+    }
+
+    // 狀態 Badge: 已收件=blue, 已通過=green, 未通過=red, 無教室=orange
+    function getStatusBadgeHtml(status) {
+      if (status === '已通過') return '<span class="badge badge-approved">已通過</span>';
+      if (status === '未通過') return '<span class="badge badge-rejected">未通過</span>';
+      if (status === '無教室') return '<span class="badge badge-noroom">無教室</span>';
+      return '<span class="badge badge-received">已收件</span>';
+    }
+
+    // ==========================================
+    // 借教室 (ROOM REQUESTS)
+    // ==========================================
+    let cachedSettings = null;
+
+    async function initRoomTab() {
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      const dateStr = tomorrow.toISOString().split('T')[0];
+      const dateInput = document.getElementById('roomDateInput');
+      if (!dateInput.value) {
+        dateInput.value = dateStr;
+      }
+      handleRoomDateChange();
+      loadMyRoomRequests();
+    }
+
+    async function handleRoomDateChange() {
+      const dateVal = document.getElementById('roomDateInput').value;
+      if (!dateVal) return;
+      const weekday = getWeekday(dateVal);
+      const indicator = document.getElementById('roomWeekdayIndicator');
+      indicator.innerText = '📅 預約日期：' + dateVal + ' (星期' + weekday + ')';
+
+      if (!cachedSettings) {
+        const res = await api('getSettings');
+        cachedSettings = res.settings;
+      }
+
+      renderPeriodOptions(dateVal, weekday);
+    }
+
+    function renderPeriodOptions(dateVal, weekday) {
+      const grid = document.getElementById('roomPeriodGrid');
+      const weekendNote = document.getElementById('roomPeriodWeekendNote');
+      grid.innerHTML = '';
+
+      let allowedPeriods = ALL_PERIOD_KEYS;
+
+      // Weekday (Mon-Fri): 1,2,3,4,E,5,6,7,8,9,A,B
+      // Weekend: fetch from settings and show only allowed periods
+      if (weekday === '六') {
+        allowedPeriods = (cachedSettings && cachedSettings.satPeriods) || ['1','2','3','4','5','6','7'];
+        weekendNote.style.display = 'block';
+        weekendNote.innerText = '⚠️ 週六僅開放幹部後台設定之節次區間借用。';
+      } else if (weekday === '日') {
+        allowedPeriods = (cachedSettings && cachedSettings.sunPeriods) || ['5','6','7','8'];
+        weekendNote.style.display = 'block';
+        weekendNote.innerText = '⚠️ 週日僅開放幹部後台設定之節次區間借用。';
+      } else {
+        weekendNote.style.display = 'none';
+      }
+
+      if (allowedPeriods.length === 0) {
+        grid.innerHTML = '<div style="color:#b91c1c; font-weight:600; padding:10px;">本日社團教室未對外開放借用。</div>';
+        return;
+      }
+
+      ALL_PERIOD_KEYS.forEach(key => {
+        if (!allowedPeriods.includes(key)) return;
+        const label = PERIOD_LABELS[key] || key + '節';
+        const chip = document.createElement('label');
+        chip.className = 'period-chip';
+        chip.innerHTML = `
+          <input type="checkbox" name="roomPeriodCheckbox" value="` + key + `" onchange="this.parentElement.classList.toggle('selected', this.checked)">
+          <span>` + label + `</span>
+        `;
+        grid.appendChild(chip);
+      });
+    }
+
+    function toggleAllPeriods(selectAll) {
+      const cbs = document.querySelectorAll('input[name="roomPeriodCheckbox"]');
+      cbs.forEach(cb => {
+        cb.checked = selectAll;
+        cb.parentElement.classList.toggle('selected', selectAll);
+      });
+    }
+
+    async function handleRoomRequestSubmit(e) {
+      e.preventDefault();
+      const date = document.getElementById('roomDateInput').value;
+      const category = document.getElementById('roomCategorySelect').value;
+      const headcount = parseInt(document.getElementById('roomHeadcount').value, 10);
+      const needAc = document.getElementById('roomNeedAc').checked;
+      const notes = document.getElementById('roomNotes').value.trim();
+
+      const checkedPeriods = [];
+      document.querySelectorAll('input[name="roomPeriodCheckbox"]:checked').forEach(cb => {
+        checkedPeriods.push(cb.value);
+      });
+
+      if (checkedPeriods.length === 0) {
+        showToast('請至少勾選一個借用節次！', 'error');
+        return;
+      }
+
+      try {
+        await api('submitRoomRequest', {
+          email: session.email,
+          name: session.name,
+          section: session.section,
+          date,
+          periods: checkedPeriods,
+          category,
+          headcount,
+          needAc,
+          notes
+        });
+
+        showToast('借用申請已成功送出！', 'success');
+        document.getElementById('roomNotes').value = '';
+        toggleAllPeriods(false);
+        loadMyRoomRequests();
+      } catch (err) {}
+    }
+
+    async function loadMyRoomRequests() {
+      if (!session) return;
+      const res = await api('getRoomRequests', { email: session.email });
+      const tbody = document.getElementById('myRoomRequestsTableBody');
+      const list = res.requests || [];
+      if (list.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:var(--text-muted);">目前無借用申請記錄</td></tr>';
+        return;
+      }
+
+      // My requests table: [Date, Weekday, Periods, Category, Status, Assigned Room]
+      tbody.innerHTML = list.map(item => `
+        <tr>
+          <td><strong>` + item.date + `</strong></td>
+          <td>週` + getWeekday(item.date) + `</td>
+          <td>` + item.periods.join(', ') + `節</td>
+          <td>` + item.category + `</td>
+          <td>` + getStatusBadgeHtml(item.status) + `</td>
+          <td><strong style="color:var(--primary);">` + (item.assignedRoom || '待分配') + `</strong></td>
+          <td style="font-size:0.86rem; color:#475569;">` + (item.notes || '-') + `</td>
+        </tr>
+      `).join('');
+    }
+
+    // ==========================================
+    // 請假 (ABSENCE)
+    // ==========================================
+    async function loadAbsenceTab() {
+      if (!session) return;
+      const res = await api('getPractices');
+      const practices = res.practices || [];
+      const myAbsencesRes = await api('getAbsences', { email: session.email });
+      const myAbsences = myAbsencesRes.absences || [];
+
+      // Cards for each upcoming practice with deadline, submit absence button
+      const container = document.getElementById('upcomingPracticesList');
+      if (practices.length === 0) {
+        container.innerHTML = '<p style="color:var(--text-muted); text-align:center; padding:20px;">目前尚無已排定之團練場次。</p>';
+      } else {
+        container.innerHTML = practices.map(p => {
+          const myRec = myAbsences.find(a => a.practiceId === p.id);
+          const isExpired = new Date(p.deadline) < new Date();
+
+          let statusHtml = '<span class="badge badge-approved" style="font-size:0.85rem;">✅ 出席預定</span>';
+          let actionBtnText = '📝 登記請假 / 遲到 / 早退';
+          if (myRec) {
+            statusHtml = '<span class="badge badge-rejected" style="font-size:0.85rem;">⚠️ 已登記：' + myRec.type + ' (' + myRec.reason + ')</span>';
+            actionBtnText = '✏️ 修改假單';
+          }
+
+          return `
+            <div class="practice-card">
+              <div class="practice-header">
+                <div>
+                  <div class="practice-date">🎺 ` + p.date + ` (週` + getWeekday(p.date) + `) ` + (p.startTime || '18:30') + ` ~ ` + (p.endTime || '21:30') + `</div>
+                  <div style="font-size:0.92rem; color:#475569; margin-top:4px;">📍 排練地點：` + p.location + `</div>
+                </div>
+                <div>` + statusHtml + `</div>
+              </div>
+
+              <div class="practice-notes">
+                <strong>🎵 練習曲目與備註：</strong>` + (p.notes || '全體合奏排練') + `
+              </div>
+
+              <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+                <span class="practice-deadline-badge">⏰ 請假截止時間：` + p.deadline + (isExpired ? ' (已逾期)' : '') + `</span>
+                <button type="button" class="btn btn-outline btn-sm" ` + (isExpired ? 'disabled' : '') + ` onclick="openSubmitAbsenceModal('` + p.id + `', '` + p.date + `')">
+                  ` + actionBtnText + `
+                </button>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      // My absence history below
+      const historyTbody = document.getElementById('myAbsenceHistoryTableBody');
+      if (myAbsences.length === 0) {
+        historyTbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:var(--text-muted);">無請假記錄，全勤出席！🎺</td></tr>';
+      } else {
+        historyTbody.innerHTML = myAbsences.map(a => `
+          <tr>
+            <td><strong>` + a.practiceDate + `</strong></td>
+            <td>週` + getWeekday(a.practiceDate) + `</td>
+            <td>` + (a.practiceNotes || '常態合奏') + `</td>
+            <td><span class="badge ` + (a.type === '請假' ? 'badge-rejected' : 'badge-noroom') + `">` + a.type + `</span></td>
+            <td>` + a.reason + `</td>
+            <td style="font-size:0.85rem; color:#64748b;">` + (a.createdAt || '-') + `</td>
+            <td><span class="badge badge-received">已備查</span></td>
+          </tr>
+        `).join('');
+      }
+    }
+
+    function openSubmitAbsenceModal(practiceId, dateStr) {
+      document.getElementById('absenceTargetPracticeId').value = practiceId;
+      document.getElementById('absencePracticeInfo').innerText = '排練場次：' + dateStr + ' (週' + getWeekday(dateStr) + ')';
+      document.getElementById('absenceReasonText').value = '';
+      document.getElementById('modalSubmitAbsence').classList.add('open');
+    }
+    function closeSubmitAbsenceModal() {
+      document.getElementById('modalSubmitAbsence').classList.remove('open');
+    }
+
+    async function handleAbsenceSubmit(e) {
+      e.preventDefault();
+      const practiceId = document.getElementById('absenceTargetPracticeId').value;
+      const type = document.querySelector('input[name="absenceTypeRadio"]:checked').value;
+      const reason = document.getElementById('absenceReasonText').value.trim();
+
+      try {
+        await api('submitAbsence', {
+          practiceId,
+          email: session.email,
+          name: session.name,
+          section: session.section,
+          instrument: session.instrument,
+          type,
+          reason
+        });
+
+        showToast('假單已登記備查！', 'success');
+        closeSubmitAbsenceModal();
+        loadAbsenceTab();
+      } catch (err) {}
+    }
+
+    // ==========================================
+    // 座位表 (VISUAL SVG SEATING CHART)
+    // ==========================================
+    let currentTemplates = [];
+
+    async function loadSeatingTab() {
+      const pRes = await api('getPractices');
+      const practices = pRes.practices || [];
+      const pSelect = document.getElementById('seatingPracticeSelect');
+      pSelect.innerHTML = practices.map(p => `
+        <option value="` + p.id + `">` + p.date + ` (週` + getWeekday(p.date) + `) - ` + p.location + `</option>
+      `).join('');
+
+      const tRes = await api('getSeatingTemplates');
+      currentTemplates = tRes.templates || [];
+      const tSelect = document.getElementById('seatingTemplateSelect');
+      tSelect.innerHTML = currentTemplates.map(t => `
+        <option value="` + t.id + `">` + t.name + `</option>
+      `).join('');
+
+      handleSeatingChange();
+    }
+
+    async function handleSeatingChange() {
+      const practiceId = document.getElementById('seatingPracticeSelect').value;
+      const templateId = document.getElementById('seatingTemplateSelect').value;
+
+      if (!practiceId || !templateId) return;
+
+      const layout = currentTemplates.find(t => t.id === templateId) || currentTemplates[0];
+      const absRes = await api('getAbsences', { practiceId });
+      const absences = absRes.absences || [];
+
+      // 計算各聲部缺席名冊
+      const absentBySection = {};
+      SECTION_DEFS.forEach(s => absentBySection[s.abbr] = []);
+      absences.forEach(a => {
+        if (!absentBySection[a.section]) absentBySection[a.section] = [];
+        absentBySection[a.section].push(a);
+      });
+
+      renderSeatingChart('seatingChartContainer', layout, absentBySection);
+      renderSeatingSectionSummary(layout, absentBySection);
+    }
+
+    /**
+     * SVG chart layout based on real band seating:
+     * - White room rectangle with two Door labels at top corners, Window at bottom
+     * - Conductor box in lower center
+     * - Sections as groups of circles labeled with section abbreviation
+     * - Section positions (in percentage of room area):
+     *   - Perc: left side, vertical
+     *   - Tpt: upper-center-left, horizontal
+     *   - Tbn: upper-center-right, horizontal  
+     *   - Hn: right side, vertical
+     *   - Cl (multiple rows): center-left area
+     *   - Fl: lower-center
+     *   - Sax: center
+     *   - Euph: lower-center-right
+     *   - Ob: lower-right
+     * - Filled dark blue circle = present, gray circle = absent (crossed)
+     */
+    function renderSeatingChart(containerId, layout, absentBySection = {}) {
+      const container = document.getElementById(containerId);
+      if (!container || !layout) return;
+
+      const width = 900;
+      const height = 620;
+
+      let svg = `
+        <svg class="seating-svg" viewBox="0 0 ` + width + ` ` + height + `" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <filter id="boxShadow" x="-5%" y="-5%" width="110%" height="110%">
+              <feDropShadow dx="0" dy="4" stdDeviation="6" flood-opacity="0.08"/>
+            </filter>
+            <linearGradient id="podiumGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#1a237e"/>
+              <stop offset="100%" stop-color="#283593"/>
+            </linearGradient>
+          </defs>
+
+          <!-- White room rectangle -->
+          <rect x="20" y="20" width="860" height="580" rx="16" fill="#ffffff" stroke="#cbd5e1" stroke-width="2.5" filter="url(#boxShadow)"/>
+
+          <!-- Two Door labels at top corners -->
+          <g transform="translate(45, 35)">
+            <rect x="0" y="0" width="110" height="34" rx="6" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.5"/>
+            <text x="55" y="22" font-size="13" font-weight="700" fill="#334155" text-anchor="middle">🚪 前門 Door 1</text>
+          </g>
+
+          <g transform="translate(745, 35)">
+            <rect x="0" y="0" width="110" height="34" rx="6" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.5"/>
+            <text x="55" y="22" font-size="13" font-weight="700" fill="#334155" text-anchor="middle">🚪 後門 Door 2</text>
+          </g>
+
+          <!-- Window at bottom -->
+          <g transform="translate(250, 575)">
+            <rect x="0" y="0" width="400" height="16" rx="8" fill="#e0f2fe" stroke="#38bdf8" stroke-width="1.5"/>
+            <text x="200" y="12" font-size="11" font-weight="700" fill="#0369a1" text-anchor="middle">🪟 對外窗 (Window Area)</text>
+          </g>
+
+          <!-- 聲學同心圓弧參考線 -->
+          <path d="M 120 480 A 350 350 0 0 1 780 480" fill="none" stroke="#f1f5f9" stroke-width="2.5" stroke-dasharray="6,6"/>
+          <path d="M 180 480 A 280 280 0 0 1 720 480" fill="none" stroke="#f1f5f9" stroke-width="2.5" stroke-dasharray="6,6"/>
+          <path d="M 250 480 A 200 200 0 0 1 650 480" fill="none" stroke="#f1f5f9" stroke-width="2" stroke-dasharray="4,4"/>
+
+          <!-- Conductor box in lower center -->
+          <g transform="translate(400, 485)">
+            <rect x="0" y="0" width="100" height="50" rx="8" fill="url(#podiumGrad)" stroke="#ffd700" stroke-width="2.5"/>
+            <text x="50" y="25" font-size="14" font-weight="800" fill="#ffd700" text-anchor="middle">🎼 指揮臺</text>
+            <text x="50" y="42" font-size="10" font-weight="600" fill="#ffffff" text-anchor="middle">CONDUCTOR</text>
+          </g>
+      `;
+
+      // 各聲部配置群組
+      SECTION_DEFS.forEach(sec => {
+        const conf = (layout.sections && layout.sections[sec.id]) || {
+          x: sec.x,
+          y: sec.y,
+          count: sec.defaultCount,
+          dir: sec.dir
+        };
+
+        const cx = (conf.x / 100) * width;
+        const cy = (conf.y / 100) * height;
+        const count = parseInt(conf.count, 10) || sec.defaultCount;
+        const absentList = absentBySection[sec.abbr] || [];
+        const absentCount = absentList.length;
+        const presentCount = Math.max(0, count - absentCount);
+
+        // Sections as groups of circles labeled with section abbreviation
+        svg += `
+          <g class="section-group" transform="translate(` + cx + `, ` + cy + `)">
+            <rect x="-45" y="-36" width="90" height="22" rx="11" fill="#e8eaf6" stroke="#c5cae9" stroke-width="1.2"/>
+            <text x="0" y="-21" font-size="11" font-weight="700" fill="#1a237e" text-anchor="middle">
+              ` + sec.abbr + ` (` + presentCount + `/` + count + `)
+            </text>
+        `;
+
+        const r = 13;
+        for (let i = 0; i < count; i++) {
+          let dotX = 0;
+          let dotY = 0;
+
+          if (conf.dir === 'col') {
+            // Perc left vertical, Hn right vertical
+            dotX = 0;
+            dotY = i * 30;
+          } else if (conf.dir === 'row') {
+            // Tpt upper-center-left, Tbn upper-center-right, Euph, Ob horizontal
+            const totalWidth = (count - 1) * 30;
+            dotX = - (totalWidth / 2) + i * 30;
+            dotY = 0;
+          } else {
+            // Cl multiple rows center-left, Fl lower-center, Sax center
+            if (count > 5) {
+              const row = Math.floor(i / 4);
+              const col = i % 4;
+              dotX = (col - 1.5) * 28;
+              dotY = row * 28;
+            } else {
+              const totalW = (count - 1) * 28;
+              dotX = - (totalW / 2) + i * 28;
+              dotY = Math.abs(dotX) * 0.15;
+            }
+          }
+
+          // Filled dark blue circle = present, gray circle = absent (crossed)
+          const isAbsent = i >= presentCount;
+          const absentInfo = isAbsent && absentList[i - presentCount];
+          const tooltip = absentInfo 
+            ? absentInfo.name + ` (` + sec.name + `) - 請假 (` + (absentInfo.reason || absentInfo.type) + `)`
+            : sec.name + ` ` + (i + 1) + `號席位 - 出席`;
+
+          if (!isAbsent) {
+            svg += `
+              <g transform="translate(` + dotX + `, ` + dotY + `)" cursor="pointer">
+                <title>` + tooltip + `</title>
+                <circle cx="0" cy="0" r="` + r + `" fill="#1a237e" stroke="#ffd700" stroke-width="1.8"/>
+                <text x="0" y="4" font-size="10" font-weight="700" fill="#ffffff" text-anchor="middle">` + (i + 1) + `</text>
+              </g>
+            `;
+          } else {
+            svg += `
+              <g transform="translate(` + dotX + `, ` + dotY + `)" cursor="pointer">
+                <title>` + tooltip + `</title>
+                <circle cx="0" cy="0" r="` + r + `" fill="#b0bec5" stroke="#78909c" stroke-width="1.8"/>
+                <line x1="-7" y1="-7" x2="7" y2="7" stroke="#e53935" stroke-width="2.5" stroke-linecap="round"/>
+                <line x1="-7" y1="7" x2="7" y2="-7" stroke="#e53935" stroke-width="2.5" stroke-linecap="round"/>
+              </g>
+            `;
+          }
+        }
+
+        svg += `</g>`;
+      });
+
+      svg += `</svg>`;
+      container.innerHTML = svg;
+    }
+
+    function renderSeatingSectionSummary(layout, absentBySection) {
+      const summaryContainer = document.getElementById('seatingSectionSummary');
+      if (!summaryContainer) return;
+
+      summaryContainer.innerHTML = SECTION_DEFS.map(s => {
+        const conf = (layout.sections && layout.sections[s.id]) || { count: s.defaultCount };
+        const total = parseInt(conf.count, 10) || s.defaultCount;
+        const absent = (absentBySection[s.abbr] || []).length;
+        const present = Math.max(0, total - absent);
+        const rate = Math.round((present / total) * 100);
+
+        return `
+          <div style="background:#ffffff; border:1px solid var(--border); border-radius:var(--radius-md); padding:10px 14px; box-shadow:var(--shadow-sm);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+              <span style="font-weight:700; color:var(--primary);">` + s.name + ` (` + s.abbr + `)</span>
+              <span style="font-weight:700; color:` + (rate >= 80 ? '#15803d' : '#b91c1c') + `;">` + present + `/` + total + `</span>
+            </div>
+            <div style="background:#e2e8f0; height:6px; border-radius:3px; overflow:hidden;">
+              <div style="background:` + (rate >= 80 ? '#22c55e' : '#ef4444') + `; height:100%; width:` + rate + `%;"></div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // ==========================================
+    // 幹部後台：1. 借教室管理
+    // ==========================================
+    let allRoomRequestsCache = [];
+
+    async function renderAdminRoomTable() {
+      const res = await api('getRoomRequests', { all: true });
+      allRoomRequestsCache = res.requests || [];
+
+      const statusFilter = document.getElementById('adminRoomFilterStatus').value;
+      const dateFilter = document.getElementById('adminRoomFilterDate').value;
+      const tbody = document.getElementById('adminRoomTableBody');
+
+      let list = allRoomRequestsCache;
+      if (statusFilter !== 'ALL') {
+        list = list.filter(r => r.status === statusFilter);
+      }
+      if (dateFilter) {
+        list = list.filter(r => r.date === dateFilter);
+      }
+
+      if (list.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="12" style="text-align:center; color:var(--text-muted);">無符合條件之借教室申請記錄</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = list.map(item => `
+        <tr>
+          <td><code>` + item.id + `</code></td>
+          <td><strong>` + item.name + `</strong></td>
+          <td>` + item.section + `</td>
+          <td>` + item.date + `</td>
+          <td>週` + getWeekday(item.date) + `</td>
+          <td>` + item.periods.join(', ') + `節</td>
+          <td>` + item.category + `</td>
+          <td>` + (item.needAc ? '❄️是' : '否') + `</td>
+          <td>
+            <select class="form-control" style="padding:4px 8px; font-size:0.85rem;" id="adminRoomStatus_` + item.id + `">
+              <option value="已收件" ` + (item.status === '已收件' ? 'selected' : '') + `>已收件</option>
+              <option value="已通過" ` + (item.status === '已通過' ? 'selected' : '') + `>已通過</option>
+              <option value="未通過" ` + (item.status === '未通過' ? 'selected' : '') + `>未通過</option>
+              <option value="無教室" ` + (item.status === '無教室' ? 'selected' : '') + `>無教室</option>
+            </select>
+          </td>
+          <td>
+            <input type="text" class="form-control" style="padding:4px 8px; font-size:0.85rem; width:110px;" id="adminRoomAssigned_` + item.id + `" value="` + (item.assignedRoom || '') + `" placeholder="如：B201">
+          </td>
+          <td style="font-size:0.82rem; color:#64748b; max-width:140px;">` + (item.notes || '-') + `</td>
+          <td>
+            <button class="btn btn-primary btn-sm" onclick="saveAdminRoomRow('` + item.id + `')">儲存</button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    async function saveAdminRoomRow(id) {
+      const status = document.getElementById('adminRoomStatus_' + id).value;
+      const assignedRoom = document.getElementById('adminRoomAssigned_' + id).value.trim();
+
+      try {
+        await api('updateRoomRequest', { id, status, assignedRoom });
+        showToast('申請編號 ' + id + ' 審查結果已更新！', 'success');
+        renderAdminRoomTable();
+      } catch (err) {}
+    }
+
+    function exportRoomRequestsCSV() {
+      if (!allRoomRequestsCache || allRoomRequestsCache.length === 0) {
+        showToast('目前無資料可供匯出', 'info');
+        return;
+      }
+      const headers = ['申請ID', '姓名', '聲部', '日期', '星期', '節次', '類別', '人數', '冷氣', '審核狀態', '分配教室', '備註'];
+      const rows = allRoomRequestsCache.map(r => [
+        r.id,
+        r.name,
+        r.section,
+        r.date,
+        '週' + getWeekday(r.date),
+        '"' + r.periods.join(';') + '"',
+        r.category,
+        r.headcount,
+        r.needAc ? '是' : '否',
+        r.status,
+        r.assignedRoom || '',
+        '"' + (r.notes || '').replace(/"/g, '""') + '"'
+      ]);
+
+      downloadCSV('東吳管樂社_借教室申請清單_' + new Date().toISOString().split('T')[0] + '.csv', headers, rows);
+    }
+
+    // ==========================================
+    // 幹部後台：2. 團練管理
+    // ==========================================
+    let allPracticesCache = [];
+
+    async function renderAdminPracticesTable() {
+      const res = await api('getPractices');
+      allPracticesCache = res.practices || [];
+      const tbody = document.getElementById('adminPracticesTableBody');
+
+      if (allPracticesCache.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; color:var(--text-muted);">尚無團練場次，請點擊上方按鈕建立</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = allPracticesCache.map(p => `
+        <tr>
+          <td><code>` + p.id + `</code></td>
+          <td><strong>` + p.date + `</strong></td>
+          <td>週` + getWeekday(p.date) + `</td>
+          <td>` + (p.startTime || '18:30') + ` - ` + (p.endTime || '21:30') + `</td>
+          <td>` + p.location + `</td>
+          <td><span style="color:#b45309; font-weight:600;">` + p.deadline + `</span></td>
+          <td style="font-size:0.86rem; color:#475569;">` + (p.notes || '-') + `</td>
+          <td>
+            <div style="display:flex; gap:6px;">
+              <button class="btn btn-secondary btn-sm" onclick="editPracticeModal('` + p.id + `')">編輯</button>
+              <button class="btn btn-danger btn-sm" onclick="deletePracticeConfirm('` + p.id + `')">刪除</button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function openPracticeModal(editData = null) {
+      const modal = document.getElementById('modalPractice');
+      const title = document.getElementById('practiceModalTitle');
+      if (editData) {
+        title.innerText = '✏️ 編輯團練場次 (' + editData.id + ')';
+        document.getElementById('practiceEditId').value = editData.id;
+        document.getElementById('pracDateInput').value = editData.date;
+        document.getElementById('pracStartTime').value = editData.startTime || '18:30';
+        document.getElementById('pracEndTime').value = editData.endTime || '21:30';
+        document.getElementById('pracLocationInput').value = editData.location;
+        document.getElementById('pracDeadlineInput').value = editData.deadline;
+        document.getElementById('pracNotesInput').value = editData.notes || '';
+      } else {
+        title.innerText = '➕ 新增團練場次';
+        document.getElementById('practiceEditId').value = '';
+        document.getElementById('practiceForm').reset();
+        document.getElementById('pracStartTime').value = '18:30';
+        document.getElementById('pracEndTime').value = '21:30';
+      }
+      modal.classList.add('open');
+    }
+    function closePracticeModal() {
+      document.getElementById('modalPractice').classList.remove('open');
+    }
+
+    function editPracticeModal(id) {
+      const p = allPracticesCache.find(x => x.id === id);
+      if (p) openPracticeModal(p);
+    }
+
+    async function handlePracticeSubmit(e) {
+      e.preventDefault();
+      const id = document.getElementById('practiceEditId').value;
+      const date = document.getElementById('pracDateInput').value;
+      const startTime = document.getElementById('pracStartTime').value;
+      const endTime = document.getElementById('pracEndTime').value;
+      const location = document.getElementById('pracLocationInput').value.trim();
+      const deadline = document.getElementById('pracDeadlineInput').value;
+      const notes = document.getElementById('pracNotesInput').value.trim();
+
+      try {
+        await api('submitPractice', { id, date, startTime, endTime, location, deadline, notes });
+        showToast('團練場次已成功儲存！', 'success');
+        closePracticeModal();
+        renderAdminPracticesTable();
+      } catch (err) {}
+    }
+
+    async function deletePracticeConfirm(id) {
+      if (!confirm('確定要刪除場次 ' + id + ' 嗎？相關假單亦將受到影響。')) return;
+      try {
+        await api('deletePractice', { id });
+        showToast('該團練場次已刪除', 'info');
+        renderAdminPracticesTable();
+      } catch (err) {}
+    }
+
+    // ==========================================
+    // 幹部後台：3. 請假統計
+    // ==========================================
+    let currentAdminAbsences = [];
+
+    async function renderAdminAbsenceStats() {
+      const pRes = await api('getPractices');
+      const practices = pRes.practices || [];
+      const select = document.getElementById('adminAbsencePracticeSelect');
+
+      if (practices.length === 0) {
+        select.innerHTML = '<option value="">無團練場次</option>';
+        return;
+      }
+
+      if (select.children.length !== practices.length) {
+        select.innerHTML = practices.map(p => `
+          <option value="` + p.id + `">` + p.date + ` (週` + getWeekday(p.date) + `) - ` + p.location + `</option>
+        `).join('');
+      }
+
+      const practiceId = select.value || (practices[0] && practices[0].id);
+      if (!practiceId) return;
+
+      const memRes = await api('getMembers');
+      const allMembers = memRes.members || [];
+      const totalMembers = allMembers.length;
+
+      const absRes = await api('getAbsences', { practiceId });
+      currentAdminAbsences = absRes.absences || [];
+      const absentCount = currentAdminAbsences.length;
+      const presentCount = Math.max(0, totalMembers - absentCount);
+      const rate = totalMembers > 0 ? Math.round((presentCount / totalMembers) * 100) : 0;
+
+      // Summary cards (total/absent/present/rate)
+      document.getElementById('adminStatTotalMembers').innerText = totalMembers + ' 人';
+      document.getElementById('adminStatPresent').innerText = presentCount + ' 人';
+      document.getElementById('adminStatAbsent').innerText = absentCount + ' 人';
+      document.getElementById('adminStatRate').innerText = rate + '%';
+
+      // By-section breakdown
+      const grid = document.getElementById('adminSectionBreakdownGrid');
+      grid.innerHTML = SECTION_DEFS.map(sec => {
+        const secMembers = allMembers.filter(m => m.section === sec.abbr);
+        const secTotal = secMembers.length || sec.defaultCount;
+        const secAbsent = currentAdminAbsences.filter(a => a.section === sec.abbr).length;
+        const secPresent = Math.max(0, secTotal - secAbsent);
+        const secRate = secTotal > 0 ? Math.round((secPresent / secTotal) * 100) : 0;
+
+        return `
+          <div style="background:#ffffff; border:1px solid var(--border); border-radius:var(--radius-md); padding:12px; box-shadow:var(--shadow-sm);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+              <span style="font-weight:700; color:var(--primary);">` + sec.name + ` (` + sec.abbr + `)</span>
+              <span style="font-size:0.9rem; font-weight:700; color:` + (secRate >= 80 ? '#15803d' : '#b91c1c') + `;">` + secPresent + `/` + secTotal + ` 人 (` + secRate + `%)</span>
+            </div>
+            <div style="background:#e2e8f0; height:8px; border-radius:4px; overflow:hidden;">
+              <div style="background:` + (secRate >= 80 ? '#22c55e' : '#ef4444') + `; height:100%; width:` + secRate + `%;"></div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      // Detail table
+      const tbody = document.getElementById('adminAbsenceDetailTableBody');
+      if (currentAdminAbsences.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:var(--text-muted);">本場次目前全員出席，無人請假！🎺</td></tr>';
+      } else {
+        tbody.innerHTML = currentAdminAbsences.map(a => `
+          <tr>
+            <td><strong>` + a.name + `</strong></td>
+            <td>` + a.section + `</td>
+            <td>` + (a.instrument || '-') + `</td>
+            <td><span class="badge ` + (a.type === '請假' ? 'badge-rejected' : 'badge-noroom') + `">` + a.type + `</span></td>
+            <td>` + a.reason + `</td>
+            <td style="font-size:0.85rem; color:#64748b;">` + (a.createdAt || '-') + `</td>
+          </tr>
+        `).join('');
+      }
+    }
+
+    function exportAbsenceCSV() {
+      if (!currentAdminAbsences || currentAdminAbsences.length === 0) {
+        showToast('本場次無請假名單可匯出', 'info');
+        return;
+      }
+      const headers = ['姓名', '聲部', '樂器', '假別', '請假事由', '送出時間'];
+      const rows = currentAdminAbsences.map(a => [
+        a.name,
+        a.section,
+        a.instrument || '',
+        a.type,
+        '"' + (a.reason || '').replace(/"/g, '""') + '"',
+        a.createdAt || ''
+      ]);
+
+      downloadCSV('東吳管樂社_團練請假名單_' + new Date().toISOString().split('T')[0] + '.csv', headers, rows);
+    }
+
+    // ==========================================
+    // 幹部後台：4. 座位表設定 (CRUD)
+    // ==========================================
+    let adminTemplates = [];
+
+    async function loadAdminSeatingTab() {
+      const res = await api('getSeatingTemplates');
+      adminTemplates = res.templates || [];
+      const select = document.getElementById('adminSeatingTemplateSelect');
+      select.innerHTML = adminTemplates.map(t => `<option value="` + t.id + `">` + t.name + `</option>`).join('');
+
+      loadAdminSeatingTemplateFields();
+    }
+
+    function loadAdminSeatingTemplateFields() {
+      const select = document.getElementById('adminSeatingTemplateSelect');
+      const template = adminTemplates.find(t => t.id === select.value) || adminTemplates[0];
+      if (!template) return;
+
+      document.getElementById('adminSeatingTemplateName').value = template.name;
+
+      // Layout templates CRUD. For each template, set section positions (x%, y%) and default member count for each of: Cl, Fl, Ob, Sax, Hn, Tpt, Tbn, Euph, Perc
+      const tbody = document.getElementById('adminSeatingConfigTableBody');
+      tbody.innerHTML = SECTION_DEFS.map(sec => {
+        const conf = (template.sections && template.sections[sec.id]) || {
+          x: sec.x,
+          y: sec.y,
+          count: sec.defaultCount,
+          dir: sec.dir
+        };
+
+        return `
+          <tr>
+            <td><strong>` + sec.abbr + `</strong></td>
+            <td>` + sec.name + ` (` + sec.en + `)</td>
+            <td>
+              <input type="number" min="0" max="100" class="form-control" style="width:90px;" id="secX_` + sec.id + `" value="` + conf.x + `" onchange="previewAdminSeatingChart()">
+            </td>
+            <td>
+              <input type="number" min="0" max="100" class="form-control" style="width:90px;" id="secY_` + sec.id + `" value="` + conf.y + `" onchange="previewAdminSeatingChart()">
+            </td>
+            <td>
+              <input type="number" min="1" max="50" class="form-control" style="width:90px;" id="secCount_` + sec.id + `" value="` + conf.count + `" onchange="previewAdminSeatingChart()">
+            </td>
+            <td>
+              <select class="form-control" style="width:110px;" id="secDir_` + sec.id + `" onchange="previewAdminSeatingChart()">
+                <option value="arc" ` + (conf.dir === 'arc' ? 'selected' : '') + `>弧形 (Arc)</option>
+                <option value="row" ` + (conf.dir === 'row' ? 'selected' : '') + `>橫向 (Row)</option>
+                <option value="col" ` + (conf.dir === 'col' ? 'selected' : '') + `>垂直 (Col)</option>
+              </select>
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      previewAdminSeatingChart();
+    }
+
+    function getAdminCurrentEditingTemplate() {
+      const select = document.getElementById('adminSeatingTemplateSelect');
+      const name = document.getElementById('adminSeatingTemplateName').value.trim();
+      const sections = {};
+
+      SECTION_DEFS.forEach(sec => {
+        sections[sec.id] = {
+          x: parseFloat(document.getElementById('secX_' + sec.id).value) || sec.x,
+          y: parseFloat(document.getElementById('secY_' + sec.id).value) || sec.y,
+          count: parseInt(document.getElementById('secCount_' + sec.id).value, 10) || sec.defaultCount,
+          dir: document.getElementById('secDir_' + sec.id).value || sec.dir
+        };
+      });
+
+      return {
+        id: select.value || 'layout_custom_' + Date.now(),
+        name: name || '未命名編制',
+        sections
+      };
+    }
+
+    function previewAdminSeatingChart() {
+      const template = getAdminCurrentEditingTemplate();
+      renderSeatingChart('adminSeatingPreviewContainer', template, {});
+    }
+
+    async function saveAdminSeatingTemplate() {
+      const template = getAdminCurrentEditingTemplate();
+      try {
+        await api('saveSeatingTemplate', { template });
+        showToast('座位表模板「' + template.name + '」已儲存！', 'success');
+        loadAdminSeatingTab();
+      } catch (err) {}
+    }
+
+    async function addNewSeatingTemplatePrompt() {
+      const name = prompt('請輸入新座位模板名稱：', '新室內樂/重奏編制');
+      if (!name) return;
+      const newTemplate = {
+        id: 'layout_' + Date.now(),
+        name,
+        sections: {}
+      };
+      SECTION_DEFS.forEach(sec => {
+        newTemplate.sections[sec.id] = {
+          x: sec.x,
+          y: sec.y,
+          count: sec.defaultCount,
+          dir: sec.dir
+        };
+      });
+
+      try {
+        await api('saveSeatingTemplate', { template: newTemplate });
+        showToast('已新增編制模板！', 'success');
+        await loadAdminSeatingTab();
+        document.getElementById('adminSeatingTemplateSelect').value = newTemplate.id;
+        loadAdminSeatingTemplateFields();
+      } catch (err) {}
+    }
+
+    async function deleteCurrentSeatingTemplate() {
+      const select = document.getElementById('adminSeatingTemplateSelect');
+      if (adminTemplates.length <= 1) {
+        showToast('至少需保留一個座位表編制模板！', 'error');
+        return;
+      }
+      if (!confirm('確定要刪除模板「' + select.options[select.selectedIndex].text + '」嗎？')) return;
+
+      try {
+        await api('deleteSeatingTemplate', { id: select.value });
+        showToast('模板已刪除', 'info');
+        loadAdminSeatingTab();
+      } catch (err) {}
+    }
+
+    // ==========================================
+    // 幹部後台：5. 社員管理
+    // ==========================================
+    let allMembersCache = [];
+
+    async function renderAdminMembersTable() {
+      const res = await api('getMembers');
+      allMembersCache = res.members || [];
+      const search = (document.getElementById('adminMemberSearchInput').value || '').toLowerCase();
+      const tbody = document.getElementById('adminMembersTableBody');
+
+      let list = allMembersCache;
+      if (search) {
+        list = list.filter(m => 
+          m.name.toLowerCase().includes(search) || 
+          m.email.toLowerCase().includes(search) || 
+          (m.instrument || '').toLowerCase().includes(search) ||
+          m.section.toLowerCase().includes(search)
+        );
+      }
+
+      if (list.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:var(--text-muted);">無符合條件之社員</td></tr>';
+        return;
+      }
+
+      // Members table, change role, reset password to 0000, add new member
+      tbody.innerHTML = list.map(m => `
+        <tr>
+          <td><strong>` + m.name + `</strong></td>
+          <td>` + m.email + `</td>
+          <td><span class="badge" style="background:#e8eaf6; color:#1a237e;">` + m.section + `</span></td>
+          <td>` + m.instrument + `</td>
+          <td>
+            <select class="form-control" style="width:130px; padding:4px 8px; font-size:0.85rem;" onchange="changeMemberRole('` + m.email + `', this.value)">
+              <option value="member" ` + (m.role === 'member' ? 'selected' : '') + `>一般社員</option>
+              <option value="admin" ` + (m.role === 'admin' ? 'selected' : '') + `>幹部 Admin</option>
+            </select>
+          </td>
+          <td>
+            ` + (m.isDefaultPassword ? '<span class="badge badge-rejected">預設 0000</span>' : '<span class="badge badge-approved">已變更密碼</span>') + `
+          </td>
+          <td>
+            <button class="btn btn-secondary btn-sm" onclick="resetMemberPasswordConfirm('` + m.email + `', '` + m.name + `')">
+              🔑 重設為 0000
+            </button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    async function changeMemberRole(email, newRole) {
+      try {
+        await api('updateMemberRole', { email, role: newRole });
+        showToast('社員角色身分已變更！', 'success');
+        if (session.email === email) {
+          session.role = newRole;
+          localStorage.setItem('band_session', JSON.stringify(session));
+          setupUserSessionUI();
+        }
+      } catch (err) {}
+    }
+
+    async function resetMemberPasswordConfirm(email, name) {
+      if (!confirm('確定要將社員「' + name + '」之密碼重設為 0000 嗎？')) return;
+      try {
+        await api('resetPassword', { email });
+        showToast('「' + name + '」的密碼已重設為 0000！', 'success');
+        renderAdminMembersTable();
+      } catch (err) {}
+    }
+
+    function openAddMemberModal() {
+      document.getElementById('addMemberForm').reset();
+      document.getElementById('modalAddMember').classList.add('open');
+    }
+    function closeAddMemberModal() {
+      document.getElementById('modalAddMember').classList.remove('open');
+    }
+
+    async function handleAddMemberSubmit(e) {
+      e.preventDefault();
+      const name = document.getElementById('newMemberName').value.trim();
+      const email = document.getElementById('newMemberEmail').value.trim();
+      const section = document.getElementById('newMemberSection').value;
+      const instrument = document.getElementById('newMemberInstrument').value.trim();
+      const role = document.getElementById('newMemberRole').value;
+
+      try {
+        await api('addMember', { name, email, section, instrument, role });
+        showToast('已成功新增社員！', 'success');
+        closeAddMemberModal();
+        renderAdminMembersTable();
+      } catch (err) {}
+    }
+
+    // ==========================================
+    // 幹部後台：6. 系統設定 (假日節次設定)
+    // ==========================================
+    async function renderAdminSettingsTab() {
+      const res = await api('getSettings');
+      cachedSettings = res.settings;
+
+      const satGrid = document.getElementById('settingsSatPeriodsGrid');
+      const sunGrid = document.getElementById('settingsSunPeriodsGrid');
+      satGrid.innerHTML = '';
+      sunGrid.innerHTML = '';
+
+      const satChecked = cachedSettings.satPeriods || [];
+      const sunChecked = cachedSettings.sunPeriods || [];
+
+      ALL_PERIOD_KEYS.forEach(key => {
+        const label = PERIOD_LABELS[key] || key + '節';
+
+        // Saturday available periods (checkboxes)
+        const satChip = document.createElement('label');
+        satChip.className = 'period-chip ' + (satChecked.includes(key) ? 'selected' : '');
+        satChip.innerHTML = `
+          <input type="checkbox" name="setSatPeriod" value="` + key + `" ` + (satChecked.includes(key) ? 'checked' : '') + ` onchange="this.parentElement.classList.toggle('selected', this.checked)">
+          <span>` + label + `</span>
+        `;
+        satGrid.appendChild(satChip);
+
+        // Sunday available periods (checkboxes)
+        const sunChip = document.createElement('label');
+        sunChip.className = 'period-chip ' + (sunChecked.includes(key) ? 'selected' : '');
+        sunChip.innerHTML = `
+          <input type="checkbox" name="setSunPeriod" value="` + key + `" ` + (sunChecked.includes(key) ? 'checked' : '') + ` onchange="this.parentElement.classList.toggle('selected', this.checked)">
+          <span>` + label + `</span>
+        `;
+        sunGrid.appendChild(sunChip);
+      });
+    }
+
+    function toggleWeekendPeriods(day, selectAll) {
+      const name = day === 'sat' ? 'setSatPeriod' : 'setSunPeriod';
+      document.querySelectorAll('input[name="' + name + '"]').forEach(cb => {
+        cb.checked = selectAll;
+        cb.parentElement.classList.toggle('selected', selectAll);
+      });
+    }
+
+    async function saveSystemSettings() {
+      const satPeriods = [];
+      document.querySelectorAll('input[name="setSatPeriod"]:checked').forEach(cb => satPeriods.push(cb.value));
+      const sunPeriods = [];
+      document.querySelectorAll('input[name="setSunPeriod"]:checked').forEach(cb => sunPeriods.push(cb.value));
+
+      try {
+        await api('saveSettings', { satPeriods, sunPeriods });
+        cachedSettings = { satPeriods, sunPeriods };
+        showToast('系統假日開放借用節次已儲存！', 'success');
+      } catch (err) {}
+    }
+
+    function initAdminTab() {
+      showAdminTab('adminRoom');
+    }
+
+    // ==========================================
+    // 個人檔案與修改密碼 MODALS
+    // ==========================================
+    let isForcedPasswordChange = false;
+
+    function openChangePasswordModal(forced = false) {
+      isForcedPasswordChange = forced;
+      document.getElementById('changePasswordForm').reset();
+      const modal = document.getElementById('modalChangePassword');
+      const notice = document.getElementById('changePwForcedNotice');
+      const cancelBtn = document.getElementById('cancelChangePwBtn');
+      const closeBtn = document.getElementById('closeChangePwBtn');
+
+      if (forced) {
+        notice.style.display = 'block';
+        cancelBtn.style.display = 'none';
+        closeBtn.style.display = 'none';
+      } else {
+        notice.style.display = 'none';
+        cancelBtn.style.display = 'inline-block';
+        closeBtn.style.display = 'inline-block';
+      }
+
+      modal.classList.add('open');
+    }
+
+    function closeChangePasswordModal() {
+      if (isForcedPasswordChange) {
+        showToast('首次登入請務必完成密碼變更！', 'error');
+        return;
+      }
+      document.getElementById('modalChangePassword').classList.remove('open');
+    }
+
+    async function handleChangePasswordSubmit(e) {
+      e.preventDefault();
+      const oldPassword = document.getElementById('pwOldInput').value;
+      const newPassword = document.getElementById('pwNewInput').value;
+      const confirmPassword = document.getElementById('pwConfirmInput').value;
+
+      if (newPassword !== confirmPassword) {
+        showToast('新密碼兩次輸入不相符！', 'error');
+        return;
+      }
+      if (newPassword === '0000') {
+        showToast('新密碼不可繼續使用預設密碼 0000！', 'error');
+        return;
+      }
+
+      try {
+        await api('changePassword', {
+          email: session.email,
+          oldPassword,
+          newPassword
+        });
+
+        showToast('密碼已成功修改！', 'success');
+        isForcedPasswordChange = false;
+        document.getElementById('modalChangePassword').classList.remove('open');
+      } catch (err) {}
+    }
+
+    function openProfileModal() {
+      if (!session) return;
+      document.getElementById('profNameInput').value = session.name;
+      document.getElementById('profEmailInput').value = session.email;
+      document.getElementById('profSectionSelect').value = session.section;
+      document.getElementById('profInstrumentInput').value = session.instrument;
+      document.getElementById('profRoleInput').value = session.role === 'admin' ? '幹部管理員 (Admin)' : '一般社員 (Member)';
+      document.getElementById('profNotifyEmail').checked = !!session.notifyEmail;
+
+      document.getElementById('modalProfile').classList.add('open');
+    }
+    function closeProfileModal() {
+      document.getElementById('modalProfile').classList.remove('open');
+    }
+
+    async function handleProfileSubmit(e) {
+      e.preventDefault();
+      const name = document.getElementById('profNameInput').value.trim();
+      const section = document.getElementById('profSectionSelect').value;
+      const instrument = document.getElementById('profInstrumentInput').value.trim();
+      const notifyEmail = document.getElementById('profNotifyEmail').checked;
+
+      try {
+        await api('updateProfile', {
+          email: session.email,
+          name,
+          section,
+          instrument,
+          notifyEmail
+        });
+
+        session.name = name;
+        session.section = section;
+        session.instrument = instrument;
+        session.notifyEmail = notifyEmail;
+        localStorage.setItem('band_session', JSON.stringify(session));
+
+        setupUserSessionUI();
+        showToast('個人資料已儲存！', 'success');
+        closeProfileModal();
+        loadDashboard();
+      } catch (err) {}
+    }
+
+    // ==========================================
+    // CSV 匯出工具
+    // ==========================================
+    function downloadCSV(filename, headers, rows) {
+      let csvContent = '\uFEFF'; // UTF-8 BOM
+      csvContent += headers.join(',') + '\r\n';
+      rows.forEach(r => {
+        csvContent += r.join(',') + '\r\n';
+      });
+
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.setAttribute('download', filename);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      showToast('已開始下載 ' + filename, 'success');
+    }
+
+    // ==========================================
+    // 本機端 MOCK API 引擎 (LocalStorage 完整實作)
+    // ==========================================
+    function initMockDatabase() {
+      if (!localStorage.getItem('band_mock_users')) {
+        const defaultUsers = [
+          { email: 'admin@scu.edu.tw', password: '0000', name: '廖社長', instrument: '中音薩克斯風', section: 'Sax.', role: 'admin', notifyEmail: true, isDefaultPassword: true },
+          { email: 'member@scu.edu.tw', password: '0000', name: '陳小笛', instrument: '長笛', section: 'Fl.', role: 'member', notifyEmail: true, isDefaultPassword: true },
+          { email: 'cl_wang@scu.edu.tw', password: '0000', name: '王單簧', instrument: '降B調單簧管', section: 'Cl.', role: 'member', notifyEmail: true, isDefaultPassword: true },
+          { email: 'tpt_chang@scu.edu.tw', password: '0000', name: '張小號', instrument: '小號', section: 'Tpt.', role: 'member', notifyEmail: true, isDefaultPassword: true },
+          { email: 'tbn_lee@scu.edu.tw', password: '0000', name: '李長號', instrument: '次中音長號', section: 'Tbn.', role: 'member', notifyEmail: true, isDefaultPassword: true },
+          { email: 'hn_lin@scu.edu.tw', password: '0000', name: '林法國', instrument: '雙排法國號', section: 'Hn.', role: 'member', notifyEmail: true, isDefaultPassword: true },
+          { email: 'euph_wu@scu.edu.tw', password: '0000', name: '吳低音', instrument: '上低音號', section: 'Euph.', role: 'member', notifyEmail: true, isDefaultPassword: true },
+          { email: 'ob_chen@scu.edu.tw', password: '0000', name: '鄭雙簧', instrument: '雙簧管', section: 'Ob.', role: 'member', notifyEmail: true, isDefaultPassword: true },
+          { email: 'perc_kuo@scu.edu.tw', password: '0000', name: '郭打擊', instrument: '定音鼓/小鼓', section: 'Perc.', role: 'member', notifyEmail: true, isDefaultPassword: true }
+        ];
+        localStorage.setItem('band_mock_users', JSON.stringify(defaultUsers));
+      }
+
+      if (!localStorage.getItem('band_mock_practices')) {
+        const defaultPractices = [
+          {
+            id: 'prac_20261021',
+            date: '2026-10-21',
+            startTime: '18:30',
+            endTime: '21:30',
+            location: '樂活棟 B201 團練室',
+            deadline: '2026-10-20T23:59',
+            notes: '第15週定期合奏：《管樂交響曲》第一樂章、慶典序曲細部合奏。'
+          },
+          {
+            id: 'prac_20261028',
+            date: '2026-10-28',
+            startTime: '18:30',
+            endTime: '21:30',
+            location: '樂活棟 B201 團練室',
+            deadline: '2026-10-27T23:59',
+            notes: '期中音樂會第一次聯合彩排，全體團員請提早15分鐘到位。'
+          },
+          {
+            id: 'prac_20261104',
+            date: '2026-11-04',
+            startTime: '18:30',
+            endTime: '21:30',
+            location: '美育中心 音樂廳舞台',
+            deadline: '2026-11-03T23:59',
+            notes: '大團正式公演彩排與走位試音。'
+          }
+        ];
+        localStorage.setItem('band_mock_practices', JSON.stringify(defaultPractices));
+      }
+
+      if (!localStorage.getItem('band_mock_rooms')) {
+        const defaultRooms = [
+          {
+            id: 'REQ-101',
+            email: 'member@scu.edu.tw',
+            name: '陳小笛',
+            section: 'Fl.',
+            date: '2026-10-19',
+            periods: ['7', '8'],
+            category: '木管組練',
+            headcount: 4,
+            needAc: true,
+            status: '已通過',
+            assignedRoom: 'B201 團練室',
+            notes: '長笛木管重奏練習'
+          },
+          {
+            id: 'REQ-102',
+            email: 'admin@scu.edu.tw',
+            name: '廖社長',
+            section: 'Sax.',
+            date: '2026-10-20',
+            periods: ['A', 'B'],
+            category: '自主練習',
+            headcount: 1,
+            needAc: false,
+            status: '已收件',
+            assignedRoom: '',
+            notes: '獨奏曲目視奏'
+          },
+          {
+            id: 'REQ-103',
+            email: 'member@scu.edu.tw',
+            name: '陳小笛',
+            section: 'Fl.',
+            date: '2026-10-23',
+            periods: ['5', '6'],
+            category: '自主練習',
+            headcount: 2,
+            needAc: true,
+            status: '無教室',
+            assignedRoom: '',
+            notes: '本日全校課外活動，教室借滿'
+          }
+        ];
+        localStorage.setItem('band_mock_rooms', JSON.stringify(defaultRooms));
+      }
+
+      if (!localStorage.getItem('band_mock_absences')) {
+        const defaultAbsences = [
+          {
+            practiceId: 'prac_20261021',
+            practiceDate: '2026-10-21',
+            practiceNotes: '第15週定期合奏',
+            email: 'tpt_chang@scu.edu.tw',
+            name: '張小號',
+            section: 'Tpt.',
+            instrument: '小號',
+            type: '請假',
+            reason: '系上專業科目期中考衝堂',
+            createdAt: '2026-10-18 14:20'
+          },
+          {
+            practiceId: 'prac_20261021',
+            practiceDate: '2026-10-21',
+            practiceNotes: '第15週定期合奏',
+            email: 'cl_wang@scu.edu.tw',
+            name: '王單簧',
+            section: 'Cl.',
+            instrument: '降B調單簧管',
+            type: '遲到',
+            reason: '微積分課程補課預計19:00前抵達',
+            createdAt: '2026-10-18 16:45'
+          }
+        ];
+        localStorage.setItem('band_mock_absences', JSON.stringify(defaultAbsences));
+      }
+
+      if (!localStorage.getItem('band_mock_seating_templates')) {
+        const defaultTemplate = {
+          id: 'template_standard',
+          name: '標準管樂合奏編制 (Standard Concert Band)',
+          sections: {
+            Cl:  { x: 28, y: 56, count: 8, dir: 'arc' },
+            Fl:  { x: 40, y: 72, count: 6, dir: 'arc' },
+            Ob:  { x: 62, y: 72, count: 2, dir: 'row' },
+            Sax: { x: 50, y: 52, count: 5, dir: 'arc' },
+            Euph:{ x: 68, y: 56, count: 3, dir: 'row' },
+            Hn:  { x: 80, y: 46, count: 4, dir: 'col' },
+            Tpt: { x: 34, y: 24, count: 5, dir: 'row' },
+            Tbn: { x: 64, y: 24, count: 4, dir: 'row' },
+            Perc:{ x: 12, y: 38, count: 4, dir: 'col' }
+          }
+        };
+        const chamberTemplate = {
+          id: 'template_chamber',
+          name: '室內樂團 / 小編制管樂團 (Chamber Band)',
+          sections: {
+            Cl:  { x: 32, y: 58, count: 4, dir: 'row' },
+            Fl:  { x: 42, y: 70, count: 3, dir: 'row' },
+            Ob:  { x: 60, y: 70, count: 2, dir: 'row' },
+            Sax: { x: 50, y: 52, count: 3, dir: 'row' },
+            Euph:{ x: 66, y: 58, count: 2, dir: 'row' },
+            Hn:  { x: 78, y: 48, count: 2, dir: 'col' },
+            Tpt: { x: 36, y: 28, count: 3, dir: 'row' },
+            Tbn: { x: 64, y: 28, count: 2, dir: 'row' },
+            Perc:{ x: 14, y: 40, count: 2, dir: 'col' }
+          }
+        };
+        localStorage.setItem('band_mock_seating_templates', JSON.stringify([defaultTemplate, chamberTemplate]));
+      }
+
+      if (!localStorage.getItem('band_mock_settings')) {
+        const defaultSettings = {
+          satPeriods: ['1', '2', '3', '4', '5', '6', '7'],
+          sunPeriods: ['5', '6', '7', '8']
+        };
+        localStorage.setItem('band_mock_settings', JSON.stringify(defaultSettings));
+      }
+    }
+
+    function executeMockApi(action, params) {
+      initMockDatabase();
+
+      if (action === 'login') {
+        const users = JSON.parse(localStorage.getItem('band_mock_users') || '[]');
+        const u = users.find(x => x.email.toLowerCase() === params.email.toLowerCase());
+        if (!u || u.password !== params.password) {
+          return { success: false, error: '電子郵件或密碼錯誤！' };
+        }
+        return {
+          success: true,
+          mustChangePassword: u.password === '0000',
+          user: {
+            email: u.email,
+            name: u.name,
+            instrument: u.instrument,
+            section: u.section,
+            role: u.role,
+            notifyEmail: !!u.notifyEmail
+          }
+        };
+      }
+
+      if (action === 'changePassword') {
+        const users = JSON.parse(localStorage.getItem('band_mock_users') || '[]');
+        const idx = users.findIndex(x => x.email === params.email);
+        if (idx === -1) return { success: false, error: '查無此帳號' };
+        if (users[idx].password !== params.oldPassword) {
+          return { success: false, error: '舊密碼驗證錯誤！' };
+        }
+        users[idx].password = params.newPassword;
+        users[idx].isDefaultPassword = false;
+        localStorage.setItem('band_mock_users', JSON.stringify(users));
+        return { success: true };
+      }
+
+      if (action === 'updateProfile') {
+        const users = JSON.parse(localStorage.getItem('band_mock_users') || '[]');
+        const idx = users.findIndex(x => x.email === params.email);
+        if (idx !== -1) {
+          users[idx].name = params.name;
+          users[idx].section = params.section;
+          users[idx].instrument = params.instrument;
+          users[idx].notifyEmail = params.notifyEmail;
+          localStorage.setItem('band_mock_users', JSON.stringify(users));
+        }
+        return { success: true };
+      }
+
+      if (action === 'getDashboard') {
+        const practices = JSON.parse(localStorage.getItem('band_mock_practices') || '[]');
+        const rooms = JSON.parse(localStorage.getItem('band_mock_rooms') || '[]');
+        const absences = JSON.parse(localStorage.getItem('band_mock_absences') || '[]');
+
+        const nextPrac = practices[0] || null;
+        const myPending = rooms.filter(r => r.email === params.email && r.status === '已收件').length;
+        const myRecent = rooms.filter(r => r.email === params.email).slice(0, 3);
+        const myNextAbs = nextPrac ? absences.find(a => a.email === params.email && a.practiceId === nextPrac.id) : null;
+
+        return {
+          success: true,
+          nextPractice: nextPrac,
+          myNextPracticeAbsence: myNextAbs,
+          pendingRoomsCount: myPending,
+          recentRoomRequests: myRecent
+        };
+      }
+
+      if (action === 'getRoomRequests') {
+        const rooms = JSON.parse(localStorage.getItem('band_mock_rooms') || '[]');
+        if (params.all) {
+          return { success: true, requests: rooms };
+        }
+        const myRooms = rooms.filter(r => r.email === params.email);
+        return { success: true, requests: myRooms };
+      }
+
+      if (action === 'submitRoomRequest') {
+        const rooms = JSON.parse(localStorage.getItem('band_mock_rooms') || '[]');
+        const newReq = {
+          id: 'REQ-' + (Math.floor(100 + Math.random() * 900)),
+          email: params.email,
+          name: params.name,
+          section: params.section,
+          date: params.date,
+          periods: params.periods,
+          category: params.category,
+          headcount: params.headcount,
+          needAc: params.needAc,
+          notes: params.notes,
+          status: '已收件',
+          assignedRoom: ''
+        };
+        rooms.unshift(newReq);
+        localStorage.setItem('band_mock_rooms', JSON.stringify(rooms));
+        return { success: true, request: newReq };
+      }
+
+      if (action === 'updateRoomRequest') {
+        const rooms = JSON.parse(localStorage.getItem('band_mock_rooms') || '[]');
+        const idx = rooms.findIndex(r => r.id === params.id);
+        if (idx !== -1) {
+          rooms[idx].status = params.status;
+          rooms[idx].assignedRoom = params.assignedRoom;
+          localStorage.setItem('band_mock_rooms', JSON.stringify(rooms));
+        }
+        return { success: true };
+      }
+
+      if (action === 'getPractices') {
+        const practices = JSON.parse(localStorage.getItem('band_mock_practices') || '[]');
+        return { success: true, practices };
+      }
+
+      if (action === 'submitPractice') {
+        const practices = JSON.parse(localStorage.getItem('band_mock_practices') || '[]');
+        if (params.id) {
+          const idx = practices.findIndex(p => p.id === params.id);
+          if (idx !== -1) {
+            practices[idx] = { ...practices[idx], ...params };
+          }
+        } else {
+          const newPrac = {
+            id: 'prac_' + params.date.replace(/-/g, ''),
+            ...params
+          };
+          practices.push(newPrac);
+        }
+        localStorage.setItem('band_mock_practices', JSON.stringify(practices));
+        return { success: true };
+      }
+
+      if (action === 'deletePractice') {
+        let practices = JSON.parse(localStorage.getItem('band_mock_practices') || '[]');
+        practices = practices.filter(p => p.id !== params.id);
+        localStorage.setItem('band_mock_practices', JSON.stringify(practices));
+        return { success: true };
+      }
+
+      if (action === 'getAbsences') {
+        let absences = JSON.parse(localStorage.getItem('band_mock_absences') || '[]');
+        if (params.practiceId) {
+          absences = absences.filter(a => a.practiceId === params.practiceId);
+        }
+        if (params.email) {
+          absences = absences.filter(a => a.email === params.email);
+        }
+        return { success: true, absences };
+      }
+
+      if (action === 'submitAbsence') {
+        let absences = JSON.parse(localStorage.getItem('band_mock_absences') || '[]');
+        const practices = JSON.parse(localStorage.getItem('band_mock_practices') || '[]');
+        const p = practices.find(x => x.id === params.practiceId) || {};
+
+        absences = absences.filter(a => !(a.practiceId === params.practiceId && a.email === params.email));
+        absences.unshift({
+          practiceId: params.practiceId,
+          practiceDate: p.date || '',
+          practiceNotes: p.notes || '',
+          email: params.email,
+          name: params.name,
+          section: params.section,
+          instrument: params.instrument,
+          type: params.type,
+          reason: params.reason,
+          createdAt: new Date().toISOString().replace('T', ' ').substring(0, 16)
+        });
+        localStorage.setItem('band_mock_absences', JSON.stringify(absences));
+        return { success: true };
+      }
+
+      if (action === 'getSeatingTemplates') {
+        const templates = JSON.parse(localStorage.getItem('band_mock_seating_templates') || '[]');
+        return { success: true, templates };
+      }
+
+      if (action === 'saveSeatingTemplate') {
+        let templates = JSON.parse(localStorage.getItem('band_mock_seating_templates') || '[]');
+        const idx = templates.findIndex(t => t.id === params.template.id);
+        if (idx !== -1) {
+          templates[idx] = params.template;
+        } else {
+          templates.push(params.template);
+        }
+        localStorage.setItem('band_mock_seating_templates', JSON.stringify(templates));
+        return { success: true };
+      }
+
+      if (action === 'deleteSeatingTemplate') {
+        let templates = JSON.parse(localStorage.getItem('band_mock_seating_templates') || '[]');
+        templates = templates.filter(t => t.id !== params.id);
+        localStorage.setItem('band_mock_seating_templates', JSON.stringify(templates));
+        return { success: true };
+      }
+
+      if (action === 'getMembers') {
+        const users = JSON.parse(localStorage.getItem('band_mock_users') || '[]');
+        return { success: true, members: users };
+      }
+
+      if (action === 'addMember') {
+        const users = JSON.parse(localStorage.getItem('band_mock_users') || '[]');
+        if (users.some(u => u.email.toLowerCase() === params.email.toLowerCase())) {
+          return { success: false, error: '該電子郵件已存在於名冊中！' };
+        }
+        users.push({
+          email: params.email,
+          password: '0000',
+          name: params.name,
+          section: params.section,
+          instrument: params.instrument,
+          role: params.role,
+          notifyEmail: true,
+          isDefaultPassword: true
+        });
+        localStorage.setItem('band_mock_users', JSON.stringify(users));
+        return { success: true };
+      }
+
+      if (action === 'updateMemberRole') {
+        const users = JSON.parse(localStorage.getItem('band_mock_users') || '[]');
+        const idx = users.findIndex(u => u.email === params.email);
+        if (idx !== -1) {
+          users[idx].role = params.role;
+          localStorage.setItem('band_mock_users', JSON.stringify(users));
+        }
+        return { success: true };
+      }
+
+      if (action === 'resetPassword') {
+        const users = JSON.parse(localStorage.getItem('band_mock_users') || '[]');
+        const idx = users.findIndex(u => u.email === params.email);
+        if (idx !== -1) {
+          users[idx].password = '0000';
+          users[idx].isDefaultPassword = true;
+          localStorage.setItem('band_mock_users', JSON.stringify(users));
+        }
+        return { success: true };
+      }
+
+      if (action === 'getSettings') {
+        const settings = JSON.parse(localStorage.getItem('band_mock_settings') || '{}');
+        return { success: true, settings };
+      }
+
+      if (action === 'saveSettings') {
+        const settings = {
+          satPeriods: params.satPeriods || [],
+          sunPeriods: params.sunPeriods || []
+        };
+        localStorage.setItem('band_mock_settings', JSON.stringify(settings));
+        return { success: true };
+      }
+
+      return { success: false, error: '未支援的 API 動作: ' + action };
+    }
+
+    /**
+     * 系統初始化函式
+     */
+    function initApp() {
+      initMockDatabase();
+
+      const savedSession = localStorage.getItem('band_session');
+      if (savedSession) {
+        try {
+          session = JSON.parse(savedSession);
+          setupUserSessionUI();
+          showPage('mainApp');
+          showTab('tabHome');
+          return;
+        } catch (e) {
+          localStorage.removeItem('band_session');
+        }
+      }
+
+      showPage('loginPage');
+    }
+
+    // 當文件完成載入時初始化
+    window.addEventListener('DOMContentLoaded', initApp);
+  </script>
+</body>
+</html>

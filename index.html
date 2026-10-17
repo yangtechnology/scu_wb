@@ -59,6 +59,17 @@
       flex-direction: column;
     }
 
+    /* 嚴格控制幹部後台按鈕顯示：預設完全隱藏，只有 body.is-admin 時才顯示 */
+    .admin-only-nav {
+      display: none !important;
+    }
+    body.is-admin .nav-menu .admin-only-nav {
+      display: flex !important;
+    }
+    body.is-admin .mobile-menu .admin-only-nav {
+      display: block !important;
+    }
+
     .btn {
       display: inline-flex;
       align-items: center;
@@ -669,7 +680,7 @@
     .draggable-section.selected-sec rect.sec-highlight,
     .draggable-section.selected-sec circle.sec-seat {
       stroke: #1a237e;
-      stroke-width: 3px;
+      stroke-width: 3.5px;
     }
 
     .modal-overlay {
@@ -861,8 +872,8 @@
       
       <form id="loginForm" onsubmit="handleLoginSubmit(event)">
         <div class="form-group" style="text-align: left;">
-          <label class="form-label">電子信箱<span class="required">*</span></label>
-          <input type="email" id="loginEmail" class="form-control" placeholder="請輸入您的常用電子信箱" required autofocus>
+          <label class="form-label">帳號（姓名 或 電子信箱）<span class="required">*</span></label>
+          <input type="text" id="loginIdentifier" class="form-control" placeholder="請輸入您的姓名或常用電子信箱" required autofocus>
         </div>
         
         <div class="form-group" style="text-align: left;">
@@ -876,14 +887,14 @@
       </form>
 
       <div class="login-hint">
-        💡 <strong>系統提示：</strong> 首次登入預設密碼為 <strong>0000</strong>，登入後系統將引導修改密碼。
+        💡 <strong>系統提示：</strong> 可直接輸入您的<strong>姓名</strong>登入！首次登入預設密碼為 <strong>0000</strong>，登入後系統將引導修改密碼與綁定常用電子信箱。
       </div>
 
       <div class="demo-users">
         <div class="demo-users-title">快速測試帳號：</div>
         <div class="demo-btn-group">
-          <button type="button" class="btn btn-secondary btn-sm" onclick="fillDemoUser('admin@scu.edu.tw', '0000')">👑 社團幹部</button>
-          <button type="button" class="btn btn-secondary btn-sm" onclick="fillDemoUser('member@scu.edu.tw', '0000')">👤 一般社員</button>
+          <button type="button" class="btn btn-secondary btn-sm" onclick="fillDemoUser('廖社長', '0000')">👑 社團幹部</button>
+          <button type="button" class="btn btn-secondary btn-sm" onclick="fillDemoUser('陳小笛', '0000')">👤 一般社員</button>
         </div>
       </div>
     </div>
@@ -902,7 +913,7 @@
         <li class="nav-item" id="navItem-tabRoom" onclick="showTab('tabRoom')">借教室</li>
         <li class="nav-item" id="navItem-tabAbsence" onclick="showTab('tabAbsence')">請假</li>
         <li class="nav-item" id="navItem-tabSeating" onclick="showTab('tabSeating')">座位表</li>
-        <li class="nav-item" id="navItem-tabAdmin" style="display: none;" onclick="showTab('tabAdmin')">幹部後台</li>
+        <li class="nav-item admin-only-nav" id="navItem-tabAdmin" onclick="showTab('tabAdmin')">幹部後台</li>
       </ul>
 
       <div class="nav-user">
@@ -921,7 +932,7 @@
       <div class="nav-item" id="mobNavItem-tabRoom" onclick="showTab('tabRoom'); toggleMobileMenu();">借教室</div>
       <div class="nav-item" id="mobNavItem-tabAbsence" onclick="showTab('tabAbsence'); toggleMobileMenu();">請假</div>
       <div class="nav-item" id="mobNavItem-tabSeating" onclick="showTab('tabSeating'); toggleMobileMenu();">座位表</div>
-      <div class="nav-item" id="mobNavItem-tabAdmin" style="display: none;" onclick="showTab('tabAdmin'); toggleMobileMenu();">幹部後台</div>
+      <div class="nav-item admin-only-nav" id="mobNavItem-tabAdmin" onclick="showTab('tabAdmin'); toggleMobileMenu();">幹部後台</div>
     </div>
 
     <main class="main-content">
@@ -930,7 +941,7 @@
       <div id="tabHome" class="page-section active">
         <div class="welcome-banner">
           <h2 class="welcome-title" id="homeWelcomeTitle">歡迎回來，同學！🎶</h2>
-          <p class="welcome-subtitle" id="homeWelcomeSubtitle">東吳管樂社團務資訊與教室管理已就緒，祝練習愉快！</p>
+          <p class="welcome-subtitle" id="homeWelcomeSubtitle">東吳管樂社 ・負責樂器：</p>
         </div>
 
         <div class="form-row">
@@ -1367,7 +1378,7 @@
           </div>
         </div>
 
-        <!-- 5.4 座位表設定（直接拖曳移動） -->
+        <!-- 5.4 座位表設定 -->
         <div id="subtab-adminSeating" class="subtab-content">
           <div class="card">
             <div class="card-header">
@@ -1383,7 +1394,6 @@
               </div>
             </div>
 
-            <!-- 選中聲部的快速微調工具列 -->
             <div id="adminSeatingQuickBar" style="background: #f8fafc; border: 1.5px solid var(--border); border-radius: var(--radius-md); padding: 12px 18px; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
               <div style="display: flex; align-items: center; gap: 10px;">
                 <span style="font-weight: 700; color: var(--primary);" id="selectedSecTitle">💡 請點擊或拖曳下方任一聲部進行調整</span>
@@ -1427,7 +1437,7 @@
                 <thead>
                   <tr>
                     <th>姓名</th>
-                    <th>電子信箱</th>
+                    <th>常用電子信箱</th>
                     <th>聲部</th>
                     <th>樂器</th>
                     <th>身分角色</th>
@@ -1478,24 +1488,29 @@
     </main>
   </div>
 
-  <!-- ==================== 彈出視窗組 ==================== -->
+  <!-- ==================== 彈出視窗組（全域保證最多只開一層） ==================== -->
 
-  <!-- 1. 修改密碼 -->
+  <!-- 1. 修改密碼與首次綁定信箱 -->
   <div id="modalChangePassword" class="modal-overlay">
     <div class="modal-card">
       <div class="modal-header">
-        <div class="modal-title">🔐 修改登入密碼</div>
+        <div class="modal-title" id="changePwModalTitle">🔐 修改登入密碼</div>
         <button type="button" id="closeChangePwBtn" class="modal-close" onclick="closeChangePasswordModal()">✕</button>
       </div>
       <form id="changePasswordForm" onsubmit="handleChangePasswordSubmit(event)">
         <div class="modal-body">
           <div id="changePwForcedNotice" style="display: none; background: #fff3cd; border: 1px solid #ffeeba; border-radius: var(--radius-md); padding: 10px 14px; color: #856404; font-size: 0.9rem; margin-bottom: 16px;">
-            ⚠️ <strong>安全性提示：</strong> 您的帳號目前使用預設密碼 <strong>0000</strong>，首次登入請務必修改密碼以確保帳號安全！
+            ⚠️ <strong>首次登入設定：</strong> 請設定您的常用電子信箱（供借教室審核通知使用），並將預設密碼 <strong>0000</strong> 修改為您的個人密碼！
+          </div>
+
+          <div class="form-group" id="changePwEmailGroup" style="display: none;">
+            <label class="form-label">常用電子信箱<span class="required">*</span></label>
+            <input type="email" id="pwEmailInput" class="form-control" placeholder="例如：example@gmail.com">
           </div>
 
           <div class="form-group">
             <label class="form-label">目前密碼<span class="required">*</span></label>
-            <input type="password" id="pwOldInput" class="form-control" placeholder="請輸入舊密碼 (預設為 0000)" required>
+            <input type="password" id="pwOldInput" class="form-control" placeholder="請輸入目前密碼 (預設為 0000)" required>
           </div>
 
           <div class="form-group">
@@ -1510,13 +1525,13 @@
         </div>
         <div class="modal-footer">
           <button type="button" id="cancelChangePwBtn" class="btn btn-secondary" onclick="closeChangePasswordModal()">取消</button>
-          <button type="submit" class="btn btn-primary">確認修改密碼</button>
+          <button type="submit" class="btn btn-primary">確認儲存</button>
         </div>
       </form>
     </div>
   </div>
 
-  <!-- 2. 個人資料與偏好設定 -->
+  <!-- 2. 個人資料與通知設定 -->
   <div id="modalProfile" class="modal-overlay">
     <div class="modal-card">
       <div class="modal-header">
@@ -1526,13 +1541,13 @@
       <form id="profileForm" onsubmit="handleProfileSubmit(event)">
         <div class="modal-body">
           <div class="form-group">
-            <label class="form-label">社員姓名</label>
+            <label class="form-label">社員姓名<span class="required">*</span></label>
             <input type="text" id="profNameInput" class="form-control" required>
           </div>
 
           <div class="form-group">
-            <label class="form-label">電子信箱</label>
-            <input type="email" id="profEmailInput" class="form-control" readonly style="background-color: #f1f5f9; cursor: not-allowed;">
+            <label class="form-label">常用電子信箱<span class="required">*</span></label>
+            <input type="email" id="profEmailInput" class="form-control" placeholder="請輸入常用電子信箱" required>
           </div>
 
           <div class="form-row">
@@ -1540,23 +1555,23 @@
               <div class="form-group">
                 <label class="form-label">所屬聲部<span class="required">*</span></label>
                 <select id="profSectionSelect" class="form-control" required>
-                  <option value="Cl.">豎笛 (Cl.)</option>
-                  <option value="Fl.">長笛 (Fl.)</option>
-                  <option value="Ob.">雙簧管 (Ob.)</option>
-                  <option value="Sax.">薩克斯風 (Sax.)</option>
-                  <option value="Hn.">法國號 (Hn.)</option>
-                  <option value="Tpt.">小號 (Tpt.)</option>
-                  <option value="Tbn.">長號 (Tbn.)</option>
-                  <option value="Euph.">上低音號 (Euph.)</option>
-                  <option value="Perc.">打擊 (Perc.)</option>
+                  <option value="Cl.">Cl. 豎笛</option>
+                  <option value="Fl.">Fl. 長笛</option>
+                  <option value="Ob.">Ob. 雙簧管</option>
+                  <option value="Sax.">Sax. 薩克斯風</option>
+                  <option value="Hn.">Hn. 法國號</option>
+                  <option value="Tpt.">Tpt. 小號</option>
+                  <option value="Tbn.">Tbn. 長號</option>
+                  <option value="Euph.">Euph. 上低音號</option>
+                  <option value="Perc.">Perc. 打擊</option>
                 </select>
               </div>
             </div>
 
             <div class="form-col">
               <div class="form-group">
-                <label class="form-label">專長樂器<span class="required">*</span></label>
-                <input type="text" id="profInstrumentInput" class="form-control" placeholder="如：降B調豎笛、長笛" required>
+                <label class="form-label">負責樂器<span class="required">*</span></label>
+                <input type="text" id="profInstrumentInput" class="form-control" placeholder="如：小號、長笛" required>
               </div>
             </div>
           </div>
@@ -1574,7 +1589,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" onclick="openChangePasswordModal(false)">修改密碼</button>
+          <button type="button" class="btn btn-secondary" onclick="switchToChangePasswordModal()">修改密碼</button>
           <button type="submit" class="btn btn-primary">儲存個人設定</button>
         </div>
       </form>
@@ -1646,28 +1661,28 @@
         <div class="modal-body">
           <div class="form-group">
             <label class="form-label">社員姓名<span class="required">*</span></label>
-            <input type="text" id="newMemberName" class="form-control" placeholder="請輸入姓名" required>
+            <input type="text" id="newMemberName" class="form-control" placeholder="請輸入姓名（社員可直接用姓名登入）" required>
           </div>
 
           <div class="form-group">
-            <label class="form-label">常用電子信箱<span class="required">*</span></label>
-            <input type="email" id="newMemberEmail" class="form-control" placeholder="example@gmail.com" required>
+            <label class="form-label">常用電子信箱（選填，可由社員首次登入時自行填寫）</label>
+            <input type="email" id="newMemberEmail" class="form-control" placeholder="未知可留空，例如：example@gmail.com">
           </div>
 
           <div class="form-row">
             <div class="form-col">
               <div class="form-group">
                 <label class="form-label">所屬聲部<span class="required">*</span></label>
-                <select id="newMemberSection" class="form-control" required>
-                  <option value="Cl.">豎笛 (Cl.)</option>
-                  <option value="Fl.">長笛 (Fl.)</option>
-                  <option value="Ob.">雙簧管 (Ob.)</option>
-                  <option value="Sax.">薩克斯風 (Sax.)</option>
-                  <option value="Hn.">法國號 (Hn.)</option>
-                  <option value="Tpt.">小號 (Tpt.)</option>
-                  <option value="Tbn.">長號 (Tbn.)</option>
-                  <option value="Euph.">上低音號 (Euph.)</option>
-                  <option value="Perc.">打擊 (Perc.)</option>
+                <select id="newMemberSection" class="form-control" required onchange="syncNewMemberInstrumentHint()">
+                  <option value="Cl.">Cl. 豎笛</option>
+                  <option value="Fl.">Fl. 長笛</option>
+                  <option value="Ob.">Ob. 雙簧管</option>
+                  <option value="Sax.">Sax. 薩克斯風</option>
+                  <option value="Hn.">Hn. 法國號</option>
+                  <option value="Tpt.">Tpt. 小號</option>
+                  <option value="Tbn.">Tbn. 長號</option>
+                  <option value="Euph.">Euph. 上低音號</option>
+                  <option value="Perc.">Perc. 打擊</option>
                 </select>
               </div>
             </div>
@@ -1675,7 +1690,7 @@
             <div class="form-col">
               <div class="form-group">
                 <label class="form-label">負責樂器<span class="required">*</span></label>
-                <input type="text" id="newMemberInstrument" class="form-control" placeholder="例如：降B調豎笛、小號" required>
+                <input type="text" id="newMemberInstrument" class="form-control" value="Cl. 豎笛" required>
               </div>
             </div>
           </div>
@@ -1689,7 +1704,7 @@
           </div>
 
           <p style="font-size: 0.85rem; color: var(--text-muted);">
-            💡 系統預設密碼為 <strong>0000</strong>，首次登入將提示修改。
+            💡 系統預設密碼為 <strong>0000</strong>，社員首次以姓名登入後，系統會引導他填寫常用電子信箱並修改密碼。
           </p>
         </div>
         <div class="modal-footer">
@@ -1747,7 +1762,6 @@
     };
     const ALL_PERIOD_KEYS = ['1', '2', '3', '4', 'E', '5', '6', '7', '8', '9', 'A', 'B'];
 
-    // 9大標準聲部統計定義
     const SECTION_DEFS = [
       { id: 'Cl',   name: '豎笛',     abbr: 'Cl.',   defaultCount: 6 },
       { id: 'Fl',   name: '長笛',     abbr: 'Fl.',   defaultCount: 2 },
@@ -1760,7 +1774,6 @@
       { id: 'Perc', name: '打擊',     abbr: 'Perc.', defaultCount: 4 }
     ];
 
-    // 座位表區塊定義（還原手繪座位圖：Cl 分 1, 2, 3 排、斜向圓圈穿線、perc 左側斜長方形）
     const SEATING_GROUPS = [
       { id: 'Perc', label: 'perc', secAbbr: 'Perc.', defaultCount: 4, x: 12, y: 36, angle: -76, type: 'box' },
       { id: 'Tpt',  label: 'Tp',   secAbbr: 'Tpt.',  defaultCount: 5, x: 38, y: 23, angle: -2,  type: 'line', labelPos: 'top' },
@@ -1777,13 +1790,31 @@
 
     let session = null;
 
-    // 格式化日期時間：消除 T，統一顯示 YYYY-MM-DD HH:mm
+    /**
+     * 將樂器文字格式化為「Tpt. 小號」（自動清除多餘括號，避免出現 (Tpt.(小號))）
+     */
+    function formatInstrumentDisplay(inst, section) {
+      let s = String(inst || '').trim();
+      const sec = String(section || '').trim();
+      s = s.replace(/\(([^)]+)\)/g, ' $1').replace(/（([^）]+)）/g, ' $1').replace(/\s+/g, ' ').trim();
+      if (sec && !s.toLowerCase().startsWith(sec.toLowerCase())) {
+        return sec + ' ' + s;
+      }
+      return s;
+    }
+
+    /**
+     * 關閉所有彈出視窗（確保畫面上永遠最多只有一層視窗，杜絕疊疊樂）
+     */
+    function closeAllModals() {
+      document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('open'));
+    }
+
     function formatDateTimeDisplay(str) {
       if (!str) return '';
       return String(str).replace('T', ' ').substring(0, 16);
     }
 
-    // 轉為 datetime-local input 需要的 YYYY-MM-DDTHH:mm
     function toDatetimeLocalInput(str) {
       if (!str) return '';
       const clean = String(str).trim().replace(' ', 'T');
@@ -1817,7 +1848,7 @@
       } catch (err) {
         console.error('API Error:', err);
         if (!err.message || (!err.message.includes('連線錯誤') && err.message !== '操作失敗，請稍後再試')) {
-          const isAlreadyShown = err.message && (err.message.includes('找不到') || err.message.includes('密碼') || err.message.includes('已存在') || err.message.includes('超過'));
+          const isAlreadyShown = err.message && (err.message.includes('找不到') || err.message.includes('密碼') || err.message.includes('已存在') || err.message.includes('已被') || err.message.includes('超過'));
           if (!isAlreadyShown) {
             showToast(err.message || '連線錯誤，請稍後再試', 'error');
           }
@@ -1858,6 +1889,11 @@
     }
 
     function showTab(tabId) {
+      if (tabId === 'tabAdmin' && (!session || session.role !== 'admin')) {
+        showToast('您無權限進入幹部後台', 'error');
+        return;
+      }
+
       const tabs = ['tabHome', 'tabRoom', 'tabAbsence', 'tabSeating', 'tabAdmin'];
       tabs.forEach(t => {
         const el = document.getElementById(t);
@@ -1879,14 +1915,7 @@
       if (tabId === 'tabRoom') initRoomTab();
       if (tabId === 'tabAbsence') loadAbsenceTab();
       if (tabId === 'tabSeating') loadSeatingTab();
-      if (tabId === 'tabAdmin') {
-        if (!session || session.role !== 'admin') {
-          showToast('您無權限進入幹部後台', 'error');
-          showTab('tabHome');
-          return;
-        }
-        initAdminTab();
-      }
+      if (tabId === 'tabAdmin') initAdminTab();
     }
 
     function showAdminTab(subtabId) {
@@ -1927,20 +1956,21 @@
     // ==========================================
     // 登入與身分狀態
     // ==========================================
-    function fillDemoUser(email, pw) {
-      document.getElementById('loginEmail').value = email;
+    function fillDemoUser(identifier, pw) {
+      document.getElementById('loginIdentifier').value = identifier;
       document.getElementById('loginPassword').value = pw;
     }
 
     async function handleLoginSubmit(e) {
       e.preventDefault();
-      const email = document.getElementById('loginEmail').value.trim();
+      const identifier = document.getElementById('loginIdentifier').value.trim();
       const password = document.getElementById('loginPassword').value;
 
       try {
-        const res = await api('login', { email, password });
+        const res = await api('login', { identifier, email: identifier, password });
         if (res.success) {
           session = res.user;
+          session.instrument = formatInstrumentDisplay(session.instrument, session.section);
           localStorage.setItem('band_session', JSON.stringify(session));
 
           showToast('登入成功，歡迎 ' + session.name, 'success');
@@ -1948,8 +1978,9 @@
           showPage('mainApp');
           showTab('tabHome');
 
-          if (password === '0000' || res.mustChangePassword) {
-            setTimeout(() => openChangePasswordModal(true), 400);
+          // 首次登入（預設密碼 0000 或尚未綁定常用電子信箱）強制彈出設定視窗
+          if (password === '0000' || res.mustChangePassword || !session.email) {
+            setTimeout(() => openChangePasswordModal(true), 350);
           }
         }
       } catch (err) {}
@@ -1957,30 +1988,31 @@
 
     function handleLogout() {
       session = null;
+      document.body.classList.remove('is-admin');
       localStorage.removeItem('band_session');
       document.getElementById('loginPassword').value = '';
+      closeAllModals();
       showToast('已登出系統', 'info');
       showPage('loginPage');
     }
 
     function setupUserSessionUI() {
       if (!session) return;
-      document.getElementById('navUserName').innerText = session.name + ' (' + session.instrument + ')';
+      const cleanInst = formatInstrumentDisplay(session.instrument, session.section);
+      session.instrument = cleanInst;
+
+      // 右上角顯示：管理員 (Tpt. 小號)
+      document.getElementById('navUserName').innerText = session.name + ' (' + cleanInst + ')';
 
       const roleBadge = document.getElementById('navRoleBadge');
-      const adminNav = document.getElementById('navItem-tabAdmin');
-      const mobAdminNav = document.getElementById('mobNavItem-tabAdmin');
-
       if (session.role === 'admin') {
+        document.body.classList.add('is-admin');
         roleBadge.className = 'badge badge-admin';
         roleBadge.innerText = '幹部';
-        adminNav.style.display = 'flex';
-        mobAdminNav.style.display = 'block';
       } else {
+        document.body.classList.remove('is-admin');
         roleBadge.className = 'badge badge-member';
         roleBadge.innerText = '社員';
-        adminNav.style.display = 'none';
-        mobAdminNav.style.display = 'none';
       }
     }
 
@@ -1989,10 +2021,12 @@
     // ==========================================
     async function loadDashboard() {
       if (!session) return;
+      const cleanInst = formatInstrumentDisplay(session.instrument, session.section);
       document.getElementById('homeWelcomeTitle').innerText = '歡迎回來，' + session.name + '！🎶';
-      document.getElementById('homeWelcomeSubtitle').innerText = '東吳管樂社 ' + session.section + ' 聲部・負責樂器：' + session.instrument;
+      // 修正為：東吳管樂社 ・負責樂器：Tpt. 小號
+      document.getElementById('homeWelcomeSubtitle').innerText = '東吳管樂社  ・負責樂器：' + cleanInst;
 
-      const data = await api('getDashboard', { email: session.email });
+      const data = await api('getDashboard', { email: session.email, name: session.name });
 
       const nextPrac = data.nextPractice;
       const upcomingEl = document.getElementById('homeUpcomingPracticeContent');
@@ -2177,7 +2211,7 @@
 
     async function loadMyRoomRequests() {
       if (!session) return;
-      const res = await api('getRoomRequests', { email: session.email });
+      const res = await api('getRoomRequests', { email: session.email, name: session.name });
       const tbody = document.getElementById('myRoomRequestsTableBody');
       const list = res.requests || [];
       if (list.length === 0) {
@@ -2208,7 +2242,7 @@
       if (!session) return;
       const res = await api('getPractices');
       const practices = res.practices || [];
-      const myAbsencesRes = await api('getAbsences', { email: session.email });
+      const myAbsencesRes = await api('getAbsences', { email: session.email, name: session.name });
       const myAbsences = myAbsencesRes.absences || [];
 
       const container = document.getElementById('upcomingPracticesList');
@@ -2270,6 +2304,7 @@
     }
 
     function openSubmitAbsenceModal(practiceId, dateStr, existingReason = '') {
+      closeAllModals();
       document.getElementById('absenceTargetPracticeId').value = practiceId;
       document.getElementById('absencePracticeInfo').innerText = '團練場次：' + dateStr + ' (週' + getWeekday(dateStr) + ')';
       document.getElementById('absenceReasonText').value = existingReason;
@@ -2301,7 +2336,7 @@
     }
 
     // ==========================================
-    // 座位表（手繪風格 + 請假自動隱藏重排 + 幹部拖曳）
+    // 座位表（前後端完全一致，過濾舊版亂碼資料）
     // ==========================================
     let currentLayouts = [];
 
@@ -2311,6 +2346,16 @@
         sections[g.id] = { x: g.x, y: g.y, count: g.defaultCount, angle: g.angle };
       });
       return { id: 'default', name: '預設團練座位表', sections };
+    }
+
+    /**
+     * 確保傳入的座位配置為新版結構（若偵測到舊版沒有 Cl1，自動轉為新版預設值）
+     */
+    function sanitizeLayoutConfig(layout) {
+      if (!layout || !layout.sections || !layout.sections.Cl1) {
+        return getDefaultLayoutConfig();
+      }
+      return layout;
     }
 
     async function loadSeatingTab() {
@@ -2332,15 +2377,15 @@
 
     function getLayoutForPractice(practiceId) {
       const specific = currentLayouts.find(l => l.id === 'practice_' + practiceId);
-      if (specific && specific.sections) return specific;
-      const def = currentLayouts.find(l => l.id === 'default') || currentLayouts[0];
-      if (def && def.sections) return def;
+      if (specific && specific.sections && specific.sections.Cl1) return specific;
+      const def = currentLayouts.find(l => l.id === 'default');
+      if (def && def.sections && def.sections.Cl1) return def;
       return getDefaultLayoutConfig();
     }
 
     async function handleSeatingChange() {
       const practiceId = document.getElementById('seatingPracticeSelect').value;
-      const layout = getLayoutForPractice(practiceId);
+      const layout = sanitizeLayoutConfig(getLayoutForPractice(practiceId));
 
       let absences = [];
       if (practiceId) {
@@ -2359,16 +2404,11 @@
       renderSeatingSectionSummary(layout, absentBySection);
     }
 
-    /**
-     * 計算每個座位群組扣除請假後的「實際出席座位數」
-     * 請假的人直接不顯示，剩下的自動重排
-     */
     function calculateGroupPresentCount(group, layout, absentBySection) {
       const conf = (layout.sections && layout.sections[group.id]) || group;
       const baseCount = parseInt(conf.count !== undefined ? conf.count : group.defaultCount, 10);
       const secAbsentCount = (absentBySection[group.secAbbr] || []).length;
 
-      // 豎笛拆為 Cl.1 / Cl.2 / Cl.3 三排，若有請假從第 3 排往前依序遞減重排
       if (group.secAbbr === 'Cl.') {
         const c1 = parseInt((layout.sections && layout.sections.Cl1 && layout.sections.Cl1.count) ?? 2, 10);
         const c2 = parseInt((layout.sections && layout.sections.Cl2 && layout.sections.Cl2.count) ?? 2, 10);
@@ -2390,10 +2430,6 @@
       return Math.max(0, baseCount - secAbsentCount);
     }
 
-    /**
-     * 繪製手繪風格 SVG 座位表
-     * @param {boolean} interactive - 是否為幹部後台可拖曳模式
-     */
     function renderSeatingChart(containerId, layout, absentBySection = {}, interactive = false) {
       const container = document.getElementById(containerId);
       if (!container || !layout) return;
@@ -2403,10 +2439,8 @@
 
       let svg = `
         <svg id="svg_${containerId}" class="seating-svg" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">
-          <!-- 教室外框 -->
           <rect x="20" y="20" width="860" height="580" rx="12" fill="#ffffff" stroke="#1e293b" stroke-width="2"/>
 
-          <!-- 左上與右上 Door (純英文 Door，無數字或中文) -->
           <g transform="translate(85, 36)">
             <rect x="0" y="0" width="130" height="44" fill="#ffffff" stroke="#1e293b" stroke-width="2"/>
             <text x="65" y="28" font-size="20" font-weight="700" fill="#1e293b" text-anchor="middle">Door</text>
@@ -2417,16 +2451,13 @@
             <text x="60" y="28" font-size="20" font-weight="700" fill="#1e293b" text-anchor="middle">Door</text>
           </g>
 
-          <!-- 右側長條區 (對應手繪圖右側長方形) -->
           <rect x="775" y="100" width="52" height="435" fill="#ffffff" stroke="#1e293b" stroke-width="2"/>
 
-          <!-- 指揮 -->
           <g transform="translate(360, 445)">
             <rect x="0" y="0" width="180" height="48" fill="#ffffff" stroke="#1e293b" stroke-width="2"/>
             <text x="90" y="32" font-size="22" font-weight="800" fill="#1e293b" text-anchor="middle" letter-spacing="8">指揮</text>
           </g>
 
-          <!-- 下方 Window -->
           <g transform="translate(160, 515)">
             <rect x="0" y="0" width="570" height="62" fill="#ffffff" stroke="#1e293b" stroke-width="2"/>
             <text x="285" y="40" font-size="26" font-weight="700" fill="#1e293b" text-anchor="middle" letter-spacing="3">Window</text>
@@ -2447,7 +2478,6 @@
 
         const presentCount = calculateGroupPresentCount(group, layout, absentBySection);
 
-        // 若該排全員請假（出席 0 人）且非後台編輯模式，直接隱藏不顯示
         if (presentCount <= 0 && !interactive) {
           return;
         }
@@ -2460,7 +2490,6 @@
         svg += `<g ${dragAttrs} transform="translate(${cx}, ${cy})">`;
 
         if (group.type === 'box') {
-          // 左側打擊區斜長方形
           svg += `
             <g transform="rotate(${angle})">
               <rect class="sec-highlight" x="-95" y="-36" width="190" height="72" fill="#ffffff" stroke="#1e293b" stroke-width="2"/>
@@ -2472,7 +2501,6 @@
           const spacing = 44;
           const drawCount = presentCount;
 
-          // 旋轉的座位圓圈與穿線
           svg += `<g transform="rotate(${angle})">`;
           if (drawCount > 0) {
             const totalW = (drawCount - 1) * spacing;
@@ -2484,12 +2512,10 @@
               svg += `<circle class="sec-seat" cx="${dotX}" cy="0" r="${r}" fill="#ffffff" stroke="#1e293b" stroke-width="2"/>`;
             }
           } else if (interactive) {
-            // 後台編輯時若剛好 0 人，留一個虛線框方便幹部點選拖曳
             svg += `<rect class="sec-highlight" x="-30" y="-18" width="60" height="36" stroke="#94a3b8" stroke-dasharray="4,4" fill="none"/>`;
           }
           svg += `</g>`;
 
-          // 聲部文字標籤（保持正向好閱讀）
           let labelX = 0;
           let labelY = -28;
           if (group.labelPos === 'left') {
@@ -2539,7 +2565,7 @@
         return `
           <div style="background:#ffffff; border:1px solid var(--border); border-radius:var(--radius-md); padding:10px 14px; box-shadow:var(--shadow-sm);">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
-              <span style="font-weight:700; color:var(--primary);">` + s.name + ` (` + s.abbr + `)</span>
+              <span style="font-weight:700; color:var(--primary);">` + s.abbr + ` ` + s.name + `</span>
               <span style="font-weight:700; color:` + (rate >= 80 ? '#15803d' : '#b91c1c') + `;">出席 ` + present + `/` + total + `</span>
             </div>
             <div style="background:#e2e8f0; height:6px; border-radius:3px; overflow:hidden;">
@@ -2579,15 +2605,13 @@
       const found = currentLayouts.find(l => l.id === targetId);
       const fallback = currentLayouts.find(l => l.id === 'default') || getDefaultLayoutConfig();
 
-      // 深拷貝一份出來編輯
-      const sourceLayout = found || fallback;
+      const sourceLayout = sanitizeLayoutConfig(found || fallback);
       adminEditingLayout = {
         id: targetId,
         name: targetId === 'default' ? '預設團練座位表' : ('單場座位表 ' + targetId),
-        sections: JSON.parse(JSON.stringify(sourceLayout.sections || getDefaultLayoutConfig().sections))
+        sections: JSON.parse(JSON.stringify(sourceLayout.sections))
       };
 
-      // 若選擇的是特定場次，載入該場次的請假名單以即時反映減少後的圓圈數
       adminPracticeAbsences = {};
       SECTION_DEFS.forEach(s => adminPracticeAbsences[s.abbr] = []);
       if (targetId.startsWith('practice_')) {
@@ -2697,7 +2721,7 @@
     async function saveAdminSeatingLayout() {
       if (!adminEditingLayout) return;
       try {
-        await api('saveSeatingTemplate', { email: session.email, template: adminEditingLayout });
+        await api('saveSeatingTemplate', { email: session.email, adminName: session.name, template: adminEditingLayout });
         showToast('座位表位置與設定已儲存！', 'success');
         const tRes = await api('getSeatingTemplates');
         currentLayouts = tRes.templates || tRes.layouts || [];
@@ -2710,7 +2734,7 @@
     let allRoomRequestsCache = [];
 
     async function renderAdminRoomTable() {
-      const res = await api('getRoomRequests', { email: session.email, all: true });
+      const res = await api('getRoomRequests', { email: session.email, name: session.name, all: true });
       allRoomRequestsCache = res.requests || [];
 
       const statusFilter = document.getElementById('adminRoomFilterStatus').value;
@@ -2766,8 +2790,14 @@
       const assignedRoom = document.getElementById('adminRoomAssigned_' + id).value.trim();
 
       try {
-        await api('updateRoomRequest', { email: session.email, id, status, assignedRoom });
-        showToast('審查結果已更新！', 'success');
+        const res = await api('updateRoomRequest', { email: session.email, name: session.name, id, status, assignedRoom });
+        if (res.emailSent) {
+          showToast('審查結果已更新，並已寄發通知信給申請人！', 'success');
+        } else if (res.emailError) {
+          showToast('審查已更新（未寄信：' + res.emailError + '）', 'info');
+        } else {
+          showToast('審查結果已更新！', 'success');
+        }
         renderAdminRoomTable();
       } catch (err) {}
     }
@@ -2832,6 +2862,7 @@
     }
 
     function openPracticeModal(editData = null) {
+      closeAllModals();
       const modal = document.getElementById('modalPractice');
       const title = document.getElementById('practiceModalTitle');
       if (editData) {
@@ -2872,7 +2903,7 @@
       const notes = document.getElementById('pracNotesInput').value.trim();
 
       try {
-        await api('submitPractice', { email: session.email, id, date, startTime, endTime, location, deadline, notes });
+        await api('submitPractice', { email: session.email, name: session.name, id, date, startTime, endTime, location, deadline, notes });
         showToast('團練場次已成功儲存！', 'success');
         closePracticeModal();
         renderAdminPracticesTable();
@@ -2882,7 +2913,7 @@
     async function deletePracticeConfirm(id) {
       if (!confirm('確定要刪除此團練場次嗎？')) return;
       try {
-        await api('deletePractice', { email: session.email, id });
+        await api('deletePractice', { email: session.email, name: session.name, id });
         showToast('該團練場次已刪除', 'info');
         renderAdminPracticesTable();
       } catch (err) {}
@@ -2912,11 +2943,11 @@
       const practiceId = select.value || (practices[0] && practices[0].id);
       if (!practiceId) return;
 
-      const memRes = await api('getMembers', { email: session.email });
+      const memRes = await api('getMembers', { email: session.email, name: session.name });
       const allMembers = memRes.users || memRes.members || [];
       const totalMembers = allMembers.length;
 
-      const absRes = await api('getAbsences', { email: session.email, practiceId });
+      const absRes = await api('getAbsences', { email: session.email, name: session.name, practiceId });
       currentAdminAbsences = absRes.absences || [];
       const absentCount = currentAdminAbsences.length;
       const presentCount = Math.max(0, totalMembers - absentCount);
@@ -2938,7 +2969,7 @@
         return `
           <div style="background:#ffffff; border:1px solid var(--border); border-radius:var(--radius-md); padding:12px; box-shadow:var(--shadow-sm);">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-              <span style="font-weight:700; color:var(--primary);">` + sec.name + ` (` + sec.abbr + `)</span>
+              <span style="font-weight:700; color:var(--primary);">` + sec.abbr + ` ` + sec.name + `</span>
               <span style="font-size:0.9rem; font-weight:700; color:` + (secRate >= 80 ? '#15803d' : '#b91c1c') + `;">` + secPresent + `/` + secTotal + ` 人 (` + secRate + `%)</span>
             </div>
             <div style="background:#e2e8f0; height:8px; border-radius:4px; overflow:hidden;">
@@ -2956,7 +2987,7 @@
           <tr>
             <td><strong>` + a.name + `</strong></td>
             <td>` + a.section + `</td>
-            <td>` + (a.instrument || '-') + `</td>
+            <td>` + formatInstrumentDisplay(a.instrument, a.section) + `</td>
             <td>` + a.reason + `</td>
             <td style="font-size:0.85rem; color:#64748b;">` + formatDateTimeDisplay(a.createdAt) + `</td>
           </tr>
@@ -2973,7 +3004,7 @@
       const rows = currentAdminAbsences.map(a => [
         a.name,
         a.section,
-        a.instrument || '',
+        formatInstrumentDisplay(a.instrument, a.section),
         '"' + (a.reason || '').replace(/"/g, '""') + '"',
         formatDateTimeDisplay(a.createdAt)
       ]);
@@ -2987,7 +3018,7 @@
     let allMembersCache = [];
 
     async function renderAdminMembersTable() {
-      const res = await api('getMembers', { email: session.email });
+      const res = await api('getMembers', { email: session.email, name: session.name });
       allMembersCache = res.users || res.members || [];
       const search = (document.getElementById('adminMemberSearchInput').value || '').toLowerCase();
       const tbody = document.getElementById('adminMembersTableBody');
@@ -2996,7 +3027,7 @@
       if (search) {
         list = list.filter(m => 
           m.name.toLowerCase().includes(search) || 
-          m.email.toLowerCase().includes(search) || 
+          (m.email || '').toLowerCase().includes(search) || 
           (m.instrument || '').toLowerCase().includes(search) ||
           m.section.toLowerCase().includes(search)
         );
@@ -3010,11 +3041,11 @@
       tbody.innerHTML = list.map(m => `
         <tr>
           <td><strong>` + m.name + `</strong></td>
-          <td>` + m.email + `</td>
+          <td>` + (m.email || '<span style="color:var(--text-muted); font-size:0.85rem;">尚未綁定信箱</span>') + `</td>
           <td><span class="badge" style="background:#e8eaf6; color:#1a237e;">` + m.section + `</span></td>
-          <td>` + m.instrument + `</td>
+          <td>` + formatInstrumentDisplay(m.instrument, m.section) + `</td>
           <td>
-            <select class="form-control" style="width:120px; padding:4px 8px; font-size:0.85rem;" onchange="changeMemberRole('` + m.email + `', this.value)">
+            <select class="form-control" style="width:120px; padding:4px 8px; font-size:0.85rem;" onchange="changeMemberRole('` + m.email + `', '` + m.name + `', this.value)">
               <option value="member" ` + (m.role === 'member' ? 'selected' : '') + `>一般社員</option>
               <option value="admin" ` + (m.role === 'admin' ? 'selected' : '') + `>社團幹部</option>
             </select>
@@ -3031,11 +3062,17 @@
       `).join('');
     }
 
-    async function changeMemberRole(email, newRole) {
+    async function changeMemberRole(targetEmail, targetName, newRole) {
       try {
-        await api('updateMemberRole', { email: session.email, targetEmail: email, role: newRole });
+        await api('updateMemberRole', {
+          adminEmail: session.email,
+          adminName: session.name,
+          targetEmail,
+          targetName,
+          role: newRole
+        });
         showToast('社員角色身分已變更！', 'success');
-        if (session.email === email) {
+        if (session.name === targetName || (session.email && session.email === targetEmail)) {
           session.role = newRole;
           localStorage.setItem('band_session', JSON.stringify(session));
           setupUserSessionUI();
@@ -3044,17 +3081,30 @@
       } catch (err) {}
     }
 
-    async function resetMemberPasswordConfirm(email, name) {
-      if (!confirm('確定要將社員「' + name + '」之密碼重設為 0000 嗎？')) return;
+    async function resetMemberPasswordConfirm(targetEmail, targetName) {
+      if (!confirm('確定要將社員「' + targetName + '」之密碼重設為 0000 嗎？')) return;
       try {
-        await api('resetPassword', { email: session.email, targetEmail: email });
-        showToast('「' + name + '」的密碼已重設為 0000！', 'success');
+        await api('resetPassword', {
+          adminEmail: session.email,
+          adminName: session.name,
+          targetEmail,
+          targetName
+        });
+        showToast('「' + targetName + '」的密碼已重設為 0000！', 'success');
         renderAdminMembersTable();
       } catch (err) {}
     }
 
+    function syncNewMemberInstrumentHint() {
+      const sel = document.getElementById('newMemberSection');
+      const optText = sel.options[sel.selectedIndex].text;
+      document.getElementById('newMemberInstrument').value = optText;
+    }
+
     function openAddMemberModal() {
+      closeAllModals();
       document.getElementById('addMemberForm').reset();
+      syncNewMemberInstrumentHint();
       document.getElementById('modalAddMember').classList.add('open');
     }
     function closeAddMemberModal() {
@@ -3066,12 +3116,12 @@
       const name = document.getElementById('newMemberName').value.trim();
       const email = document.getElementById('newMemberEmail').value.trim();
       const section = document.getElementById('newMemberSection').value;
-      const instrument = document.getElementById('newMemberInstrument').value.trim();
+      const instrument = formatInstrumentDisplay(document.getElementById('newMemberInstrument').value.trim(), section);
       const role = document.getElementById('newMemberRole').value;
 
       try {
-        await api('addMember', { adminEmail: session.email, name, email, section, instrument, role });
-        showToast('已成功新增社員！預設密碼：0000', 'success');
+        await api('addMember', { adminEmail: session.email, adminName: session.name, name, email, section, instrument, role });
+        showToast('已成功新增社員！可直接以姓名登入，預設密碼：0000', 'success');
         closeAddMemberModal();
         renderAdminMembersTable();
       } catch (err) {}
@@ -3139,24 +3189,44 @@
     }
 
     // ==========================================
-    // 個人資料與修改密碼
+    // 個人資料與修改密碼（單層切換無疊疊樂）
     // ==========================================
     let isForcedPasswordChange = false;
 
+    /**
+     * 從「個人設定」切換到「修改密碼」：先關閉個人設定，再開啟修改密碼
+     */
+    function switchToChangePasswordModal() {
+      closeProfileModal();
+      openChangePasswordModal(false);
+    }
+
     function openChangePasswordModal(forced = false) {
+      closeAllModals();
       isForcedPasswordChange = forced;
       document.getElementById('changePasswordForm').reset();
+
       const modal = document.getElementById('modalChangePassword');
+      const title = document.getElementById('changePwModalTitle');
       const notice = document.getElementById('changePwForcedNotice');
+      const emailGroup = document.getElementById('changePwEmailGroup');
+      const emailInput = document.getElementById('pwEmailInput');
       const cancelBtn = document.getElementById('cancelChangePwBtn');
       const closeBtn = document.getElementById('closeChangePwBtn');
 
       if (forced) {
+        title.innerText = '🔐 首次登入：設定常用信箱與新密碼';
         notice.style.display = 'block';
+        emailGroup.style.display = 'block';
+        emailInput.required = true;
+        emailInput.value = session && session.email ? session.email : '';
         cancelBtn.style.display = 'none';
         closeBtn.style.display = 'none';
       } else {
+        title.innerText = '🔐 修改登入密碼';
         notice.style.display = 'none';
+        emailGroup.style.display = 'none';
+        emailInput.required = false;
         cancelBtn.style.display = 'inline-block';
         closeBtn.style.display = 'inline-block';
       }
@@ -3166,7 +3236,7 @@
 
     function closeChangePasswordModal() {
       if (isForcedPasswordChange) {
-        showToast('首次登入請務必完成密碼變更！', 'error');
+        showToast('首次登入請務必完成信箱綁定與密碼變更！', 'error');
         return;
       }
       document.getElementById('modalChangePassword').classList.remove('open');
@@ -3174,10 +3244,15 @@
 
     async function handleChangePasswordSubmit(e) {
       e.preventDefault();
+      const newEmail = document.getElementById('pwEmailInput').value.trim();
       const oldPassword = document.getElementById('pwOldInput').value;
       const newPassword = document.getElementById('pwNewInput').value;
       const confirmPassword = document.getElementById('pwConfirmInput').value;
 
+      if (isForcedPasswordChange && !newEmail) {
+        showToast('請填寫您的常用電子信箱！', 'error');
+        return;
+      }
       if (newPassword !== confirmPassword) {
         showToast('新密碼兩次輸入不相符！', 'error');
         return;
@@ -3188,13 +3263,21 @@
       }
 
       try {
-        await api('changePassword', {
+        const res = await api('changePassword', {
           email: session.email,
+          name: session.name,
+          newEmail: isForcedPasswordChange ? newEmail : session.email,
           oldPassword,
           newPassword
         });
 
-        showToast('密碼已成功修改！', 'success');
+        if (isForcedPasswordChange && newEmail) {
+          session.email = res.email || newEmail.toLowerCase();
+          session.notifyEmail = true;
+          localStorage.setItem('band_session', JSON.stringify(session));
+        }
+
+        showToast('設定已成功儲存！', 'success');
         isForcedPasswordChange = false;
         document.getElementById('modalChangePassword').classList.remove('open');
       } catch (err) {}
@@ -3202,12 +3285,13 @@
 
     function openProfileModal() {
       if (!session) return;
+      closeAllModals();
       document.getElementById('profNameInput').value = session.name;
-      document.getElementById('profEmailInput').value = session.email;
+      document.getElementById('profEmailInput').value = session.email || '';
       document.getElementById('profSectionSelect').value = session.section;
-      document.getElementById('profInstrumentInput').value = session.instrument;
+      document.getElementById('profInstrumentInput').value = formatInstrumentDisplay(session.instrument, session.section);
       document.getElementById('profRoleInput').value = session.role === 'admin' ? '社團幹部' : '一般社員';
-      document.getElementById('profNotifyEmail').checked = !!session.notifyEmail;
+      document.getElementById('profNotifyEmail').checked = session.notifyEmail !== false;
 
       document.getElementById('modalProfile').classList.add('open');
     }
@@ -3217,21 +3301,26 @@
 
     async function handleProfileSubmit(e) {
       e.preventDefault();
+      const oldName = session.name;
       const name = document.getElementById('profNameInput').value.trim();
+      const newEmail = document.getElementById('profEmailInput').value.trim();
       const section = document.getElementById('profSectionSelect').value;
-      const instrument = document.getElementById('profInstrumentInput').value.trim();
+      const instrument = formatInstrumentDisplay(document.getElementById('profInstrumentInput').value.trim(), section);
       const notifyEmail = document.getElementById('profNotifyEmail').checked;
 
       try {
         await api('updateProfile', {
           email: session.email,
+          oldName,
           name,
+          newEmail,
           section,
           instrument,
           notifyEmail
         });
 
         session.name = name;
+        session.email = newEmail.toLowerCase();
         session.section = section;
         session.instrument = instrument;
         session.notifyEmail = notifyEmail;
@@ -3267,36 +3356,10 @@
     function initMockDatabase() {
       if (!localStorage.getItem('band_mock_users')) {
         const defaultUsers = [
-          { email: 'admin@scu.edu.tw', password: '0000', name: '廖社長', instrument: '中音薩克斯風', section: 'Sax.', role: 'admin', notifyEmail: true, isDefaultPassword: true },
-          { email: 'member@scu.edu.tw', password: '0000', name: '陳小笛', instrument: '長笛', section: 'Fl.', role: 'member', notifyEmail: true, isDefaultPassword: true }
+          { email: 'admin@scu.edu.tw', password: '0000', name: '廖社長', instrument: 'Sax. 中音薩克斯風', section: 'Sax.', role: 'admin', notifyEmail: true, isDefaultPassword: true },
+          { email: 'member@scu.edu.tw', password: '0000', name: '陳小笛', instrument: 'Fl. 長笛', section: 'Fl.', role: 'member', notifyEmail: true, isDefaultPassword: true }
         ];
         localStorage.setItem('band_mock_users', JSON.stringify(defaultUsers));
-      }
-      if (!localStorage.getItem('band_mock_practices')) {
-        const defaultPractices = [
-          {
-            id: 'prac_20261021',
-            date: '2026-10-21',
-            startTime: '18:15',
-            endTime: '20:30',
-            location: 'D0130',
-            deadline: '2026-10-21 12:00',
-            notes: '請在18:15就位熱嘴，18:30前會開始團練。'
-          }
-        ];
-        localStorage.setItem('band_mock_practices', JSON.stringify(defaultPractices));
-      }
-      if (!localStorage.getItem('band_mock_rooms')) {
-        localStorage.setItem('band_mock_rooms', JSON.stringify([]));
-      }
-      if (!localStorage.getItem('band_mock_absences')) {
-        localStorage.setItem('band_mock_absences', JSON.stringify([]));
-      }
-      if (!localStorage.getItem('band_mock_seating_templates')) {
-        localStorage.setItem('band_mock_seating_templates', JSON.stringify([getDefaultLayoutConfig()]));
-      }
-      if (!localStorage.getItem('band_mock_settings')) {
-        localStorage.setItem('band_mock_settings', JSON.stringify({ satPeriods: ['1','2','3','4','5','6','7'], sunPeriods: ['5','6','7','8'] }));
       }
     }
 
@@ -3304,8 +3367,9 @@
       initMockDatabase();
       if (action === 'login') {
         const users = JSON.parse(localStorage.getItem('band_mock_users') || '[]');
-        const u = users.find(x => x.email.toLowerCase() === params.email.toLowerCase());
-        if (!u || u.password !== params.password) return { success: false, message: '電子信箱或密碼錯誤！' };
+        const idLower = String(params.identifier || params.email || '').trim().toLowerCase();
+        const u = users.find(x => (x.email && x.email.toLowerCase() === idLower) || (x.name && x.name.toLowerCase() === idLower));
+        if (!u || u.password !== params.password) return { success: false, message: '帳號或密碼錯誤！' };
         return { success: true, mustChangePassword: u.password === '0000', user: u };
       }
       return { success: true };

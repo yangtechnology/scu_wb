@@ -2661,7 +2661,7 @@
     let allRoomRequestsCache = [];
 
     async function renderAdminRoomTable() {
-      const res = await api('getRoomRequests', { all: true });
+      const res = await api('getRoomRequests', { email: session.email, all: true });
       allRoomRequestsCache = res.requests || [];
 
       const statusFilter = document.getElementById('adminRoomFilterStatus').value;
@@ -2715,8 +2715,8 @@
       const assignedRoom = document.getElementById('adminRoomAssigned_' + id).value.trim();
 
       try {
-        await api('updateRoomRequest', { id, status, assignedRoom });
-        showToast('申請編號 ' + id + ' 審查結果已更新！', 'success');
+        await api('updateRoomRequest', { email: session.email, id, status, assignedRoom });
+        showToast('審查結果已更新！', 'success');
         renderAdminRoomTable();
       } catch (err) {}
     }
@@ -2820,7 +2820,7 @@
       const notes = document.getElementById('pracNotesInput').value.trim();
 
       try {
-        await api('submitPractice', { id, date, startTime, endTime, location, deadline, notes });
+        await api('submitPractice', { email: session.email, id, date, startTime, endTime, location, deadline, notes });
         showToast('團練場次已成功儲存！', 'success');
         closePracticeModal();
         renderAdminPracticesTable();
@@ -2828,9 +2828,9 @@
     }
 
     async function deletePracticeConfirm(id) {
-      if (!confirm('確定要刪除場次 ' + id + ' 嗎？相關假單亦將受到影響。')) return;
+      if (!confirm('確定要刪除場次嗎？相關假單亦將受到影響。')) return;
       try {
-        await api('deletePractice', { id });
+        await api('deletePractice', { email: session.email, id });
         showToast('該團練場次已刪除', 'info');
         renderAdminPracticesTable();
       } catch (err) {}
@@ -2860,11 +2860,11 @@
       const practiceId = select.value || (practices[0] && practices[0].id);
       if (!practiceId) return;
 
-      const memRes = await api('getMembers');
-      const allMembers = memRes.members || [];
+      const memRes = await api('getMembers', { email: session.email });
+      const allMembers = memRes.users || memRes.members || [];
       const totalMembers = allMembers.length;
 
-      const absRes = await api('getAbsences', { practiceId });
+      const absRes = await api('getAbsences', { email: session.email, practiceId });
       currentAdminAbsences = absRes.absences || [];
       const absentCount = currentAdminAbsences.length;
       const presentCount = Math.max(0, totalMembers - absentCount);
@@ -3021,7 +3021,7 @@
     async function saveAdminSeatingTemplate() {
       const template = getAdminCurrentEditingTemplate();
       try {
-        await api('saveSeatingTemplate', { template });
+        await api('saveSeatingTemplate', { email: session.email, template });
         showToast('座位表模板「' + template.name + '」已儲存！', 'success');
         loadAdminSeatingTab();
       } catch (err) {}
@@ -3045,7 +3045,7 @@
       });
 
       try {
-        await api('saveSeatingTemplate', { template: newTemplate });
+        await api('saveSeatingTemplate', { email: session.email, template: newTemplate });
         showToast('已新增編制模板！', 'success');
         await loadAdminSeatingTab();
         document.getElementById('adminSeatingTemplateSelect').value = newTemplate.id;
@@ -3062,7 +3062,7 @@
       if (!confirm('確定要刪除模板「' + select.options[select.selectedIndex].text + '」嗎？')) return;
 
       try {
-        await api('deleteSeatingTemplate', { id: select.value });
+        await api('deleteSeatingTemplate', { email: session.email, id: select.value });
         showToast('模板已刪除', 'info');
         loadAdminSeatingTab();
       } catch (err) {}
@@ -3074,8 +3074,8 @@
     let allMembersCache = [];
 
     async function renderAdminMembersTable() {
-      const res = await api('getMembers');
-      allMembersCache = res.members || [];
+      const res = await api('getMembers', { email: session.email });
+      allMembersCache = res.users || res.members || [];
       const search = (document.getElementById('adminMemberSearchInput').value || '').toLowerCase();
       const tbody = document.getElementById('adminMembersTableBody');
 
@@ -3121,20 +3121,23 @@
 
     async function changeMemberRole(email, newRole) {
       try {
-        await api('updateMemberRole', { email, role: newRole });
+        // 傳入 adminEmail (session.email) 和目標 targetEmail (email)
+        await api('updateMemberRole', { email: session.email, targetEmail: email, role: newRole });
         showToast('社員角色身分已變更！', 'success');
         if (session.email === email) {
           session.role = newRole;
           localStorage.setItem('band_session', JSON.stringify(session));
           setupUserSessionUI();
         }
+        renderAdminMembersTable();
       } catch (err) {}
     }
 
     async function resetMemberPasswordConfirm(email, name) {
       if (!confirm('確定要將社員「' + name + '」之密碼重設為 0000 嗎？')) return;
       try {
-        await api('resetPassword', { email });
+        // 傳入 adminEmail (session.email) 和目標 targetEmail (email)
+        await api('resetPassword', { email: session.email, targetEmail: email });
         showToast('「' + name + '」的密碼已重設為 0000！', 'success');
         renderAdminMembersTable();
       } catch (err) {}
@@ -3157,8 +3160,9 @@
       const role = document.getElementById('newMemberRole').value;
 
       try {
-        await api('addMember', { name, email, section, instrument, role });
-        showToast('已成功新增社員！', 'success');
+        // 傳入 adminEmail (session.email) 才能通過後端 admin 驗證
+        await api('addMember', { adminEmail: session.email, name, email, section, instrument, role });
+        showToast('已成功新增社員！預設密碼：0000', 'success');
         closeAddMemberModal();
         renderAdminMembersTable();
       } catch (err) {}

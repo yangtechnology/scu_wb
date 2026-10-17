@@ -59,7 +59,7 @@
       flex-direction: column;
     }
 
-    /* 嚴格控制幹部後台按鈕顯示：預設完全隱藏，只有 body.is-admin 時才顯示 */
+    /* 嚴格控制幹部後台按鈕顯示：預設完全隱藏，只有幹部登入時才顯示 */
     .admin-only-nav {
       display: none !important;
     }
@@ -238,6 +238,10 @@
       border-color: var(--primary);
       box-shadow: 0 0 0 3px rgba(26,35,126,0.12);
     }
+    select.form-control option:disabled {
+      color: #94a3b8;
+      background-color: #f1f5f9;
+    }
     textarea.form-control {
       resize: vertical;
       min-height: 80px;
@@ -254,7 +258,7 @@
 
     .period-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
       gap: 8px;
       margin-top: 6px;
     }
@@ -941,7 +945,7 @@
       <div id="tabHome" class="page-section active">
         <div class="welcome-banner">
           <h2 class="welcome-title" id="homeWelcomeTitle">歡迎回來，同學！🎶</h2>
-          <p class="welcome-subtitle" id="homeWelcomeSubtitle">東吳管樂社 ・負責樂器：</p>
+          <p class="welcome-subtitle" id="homeWelcomeSubtitle">東吳管樂社  ・負責樂器：</p>
         </div>
 
         <div class="form-row">
@@ -1001,12 +1005,13 @@
                   <th>練習類別</th>
                   <th>勿擾</th>
                   <th>需求</th>
-                  <th>狀態</th>
-                  <th>分配教室</th>
+                  <th>審核</th>
+                  <th>可借用時間</th>
+                  <th>核定教室</th>
                 </tr>
               </thead>
               <tbody id="homeRecentRoomsTableBody">
-                <tr><td colspan="8" style="text-align:center; color:var(--text-muted);">載入中...</td></tr>
+                <tr><td colspan="9" style="text-align:center; color:var(--text-muted);">載入中...</td></tr>
               </tbody>
             </table>
           </div>
@@ -1019,8 +1024,13 @@
           <div class="card-header">
             <div>
               <h2 class="card-title">🚪 借用排練教室 / 琴房</h2>
-              <div class="card-desc">填寫欲借用之日期、節次、練習類別與需求，幹部將進行審查與教室指派。</div>
+              <div class="card-desc">當週僅開放借用「下週」之教室，並請於本週截止時間前完成填寫。</div>
             </div>
+          </div>
+
+          <!-- 借用規則與當週截止提示橫幅 -->
+          <div id="roomBookingRuleBanner" style="background: #fffbeb; border: 1.5px solid #fcd34d; border-radius: var(--radius-md); padding: 12px 16px; margin-bottom: 20px; font-size: 0.92rem; color: #92400e; line-height: 1.5;">
+            載入借用規則中...
           </div>
 
           <form id="roomRequestForm" onsubmit="handleRoomRequestSubmit(event)">
@@ -1106,7 +1116,7 @@
             </div>
 
             <div style="text-align: right;">
-              <button type="submit" class="btn btn-primary" style="padding: 10px 24px;">
+              <button type="submit" id="roomSubmitBtn" class="btn btn-primary" style="padding: 10px 24px;">
                 🚀 送出借用申請
               </button>
             </div>
@@ -1117,7 +1127,7 @@
           <div class="card-header">
             <div>
               <h3 class="card-title">📋 我的申請記錄</h3>
-              <div class="card-desc">已收件(藍)、已通過(綠)、未通過(紅)、無教室(橘)</div>
+              <div class="card-desc">依借用日期由近到遠排列・已收件(藍)、已通過(綠)、未通過(紅)、無教室(橘)</div>
             </div>
             <button class="btn btn-secondary btn-sm" onclick="loadMyRoomRequests()">🔄 重新整理</button>
           </div>
@@ -1129,17 +1139,18 @@
                   <th>借用日期</th>
                   <th>星期</th>
                   <th>節次</th>
-                  <th>練習類別</th>
-                  <th>使用人數</th>
+                  <th>類別</th>
+                  <th>人數</th>
                   <th>勿擾</th>
                   <th>需求</th>
-                  <th>狀態</th>
-                  <th>分配教室</th>
                   <th>備註</th>
+                  <th>審核</th>
+                  <th>可借用時間</th>
+                  <th>核定教室</th>
                 </tr>
               </thead>
               <tbody id="myRoomRequestsTableBody">
-                <tr><td colspan="10" style="text-align:center; color:var(--text-muted);">載入中...</td></tr>
+                <tr><td colspan="11" style="text-align:center; color:var(--text-muted);">載入中...</td></tr>
               </tbody>
             </table>
           </div>
@@ -1152,7 +1163,7 @@
           <div class="card-header">
             <div>
               <h2 class="card-title">📝 團練請假登記</h2>
-              <div class="card-desc">團員若因故無法出席，請務必於截止時間前填寫請假事由；請假後座位表將自動重排。</div>
+              <div class="card-desc">團練前 7 天開放請假登記，請務必於團練當天中午 12:00 前完成填寫；請假後座位表將自動重排。</div>
             </div>
           </div>
 
@@ -1165,7 +1176,7 @@
           <div class="card-header">
             <div>
               <h3 class="card-title">📖 我的請假記錄</h3>
-              <div class="card-desc">過往所有團練請假登記紀錄</div>
+              <div class="card-desc">過往所有團練請假登記紀錄（依團練日期由近到遠排列）</div>
             </div>
           </div>
 
@@ -1195,7 +1206,7 @@
           <div class="card-header">
             <div>
               <h2 class="card-title">🎼 團練座位表</h2>
-              <div class="card-desc">依據當週團練實際出席人數自動排定座位（已請假人員將自動隱藏並重新排列）。</div>
+              <div class="card-desc">僅開放檢視最近一場團練之實際出席座位配置（遠期場次尚未確定出缺席，故反灰鎖定）。</div>
             </div>
             
             <div class="seating-controls">
@@ -1233,13 +1244,13 @@
           </div>
         </div>
 
-        <!-- 5.1 借教室管理 -->
+        <!-- 5.1 借教室管理（無申請編號，新增可借用時間與核定教室） -->
         <div id="subtab-adminRoom" class="subtab-content active">
           <div class="card">
             <div class="card-header">
               <div>
                 <h3 class="card-title">🚪 全社借教室申請審查</h3>
-                <div class="card-desc">可篩選狀態與日期，線上編輯審核狀態與指派教室，並支援匯出報表。</div>
+                <div class="card-desc">依借用日期由近到遠排列；可線上填寫審核狀態、可借用時間與核定教室，並支援匯出報表。</div>
               </div>
               <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
                 <select id="adminRoomFilterStatus" class="form-control" style="width: auto;" onchange="renderAdminRoomTable()">
@@ -1258,19 +1269,18 @@
               <table>
                 <thead>
                   <tr>
-                    <th>申請編號</th>
-                    <th>申請人</th>
-                    <th>聲部</th>
+                    <th>姓名</th>
                     <th>借用日期</th>
                     <th>星期</th>
                     <th>節次</th>
-                    <th>練習類別</th>
+                    <th>類別</th>
                     <th>人數</th>
                     <th>勿擾</th>
                     <th>需求</th>
-                    <th>審核狀態</th>
-                    <th>分配教室</th>
                     <th>備註</th>
+                    <th>審核</th>
+                    <th>可借用時間</th>
+                    <th>核定教室</th>
                     <th>操作</th>
                   </tr>
                 </thead>
@@ -1280,13 +1290,13 @@
           </div>
         </div>
 
-        <!-- 5.2 團練管理 -->
+        <!-- 5.2 團練管理（無場次代碼，由近到遠排序） -->
         <div id="subtab-adminPractice" class="subtab-content">
           <div class="card">
             <div class="card-header">
               <div>
                 <h3 class="card-title">🎺 團練場次排程管理</h3>
-                <div class="card-desc">新增、編輯或刪除全團合奏排練資訊。</div>
+                <div class="card-desc">依排練日期由近到遠排列；新增團練時系統將自動帶入預設時間、地點與當天中午 12:00 截止。</div>
               </div>
               <button class="btn btn-primary btn-sm" onclick="openPracticeModal()">➕ 新增團練場次</button>
             </div>
@@ -1295,7 +1305,6 @@
               <table>
                 <thead>
                   <tr>
-                    <th>場次代碼</th>
                     <th>排練日期</th>
                     <th>星期</th>
                     <th>排練時間</th>
@@ -1317,7 +1326,7 @@
             <div class="card-header">
               <div>
                 <h3 class="card-title">📊 團練請假與出席統計</h3>
-                <div class="card-desc">選取團練場次，即時統計全體與各聲部出缺席狀態，並可匯出名單。</div>
+                <div class="card-desc">選取團練場次，即時統計全體與各樂器出缺席狀態，並可匯出名單。</div>
               </div>
               <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
                 <label style="font-weight: 600; font-size: 0.9rem;">選取團練：</label>
@@ -1357,7 +1366,7 @@
               </div>
             </div>
 
-            <h4 style="margin-bottom: 12px; color: var(--primary); font-size: 1.05rem;">各聲部出席率分佈</h4>
+            <h4 style="margin-bottom: 12px; color: var(--primary); font-size: 1.05rem;">各樂器出席率分佈</h4>
             <div id="adminSectionBreakdownGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; margin-bottom: 24px;"></div>
 
             <h4 style="margin-bottom: 12px; color: var(--primary); font-size: 1.05rem;">請假詳細名冊</h4>
@@ -1366,8 +1375,7 @@
                 <thead>
                   <tr>
                     <th>社員姓名</th>
-                    <th>聲部</th>
-                    <th>樂器</th>
+                    <th>負責樂器</th>
                     <th>請假事由</th>
                     <th>登記時間</th>
                   </tr>
@@ -1384,7 +1392,7 @@
             <div class="card-header">
               <div>
                 <h3 class="card-title">🎼 座位表視覺化拖曳調整</h3>
-                <div class="card-desc">直接在下方座位圖中「按住滑鼠或手指拖曳」即可移動聲部位置；點擊聲部可微調人數與角度。</div>
+                <div class="card-desc">直接在下方座位圖中「按住滑鼠或手指拖曳」即可移動位置；點擊聲部可微調人數與角度。</div>
               </div>
               <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
                 <label style="font-weight: 600; font-size: 0.9rem;">調整目標：</label>
@@ -1418,7 +1426,7 @@
           </div>
         </div>
 
-        <!-- 5.5 社員管理 -->
+        <!-- 5.5 社員管理（合併負責樂器） -->
         <div id="subtab-adminMembers" class="subtab-content">
           <div class="card">
             <div class="card-header">
@@ -1438,8 +1446,7 @@
                   <tr>
                     <th>姓名</th>
                     <th>常用電子信箱</th>
-                    <th>聲部</th>
-                    <th>樂器</th>
+                    <th>負責樂器</th>
                     <th>身分角色</th>
                     <th>密碼狀態</th>
                     <th>管理操作</th>
@@ -1451,16 +1458,27 @@
           </div>
         </div>
 
-        <!-- 5.6 系統設定 -->
+        <!-- 5.6 系統設定（含連假提早截止日設定 + 週末節次設定） -->
         <div id="subtab-adminSettings" class="subtab-content">
           <div class="card">
             <div class="card-header">
               <div>
-                <h3 class="card-title">⚙️ 假日借用開放節次設定</h3>
-                <div class="card-desc">設定週六與週日允許社員申請之節次；未勾選者於借教室頁面將不予開放。</div>
+                <h3 class="card-title">⚙️ 借教室截止時間與假日開放節次設定</h3>
+                <div class="card-desc">設定當週預約下週教室之截止日（遇週五連假可提早至週四或週三中午12:00），以及週六、週日開放節次。</div>
               </div>
               <button class="btn btn-primary" onclick="saveSystemSettings()">💾 儲存設定</button>
             </div>
+
+            <div style="margin-bottom: 24px; max-width: 420px;">
+              <label class="form-label">⏰ 當週借教室申請截止日（預設為週五中午 12:00）</label>
+              <select id="settingsBookingDeadlineDay" class="form-control">
+                <option value="5">星期五 中午 12:00 截止（一般週）</option>
+                <option value="4">星期四 中午 12:00 截止（遇週五連假）</option>
+                <option value="3">星期三 中午 12:00 截止（遇週四、五連假）</option>
+              </select>
+            </div>
+
+            <hr style="border: 0; border-top: 1px solid var(--border); margin: 24px 0;">
 
             <div style="margin-bottom: 24px;">
               <h4 style="font-size: 1.05rem; color: var(--primary); margin-bottom: 10px; display: flex; align-items: center; gap: 8px;">
@@ -1488,7 +1506,7 @@
     </main>
   </div>
 
-  <!-- ==================== 彈出視窗組（全域保證最多只開一層） ==================== -->
+  <!-- ==================== 彈出視窗組 ==================== -->
 
   <!-- 1. 修改密碼與首次綁定信箱 -->
   <div id="modalChangePassword" class="modal-overlay">
@@ -1531,7 +1549,7 @@
     </div>
   </div>
 
-  <!-- 2. 個人資料與通知設定 -->
+  <!-- 2. 個人資料與通知設定（合併為單一「負責樂器」欄位） -->
   <div id="modalProfile" class="modal-overlay">
     <div class="modal-card">
       <div class="modal-header">
@@ -1550,30 +1568,19 @@
             <input type="email" id="profEmailInput" class="form-control" placeholder="請輸入常用電子信箱" required>
           </div>
 
-          <div class="form-row">
-            <div class="form-col">
-              <div class="form-group">
-                <label class="form-label">所屬聲部<span class="required">*</span></label>
-                <select id="profSectionSelect" class="form-control" required>
-                  <option value="Cl.">Cl. 豎笛</option>
-                  <option value="Fl.">Fl. 長笛</option>
-                  <option value="Ob.">Ob. 雙簧管</option>
-                  <option value="Sax.">Sax. 薩克斯風</option>
-                  <option value="Hn.">Hn. 法國號</option>
-                  <option value="Tpt.">Tpt. 小號</option>
-                  <option value="Tbn.">Tbn. 長號</option>
-                  <option value="Euph.">Euph. 上低音號</option>
-                  <option value="Perc.">Perc. 打擊</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="form-col">
-              <div class="form-group">
-                <label class="form-label">負責樂器<span class="required">*</span></label>
-                <input type="text" id="profInstrumentInput" class="form-control" placeholder="如：小號、長笛" required>
-              </div>
-            </div>
+          <div class="form-group">
+            <label class="form-label">負責樂器<span class="required">*</span></label>
+            <select id="profInstrumentSelect" class="form-control" required>
+              <option value="Cl. 豎笛">Cl. 豎笛</option>
+              <option value="Fl. 長笛">Fl. 長笛</option>
+              <option value="Ob. 雙簧管">Ob. 雙簧管</option>
+              <option value="Sax. 薩克斯風">Sax. 薩克斯風</option>
+              <option value="Hn. 法國號">Hn. 法國號</option>
+              <option value="Tpt. 小號">Tpt. 小號</option>
+              <option value="Tbn. 長號">Tbn. 長號</option>
+              <option value="Euph. 上低音號">Euph. 上低音號</option>
+              <option value="Perc. 打擊">Perc. 打擊</option>
+            </select>
           </div>
 
           <div class="form-group">
@@ -1596,7 +1603,7 @@
     </div>
   </div>
 
-  <!-- 3. 新增/編輯團練場次 -->
+  <!-- 3. 新增/編輯團練場次（預設 18:15、20:30、D0130、當天中午 12:00 截止） -->
   <div id="modalPractice" class="modal-overlay">
     <div class="modal-card">
       <div class="modal-header">
@@ -1609,31 +1616,31 @@
 
           <div class="form-group">
             <label class="form-label">團練日期<span class="required">*</span></label>
-            <input type="date" id="pracDateInput" class="form-control" required>
+            <input type="date" id="pracDateInput" class="form-control" required onchange="handlePracticeDateAutoDeadline()">
           </div>
 
           <div class="form-row">
             <div class="form-col">
               <div class="form-group">
                 <label class="form-label">開始時間<span class="required">*</span></label>
-                <input type="time" id="pracStartTime" class="form-control" value="18:30" required>
+                <input type="time" id="pracStartTime" class="form-control" value="18:15" required>
               </div>
             </div>
             <div class="form-col">
               <div class="form-group">
                 <label class="form-label">結束時間<span class="required">*</span></label>
-                <input type="time" id="pracEndTime" class="form-control" value="21:30" required>
+                <input type="time" id="pracEndTime" class="form-control" value="20:30" required>
               </div>
             </div>
           </div>
 
           <div class="form-group">
             <label class="form-label">團練地點<span class="required">*</span></label>
-            <input type="text" id="pracLocationInput" class="form-control" placeholder="例如：D0130" required>
+            <input type="text" id="pracLocationInput" class="form-control" value="D0130" required>
           </div>
 
           <div class="form-group">
-            <label class="form-label">請假登記截止時間<span class="required">*</span></label>
+            <label class="form-label">請假登記截止時間（預設為團練當天中午 12:00）<span class="required">*</span></label>
             <input type="datetime-local" id="pracDeadlineInput" class="form-control" required>
           </div>
 
@@ -1650,7 +1657,7 @@
     </div>
   </div>
 
-  <!-- 4. 新增社員 -->
+  <!-- 4. 新增社員（合併為單一「負責樂器」欄位） -->
   <div id="modalAddMember" class="modal-overlay">
     <div class="modal-card">
       <div class="modal-header">
@@ -1669,30 +1676,19 @@
             <input type="email" id="newMemberEmail" class="form-control" placeholder="未知可留空，例如：example@gmail.com">
           </div>
 
-          <div class="form-row">
-            <div class="form-col">
-              <div class="form-group">
-                <label class="form-label">所屬聲部<span class="required">*</span></label>
-                <select id="newMemberSection" class="form-control" required onchange="syncNewMemberInstrumentHint()">
-                  <option value="Cl.">Cl. 豎笛</option>
-                  <option value="Fl.">Fl. 長笛</option>
-                  <option value="Ob.">Ob. 雙簧管</option>
-                  <option value="Sax.">Sax. 薩克斯風</option>
-                  <option value="Hn.">Hn. 法國號</option>
-                  <option value="Tpt.">Tpt. 小號</option>
-                  <option value="Tbn.">Tbn. 長號</option>
-                  <option value="Euph.">Euph. 上低音號</option>
-                  <option value="Perc.">Perc. 打擊</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="form-col">
-              <div class="form-group">
-                <label class="form-label">負責樂器<span class="required">*</span></label>
-                <input type="text" id="newMemberInstrument" class="form-control" value="Cl. 豎笛" required>
-              </div>
-            </div>
+          <div class="form-group">
+            <label class="form-label">負責樂器<span class="required">*</span></label>
+            <select id="newMemberInstrument" class="form-control" required>
+              <option value="Cl. 豎笛">Cl. 豎笛</option>
+              <option value="Fl. 長笛">Fl. 長笛</option>
+              <option value="Ob. 雙簧管">Ob. 雙簧管</option>
+              <option value="Sax. 薩克斯風">Sax. 薩克斯風</option>
+              <option value="Hn. 法國號">Hn. 法國號</option>
+              <option value="Tpt. 小號">Tpt. 小號</option>
+              <option value="Tbn. 長號">Tbn. 長號</option>
+              <option value="Euph. 上低音號">Euph. 上低音號</option>
+              <option value="Perc. 打擊">Perc. 打擊</option>
+            </select>
           </div>
 
           <div class="form-group">
@@ -1746,32 +1742,33 @@
   <script>
     const GAS_URL = 'https://script.google.com/macros/s/AKfycbzRYlRMKgd9LOsbk92ayqqtDrdOEbZZtSzfwU5UTXqeQULPtEEC_5AtIas-uiMfzBQ/exec';
 
+    // 節次標籤（E、A、B 不加括號說明）
     const PERIOD_LABELS = {
       '1': '1節',
       '2': '2節',
       '3': '3節',
       '4': '4節',
-      'E': 'E節(午休)',
+      'E': 'E節',
       '5': '5節',
       '6': '6節',
       '7': '7節',
       '8': '8節',
       '9': '9節',
-      'A': 'A節(第10節)',
-      'B': 'B節(第11節)'
+      'A': 'A節',
+      'B': 'B節'
     };
     const ALL_PERIOD_KEYS = ['1', '2', '3', '4', 'E', '5', '6', '7', '8', '9', 'A', 'B'];
 
     const SECTION_DEFS = [
-      { id: 'Cl',   name: '豎笛',     abbr: 'Cl.',   defaultCount: 6 },
-      { id: 'Fl',   name: '長笛',     abbr: 'Fl.',   defaultCount: 2 },
-      { id: 'Ob',   name: '雙簧管',   abbr: 'Ob.',   defaultCount: 1 },
-      { id: 'Sax',  name: '薩克斯風', abbr: 'Sax.',  defaultCount: 2 },
-      { id: 'Euph', name: '上低音號', abbr: 'Euph.', defaultCount: 2 },
-      { id: 'Hn',   name: '法國號',   abbr: 'Hn.',   defaultCount: 3 },
-      { id: 'Tpt',  name: '小號',     abbr: 'Tpt.',  defaultCount: 5 },
-      { id: 'Tbn',  name: '長號',     abbr: 'Tbn.',  defaultCount: 4 },
-      { id: 'Perc', name: '打擊',     abbr: 'Perc.', defaultCount: 4 }
+      { id: 'Cl',   name: '豎笛',     abbr: 'Cl.',   fullLabel: 'Cl. 豎笛',     defaultCount: 6 },
+      { id: 'Fl',   name: '長笛',     abbr: 'Fl.',   fullLabel: 'Fl. 長笛',     defaultCount: 2 },
+      { id: 'Ob',   name: '雙簧管',   abbr: 'Ob.',   fullLabel: 'Ob. 雙簧管',   defaultCount: 1 },
+      { id: 'Sax',  name: '薩克斯風', abbr: 'Sax.',  fullLabel: 'Sax. 薩克斯風', defaultCount: 2 },
+      { id: 'Euph', name: '上低音號', abbr: 'Euph.', fullLabel: 'Euph. 上低音號',defaultCount: 2 },
+      { id: 'Hn',   name: '法國號',   abbr: 'Hn.',   fullLabel: 'Hn. 法國號',   defaultCount: 3 },
+      { id: 'Tpt',  name: '小號',     abbr: 'Tpt.',  fullLabel: 'Tpt. 小號',     defaultCount: 5 },
+      { id: 'Tbn',  name: '長號',     abbr: 'Tbn.',  fullLabel: 'Tbn. 長號',     defaultCount: 4 },
+      { id: 'Perc', name: '打擊',     abbr: 'Perc.', fullLabel: 'Perc. 打擊',   defaultCount: 4 }
     ];
 
     const SEATING_GROUPS = [
@@ -1790,22 +1787,48 @@
 
     let session = null;
 
-    /**
-     * 將樂器文字格式化為「Tpt. 小號」（自動清除多餘括號，避免出現 (Tpt.(小號))）
-     */
-    function formatInstrumentDisplay(inst, section) {
-      let s = String(inst || '').trim();
-      const sec = String(section || '').trim();
-      s = s.replace(/\(([^)]+)\)/g, ' $1').replace(/（([^）]+)）/g, ' $1').replace(/\s+/g, ' ').trim();
-      if (sec && !s.toLowerCase().startsWith(sec.toLowerCase())) {
-        return sec + ' ' + s;
+    // 取得本地 YYYY-MM-DD 字串
+    function toLocalDateStr(d) {
+      const yr = d.getFullYear();
+      const mo = String(d.getMonth() + 1).padStart(2, '0');
+      const da = String(d.getDate()).padStart(2, '0');
+      return `${yr}-${mo}-${da}`;
+    }
+
+    // 統一排序：日期最近的排最上面（未來升序，過去排後面）
+    function sortByDateClosestFirst(list, dateKey = 'date') {
+      const todayStr = toLocalDateStr(new Date());
+      return [...list].sort((a, b) => {
+        const da = String(a[dateKey] || '');
+        const db = String(b[dateKey] || '');
+        const aFuture = da >= todayStr;
+        const bFuture = db >= todayStr;
+        if (aFuture && bFuture) return da.localeCompare(db);
+        if (aFuture && !bFuture) return -1;
+        if (!aFuture && bFuture) return 1;
+        return db.localeCompare(da);
+      });
+    }
+
+    function extractSectionAbbr(instStr, fallbackSec) {
+      const s = String(instStr || '').trim();
+      for (const def of SECTION_DEFS) {
+        if (s.toLowerCase().startsWith(def.abbr.toLowerCase()) || s.includes(def.name)) {
+          return def.abbr;
+        }
       }
+      return String(fallbackSec || 'Cl.').trim();
+    }
+
+    function formatInstrumentDisplay(inst, section) {
+      const abbr = extractSectionAbbr(inst, section);
+      const found = SECTION_DEFS.find(d => d.abbr === abbr);
+      if (found) return found.fullLabel;
+      let s = String(inst || '').trim();
+      s = s.replace(/\(([^)]+)\)/g, ' $1').replace(/（([^）]+)）/g, ' $1').replace(/\s+/g, ' ').trim();
       return s;
     }
 
-    /**
-     * 關閉所有彈出視窗（確保畫面上永遠最多只有一層視窗，杜絕疊疊樂）
-     */
     function closeAllModals() {
       document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('open'));
     }
@@ -1848,7 +1871,7 @@
       } catch (err) {
         console.error('API Error:', err);
         if (!err.message || (!err.message.includes('連線錯誤') && err.message !== '操作失敗，請稍後再試')) {
-          const isAlreadyShown = err.message && (err.message.includes('找不到') || err.message.includes('密碼') || err.message.includes('已存在') || err.message.includes('已被') || err.message.includes('超過'));
+          const isAlreadyShown = err.message && (err.message.includes('找不到') || err.message.includes('密碼') || err.message.includes('已存在') || err.message.includes('已被') || err.message.includes('超過') || err.message.includes('截止') || err.message.includes('開放'));
           if (!isAlreadyShown) {
             showToast(err.message || '連線錯誤，請稍後再試', 'error');
           }
@@ -1971,6 +1994,7 @@
         if (res.success) {
           session = res.user;
           session.instrument = formatInstrumentDisplay(session.instrument, session.section);
+          session.section = extractSectionAbbr(session.instrument, session.section);
           localStorage.setItem('band_session', JSON.stringify(session));
 
           showToast('登入成功，歡迎 ' + session.name, 'success');
@@ -1978,7 +2002,6 @@
           showPage('mainApp');
           showTab('tabHome');
 
-          // 首次登入（預設密碼 0000 或尚未綁定常用電子信箱）強制彈出設定視窗
           if (password === '0000' || res.mustChangePassword || !session.email) {
             setTimeout(() => openChangePasswordModal(true), 350);
           }
@@ -2000,8 +2023,8 @@
       if (!session) return;
       const cleanInst = formatInstrumentDisplay(session.instrument, session.section);
       session.instrument = cleanInst;
+      session.section = extractSectionAbbr(cleanInst, session.section);
 
-      // 右上角顯示：管理員 (Tpt. 小號)
       document.getElementById('navUserName').innerText = session.name + ' (' + cleanInst + ')';
 
       const roleBadge = document.getElementById('navRoleBadge');
@@ -2023,7 +2046,6 @@
       if (!session) return;
       const cleanInst = formatInstrumentDisplay(session.instrument, session.section);
       document.getElementById('homeWelcomeTitle').innerText = '歡迎回來，' + session.name + '！🎶';
-      // 修正為：東吳管樂社 ・負責樂器：Tpt. 小號
       document.getElementById('homeWelcomeSubtitle').innerText = '東吳管樂社  ・負責樂器：' + cleanInst;
 
       const data = await api('getDashboard', { email: session.email, name: session.name });
@@ -2040,7 +2062,7 @@
         upcomingEl.innerHTML = `
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:8px;">
             <div style="font-size:1.15rem; font-weight:700; color:var(--primary);">
-              📅 ` + nextPrac.date + ` (週` + getWeekday(nextPrac.date) + `) ` + (nextPrac.startTime || '18:30') + ` - ` + (nextPrac.endTime || '21:30') + `
+              📅 ` + nextPrac.date + ` (週` + getWeekday(nextPrac.date) + `) ` + (nextPrac.startTime || '18:15') + ` - ` + (nextPrac.endTime || '20:30') + `
             </div>
             ` + statusBadgeHtml + `
           </div>
@@ -2056,19 +2078,20 @@
       }
 
       const recentTable = document.getElementById('homeRecentRoomsTableBody');
-      const recentList = data.recentRoomRequests || [];
+      const recentList = sortByDateClosestFirst(data.recentRoomRequests || [], 'date').slice(0, 3);
       if (recentList.length === 0) {
-        recentTable.innerHTML = '<tr><td colspan="8" style="text-align:center; color:var(--text-muted);">尚無借教室記錄</td></tr>';
+        recentTable.innerHTML = '<tr><td colspan="9" style="text-align:center; color:var(--text-muted);">尚無借教室記錄</td></tr>';
       } else {
         recentTable.innerHTML = recentList.map(item => `
           <tr>
             <td><strong>` + item.date + `</strong></td>
             <td>週` + getWeekday(item.date) + `</td>
-            <td>` + (Array.isArray(item.periods) ? item.periods.join(', ') : item.periods) + `節</td>
+            <td>` + (Array.isArray(item.periods) ? item.periods.join('') : item.periods) + `</td>
             <td>` + item.category + `</td>
-            <td>` + (item.doNotDisturb ? '<span class="badge badge-rejected">勿擾</span>' : '否') + `</td>
+            <td>` + (item.doNotDisturb ? '<span class="badge badge-rejected">是</span>' : 'X') + `</td>
             <td>` + (item.needs && item.needs.length > 0 ? item.needs.join('、') : '-') + `</td>
             <td>` + getStatusBadgeHtml(item.status) + `</td>
+            <td><strong style="color:#0369a1;">` + (item.approvedTime || '-') + `</strong></td>
             <td><strong style="color:var(--primary);">` + (item.assignedRoom || '尚未分配') + `</strong></td>
           </tr>
         `).join('');
@@ -2083,18 +2106,77 @@
     }
 
     // ==========================================
-    // 借教室
+    // 借教室（當週只能借下週，週五或連假前一日 12:00 截止）
     // ==========================================
     let cachedSettings = null;
 
+    /**
+     * 計算本週開放借用的「下週一 ～ 下週日」範圍與本週截止時間
+     */
+    function getNextWeekBookingWindow() {
+      const now = new Date();
+      const day = now.getDay();
+      const diffToMon = day === 0 ? -6 : 1 - day;
+
+      const thisMonday = new Date(now);
+      thisMonday.setDate(now.getDate() + diffToMon);
+      thisMonday.setHours(0, 0, 0, 0);
+
+      const deadlineDay = parseInt((cachedSettings && cachedSettings.bookingDeadlineDay) || '5', 10);
+      const deadline = new Date(thisMonday);
+      deadline.setDate(thisMonday.getDate() + (deadlineDay - 1));
+      deadline.setHours(12, 0, 0, 0);
+
+      const nextMonday = new Date(thisMonday);
+      nextMonday.setDate(thisMonday.getDate() + 7);
+      const nextSunday = new Date(nextMonday);
+      nextSunday.setDate(nextMonday.getDate() + 6);
+
+      const dayNames = ['', '一', '二', '三', '四', '五', '六', '日'];
+      const deadlineDateStr = toLocalDateStr(deadline);
+
+      return {
+        now,
+        deadline,
+        isPastDeadline: now > deadline,
+        minDateStr: toLocalDateStr(nextMonday),
+        maxDateStr: toLocalDateStr(nextSunday),
+        deadlineLabel: `${deadlineDateStr}（週${dayNames[deadlineDay]}）中午 12:00`
+      };
+    }
+
     async function initRoomTab() {
-      const tomorrow = new Date();
-      tomorrow.setDate(tomorrow.getDate() + 1);
-      const dateStr = tomorrow.toISOString().split('T')[0];
-      const dateInput = document.getElementById('roomDateInput');
-      if (!dateInput.value) {
-        dateInput.value = dateStr;
+      if (!cachedSettings) {
+        const res = await api('getSettings');
+        cachedSettings = res.settings;
       }
+
+      const win = getNextWeekBookingWindow();
+      const banner = document.getElementById('roomBookingRuleBanner');
+      const dateInput = document.getElementById('roomDateInput');
+      const submitBtn = document.getElementById('roomSubmitBtn');
+
+      // 設定日期選擇器只允許選下週一～下週日
+      dateInput.min = win.minDateStr;
+      dateInput.max = win.maxDateStr;
+      if (!dateInput.value || dateInput.value < win.minDateStr || dateInput.value > win.maxDateStr) {
+        dateInput.value = win.minDateStr;
+      }
+
+      if (win.isPastDeadline) {
+        banner.style.background = '#fef2f2';
+        banner.style.borderColor = '#f87171';
+        banner.style.color = '#991b1b';
+        banner.innerHTML = `⛔ <strong>本週借教室申請已截止：</strong> 欲借下週（${win.minDateStr} ～ ${win.maxDateStr}）教室者，已於 <strong>${win.deadlineLabel}</strong> 截止收件。`;
+        submitBtn.disabled = true;
+      } else {
+        banner.style.background = '#fffbeb';
+        banner.style.borderColor = '#fcd34d';
+        banner.style.color = '#92400e';
+        banner.innerHTML = `💡 <strong>借教室開放時間規則：</strong> 當週僅開放預約下週 <strong>${win.minDateStr}（一）～ ${win.maxDateStr}（日）</strong> 之教室，請於本週 <strong>${win.deadlineLabel}</strong> 前完成填寫。`;
+        submitBtn.disabled = false;
+      }
+
       handleRoomDateChange();
       loadMyRoomRequests();
     }
@@ -2161,6 +2243,17 @@
     async function handleRoomRequestSubmit(e) {
       e.preventDefault();
       const date = document.getElementById('roomDateInput').value;
+      const win = getNextWeekBookingWindow();
+
+      if (win.isPastDeadline) {
+        showToast(`本週借教室已於 ${win.deadlineLabel} 截止！`, 'error');
+        return;
+      }
+      if (date < win.minDateStr || date > win.maxDateStr) {
+        showToast(`當週僅能借用下週（${win.minDateStr} ～ ${win.maxDateStr}）的教室！`, 'error');
+        return;
+      }
+
       const category = document.getElementById('roomCategorySelect').value;
       const headcount = parseInt(document.getElementById('roomHeadcount').value, 10);
       const doNotDisturb = document.getElementById('roomDoNotDisturb').checked;
@@ -2213,9 +2306,9 @@
       if (!session) return;
       const res = await api('getRoomRequests', { email: session.email, name: session.name });
       const tbody = document.getElementById('myRoomRequestsTableBody');
-      const list = res.requests || [];
+      const list = sortByDateClosestFirst(res.requests || [], 'date');
       if (list.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="10" style="text-align:center; color:var(--text-muted);">目前無借用申請記錄</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="11" style="text-align:center; color:var(--text-muted);">目前無借用申請記錄</td></tr>';
         return;
       }
 
@@ -2223,49 +2316,64 @@
         <tr>
           <td><strong>` + item.date + `</strong></td>
           <td>週` + getWeekday(item.date) + `</td>
-          <td>` + (Array.isArray(item.periods) ? item.periods.join(', ') : item.periods) + `節</td>
+          <td>` + (Array.isArray(item.periods) ? item.periods.join('') : item.periods) + `</td>
           <td>` + item.category + `</td>
-          <td>` + (item.headcount || 1) + ` 人</td>
-          <td>` + (item.doNotDisturb ? '<span class="badge badge-rejected">勿擾</span>' : '否') + `</td>
+          <td>` + (item.headcount || 1) + `</td>
+          <td>` + (item.doNotDisturb ? '<span class="badge badge-rejected">是</span>' : 'X') + `</td>
           <td>` + (item.needs && item.needs.length > 0 ? item.needs.join('、') : '-') + `</td>
-          <td>` + getStatusBadgeHtml(item.status) + `</td>
-          <td><strong style="color:var(--primary);">` + (item.assignedRoom || '待分配') + `</strong></td>
           <td style="font-size:0.86rem; color:#475569;">` + (item.notes || '-') + `</td>
+          <td>` + getStatusBadgeHtml(item.status) + `</td>
+          <td><strong style="color:#0369a1;">` + (item.approvedTime || '-') + `</strong></td>
+          <td><strong style="color:var(--primary);">` + (item.assignedRoom || '待分配') + `</strong></td>
         </tr>
       `).join('');
     }
 
     // ==========================================
-    // 請假
+    // 請假（由近到遠排序 + 團練前 7 天才開放請假）
     // ==========================================
     async function loadAbsenceTab() {
       if (!session) return;
       const res = await api('getPractices');
-      const practices = res.practices || [];
+      const practices = sortByDateClosestFirst(res.practices || [], 'date');
       const myAbsencesRes = await api('getAbsences', { email: session.email, name: session.name });
-      const myAbsences = myAbsencesRes.absences || [];
+      const myAbsences = sortByDateClosestFirst(myAbsencesRes.absences || [], 'practiceDate');
 
       const container = document.getElementById('upcomingPracticesList');
       if (practices.length === 0) {
         container.innerHTML = '<p style="color:var(--text-muted); text-align:center; padding:20px;">目前尚無已排定之團練場次。</p>';
       } else {
+        const now = new Date();
         container.innerHTML = practices.map(p => {
           const myRec = myAbsences.find(a => a.practiceId === p.id);
           const deadlineDate = new Date(String(p.deadline).replace(' ', 'T'));
-          const isExpired = !isNaN(deadlineDate.getTime()) && deadlineDate < new Date();
+          const isExpired = !isNaN(deadlineDate.getTime()) && deadlineDate < now;
+
+          // 計算團練前 7 天 00:00 是否已到
+          const pracDateObj = new Date(p.date + 'T00:00:00');
+          const openDateObj = new Date(pracDateObj);
+          openDateObj.setDate(pracDateObj.getDate() - 7);
+          const isTooEarly = now < openDateObj;
+          const openDateStr = toLocalDateStr(openDateObj);
 
           let statusHtml = '<span class="badge badge-approved" style="font-size:0.85rem;">✅ 出席預定</span>';
           let actionBtnText = '📝 我要請假';
           if (myRec) {
             statusHtml = '<span class="badge badge-rejected" style="font-size:0.85rem;">⚠️ 已請假 (' + myRec.reason + ')</span>';
             actionBtnText = '✏️ 修改請假事由';
+          } else if (isTooEarly) {
+            actionBtnText = `⏳ ${openDateStr} 開放請假`;
+          } else if (isExpired) {
+            actionBtnText = '已截止';
           }
+
+          const disableBtn = isExpired || isTooEarly;
 
           return `
             <div class="practice-card">
               <div class="practice-header">
                 <div>
-                  <div class="practice-date">🎺 ` + p.date + ` (週` + getWeekday(p.date) + `) ` + (p.startTime || '18:30') + ` - ` + (p.endTime || '21:30') + `</div>
+                  <div class="practice-date">🎺 ` + p.date + ` (週` + getWeekday(p.date) + `) ` + (p.startTime || '18:15') + ` - ` + (p.endTime || '20:30') + `</div>
                   <div style="font-size:0.92rem; color:#475569; margin-top:4px;">📍 排練地點：` + p.location + `</div>
                 </div>
                 <div>` + statusHtml + `</div>
@@ -2277,7 +2385,7 @@
 
               <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
                 <span class="practice-deadline-badge">⏰ 請假截止時間：` + formatDateTimeDisplay(p.deadline) + (isExpired ? ' (已截止)' : '') + `</span>
-                <button type="button" class="btn btn-outline btn-sm" ` + (isExpired ? 'disabled' : '') + ` onclick="openSubmitAbsenceModal('` + p.id + `', '` + p.date + `', '` + (myRec ? myRec.reason.replace(/'/g, "\\'") : '') + `')">
+                <button type="button" class="btn btn-outline btn-sm" ` + (disableBtn ? 'disabled' : '') + ` onclick="openSubmitAbsenceModal('` + p.id + `', '` + p.date + `', '` + (myRec ? myRec.reason.replace(/'/g, "\\'") : '') + `')">
                   ` + actionBtnText + `
                 </button>
               </div>
@@ -2336,7 +2444,7 @@
     }
 
     // ==========================================
-    // 座位表（前後端完全一致，過濾舊版亂碼資料）
+    // 座位表（僅開放點擊最近一場，其餘反灰）
     // ==========================================
     let currentLayouts = [];
 
@@ -2348,9 +2456,6 @@
       return { id: 'default', name: '預設團練座位表', sections };
     }
 
-    /**
-     * 確保傳入的座位配置為新版結構（若偵測到舊版沒有 Cl1，自動轉為新版預設值）
-     */
     function sanitizeLayoutConfig(layout) {
       if (!layout || !layout.sections || !layout.sections.Cl1) {
         return getDefaultLayoutConfig();
@@ -2360,14 +2465,18 @@
 
     async function loadSeatingTab() {
       const pRes = await api('getPractices');
-      const practices = pRes.practices || [];
+      const practices = sortByDateClosestFirst(pRes.practices || [], 'date');
       const pSelect = document.getElementById('seatingPracticeSelect');
+
       if (practices.length === 0) {
         pSelect.innerHTML = '<option value="">目前無團練場次</option>';
       } else {
-        pSelect.innerHTML = practices.map(p => `
-          <option value="` + p.id + `">` + p.date + ` (週` + getWeekday(p.date) + `) - ` + p.location + `</option>
-        `).join('');
+        // 第一筆即為距離今天最近的一場團練，其餘遠期場次加上 disabled 反灰不可選
+        pSelect.innerHTML = practices.map((p, idx) => {
+          const isNearest = (idx === 0);
+          const note = isNearest ? '（最近場次）' : '（日期未到）';
+          return `<option value="${p.id}" ${isNearest ? 'selected' : 'disabled'}>${p.date} (週${getWeekday(p.date)}) - ${p.location} ${note}</option>`;
+        }).join('');
       }
 
       const tRes = await api('getSeatingTemplates');
@@ -2565,7 +2674,7 @@
         return `
           <div style="background:#ffffff; border:1px solid var(--border); border-radius:var(--radius-md); padding:10px 14px; box-shadow:var(--shadow-sm);">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
-              <span style="font-weight:700; color:var(--primary);">` + s.abbr + ` ` + s.name + `</span>
+              <span style="font-weight:700; color:var(--primary);">` + s.fullLabel + `</span>
               <span style="font-weight:700; color:` + (rate >= 80 ? '#15803d' : '#b91c1c') + `;">出席 ` + present + `/` + total + `</span>
             </div>
             <div style="background:#e2e8f0; height:6px; border-radius:3px; overflow:hidden;">
@@ -2586,7 +2695,7 @@
 
     async function loadAdminSeatingTab() {
       const pRes = await api('getPractices');
-      const practices = pRes.practices || [];
+      const practices = sortByDateClosestFirst(pRes.practices || [], 'date');
       const tRes = await api('getSeatingTemplates');
       currentLayouts = tRes.templates || tRes.layouts || [];
 
@@ -2688,7 +2797,7 @@
 
       const g = SEATING_GROUPS.find(x => x.id === adminSelectedSecId);
       const conf = adminEditingLayout.sections[adminSelectedSecId] || { count: g.defaultCount, angle: g.angle };
-      titleEl.innerText = `🎯 目前選取：${g.label} (${g.secAbbr})`;
+      titleEl.innerText = `🎯 目前選取：${g.label}`;
       ctrlEl.style.display = 'flex';
       document.getElementById('selectedSecCountVal').innerText = conf.count !== undefined ? conf.count : g.defaultCount;
       document.getElementById('selectedSecAngleVal').innerText = (conf.angle !== undefined ? conf.angle : g.angle) + '°';
@@ -2729,13 +2838,13 @@
     }
 
     // ==========================================
-    // 幹部後台：1. 借教室管理
+    // 幹部後台：1. 借教室管理（無申請編號，新增可借用時間與核定教室）
     // ==========================================
     let allRoomRequestsCache = [];
 
     async function renderAdminRoomTable() {
       const res = await api('getRoomRequests', { email: session.email, name: session.name, all: true });
-      allRoomRequestsCache = res.requests || [];
+      allRoomRequestsCache = sortByDateClosestFirst(res.requests || [], 'date');
 
       const statusFilter = document.getElementById('adminRoomFilterStatus').value;
       const dateFilter = document.getElementById('adminRoomFilterDate').value;
@@ -2750,24 +2859,23 @@
       }
 
       if (list.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="14" style="text-align:center; color:var(--text-muted);">無符合條件之借教室申請記錄</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="13" style="text-align:center; color:var(--text-muted);">無符合條件之借教室申請記錄</td></tr>';
         return;
       }
 
       tbody.innerHTML = list.map(item => `
         <tr>
-          <td><code>` + item.id + `</code></td>
           <td><strong>` + item.name + `</strong></td>
-          <td>` + item.section + `</td>
           <td>` + item.date + `</td>
-          <td>週` + getWeekday(item.date) + `</td>
-          <td>` + (Array.isArray(item.periods) ? item.periods.join(', ') : item.periods) + `節</td>
+          <td>` + getWeekday(item.date) + `</td>
+          <td><strong>` + (Array.isArray(item.periods) ? item.periods.join('') : item.periods) + `</strong></td>
           <td>` + item.category + `</td>
-          <td>` + (item.headcount || 1) + ` 人</td>
-          <td>` + (item.doNotDisturb ? '<span class="badge badge-rejected">勿擾</span>' : '否') + `</td>
+          <td>` + (item.headcount || 1) + `</td>
+          <td>` + (item.doNotDisturb ? '<span class="badge badge-rejected">是</span>' : 'X') + `</td>
           <td>` + (item.needs && item.needs.length > 0 ? item.needs.join('、') : '-') + `</td>
+          <td style="font-size:0.82rem; color:#64748b; max-width:140px;">` + (item.notes || '-') + `</td>
           <td>
-            <select class="form-control" style="padding:4px 8px; font-size:0.85rem;" id="adminRoomStatus_` + item.id + `">
+            <select class="form-control" style="padding:4px 8px; font-size:0.85rem; width:96px;" id="adminRoomStatus_` + item.id + `">
               <option value="已收件" ` + (item.status === '已收件' ? 'selected' : '') + `>已收件</option>
               <option value="已通過" ` + (item.status === '已通過' ? 'selected' : '') + `>已通過</option>
               <option value="未通過" ` + (item.status === '未通過' ? 'selected' : '') + `>未通過</option>
@@ -2775,9 +2883,11 @@
             </select>
           </td>
           <td>
-            <input type="text" class="form-control" style="padding:4px 8px; font-size:0.85rem; width:110px;" id="adminRoomAssigned_` + item.id + `" value="` + (item.assignedRoom || '') + `" placeholder="如：D0130">
+            <input type="text" class="form-control" style="padding:4px 8px; font-size:0.85rem; width:95px;" id="adminRoomTime_` + item.id + `" value="` + (item.approvedTime || '') + `" placeholder="如：5678">
           </td>
-          <td style="font-size:0.82rem; color:#64748b; max-width:140px;">` + (item.notes || '-') + `</td>
+          <td>
+            <input type="text" class="form-control" style="padding:4px 8px; font-size:0.85rem; width:95px;" id="adminRoomAssigned_` + item.id + `" value="` + (item.assignedRoom || '') + `" placeholder="如：B209">
+          </td>
           <td>
             <button class="btn btn-primary btn-sm" onclick="saveAdminRoomRow('` + item.id + `')">儲存</button>
           </td>
@@ -2787,10 +2897,18 @@
 
     async function saveAdminRoomRow(id) {
       const status = document.getElementById('adminRoomStatus_' + id).value;
+      const approvedTime = document.getElementById('adminRoomTime_' + id).value.trim();
       const assignedRoom = document.getElementById('adminRoomAssigned_' + id).value.trim();
 
       try {
-        const res = await api('updateRoomRequest', { email: session.email, name: session.name, id, status, assignedRoom });
+        const res = await api('updateRoomRequest', {
+          email: session.email,
+          name: session.name,
+          id,
+          status,
+          approvedTime,
+          assignedRoom
+        });
         if (res.emailSent) {
           showToast('審查結果已更新，並已寄發通知信給申請人！', 'success');
         } else if (res.emailError) {
@@ -2807,47 +2925,45 @@
         showToast('目前無資料可供匯出', 'info');
         return;
       }
-      const headers = ['申請編號', '姓名', '聲部', '借用日期', '星期', '節次', '練習類別', '使用人數', '勿擾', '需求', '審核狀態', '分配教室', '備註'];
+      const headers = ['姓名', '借用日期', '星期', '節次', '類別', '人數', '勿擾', '需求', '備註', '審核', '可借用時間', '核定教室'];
       const rows = allRoomRequestsCache.map(r => [
-        r.id,
         r.name,
-        r.section,
         r.date,
-        '週' + getWeekday(r.date),
-        '"' + (Array.isArray(r.periods) ? r.periods.join(';') : r.periods) + '"',
+        getWeekday(r.date),
+        '"' + (Array.isArray(r.periods) ? r.periods.join('') : r.periods) + '"',
         r.category,
         r.headcount || 1,
-        r.doNotDisturb ? '是' : '否',
+        r.doNotDisturb ? '是' : 'X',
         '"' + ((r.needs || []).join('、')) + '"',
+        '"' + (r.notes || '').replace(/"/g, '""') + '"',
         r.status,
-        r.assignedRoom || '',
-        '"' + (r.notes || '').replace(/"/g, '""') + '"'
+        '"' + (r.approvedTime || '') + '"',
+        r.assignedRoom || ''
       ]);
 
-      downloadCSV('東吳管樂社_借教室申請清單_' + new Date().toISOString().split('T')[0] + '.csv', headers, rows);
+      downloadCSV('東吳管樂社_教室借用清單_' + toLocalDateStr(new Date()) + '.csv', headers, rows);
     }
 
     // ==========================================
-    // 幹部後台：2. 團練管理
+    // 幹部後台：2. 團練管理（無場次代碼，預設 18:15~20:30、D0130、當天 12:00 截止）
     // ==========================================
     let allPracticesCache = [];
 
     async function renderAdminPracticesTable() {
       const res = await api('getPractices');
-      allPracticesCache = res.practices || [];
+      allPracticesCache = sortByDateClosestFirst(res.practices || [], 'date');
       const tbody = document.getElementById('adminPracticesTableBody');
 
       if (allPracticesCache.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; color:var(--text-muted);">尚無團練場次，請點擊上方按鈕建立</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:var(--text-muted);">尚無團練場次，請點擊上方按鈕建立</td></tr>';
         return;
       }
 
       tbody.innerHTML = allPracticesCache.map(p => `
         <tr>
-          <td><code>` + p.id + `</code></td>
           <td><strong>` + p.date + `</strong></td>
           <td>週` + getWeekday(p.date) + `</td>
-          <td>` + (p.startTime || '18:30') + ` - ` + (p.endTime || '21:30') + `</td>
+          <td>` + (p.startTime || '18:15') + ` - ` + (p.endTime || '20:30') + `</td>
           <td>` + p.location + `</td>
           <td><span style="color:#b45309; font-weight:600;">` + formatDateTimeDisplay(p.deadline) + `</span></td>
           <td style="font-size:0.86rem; color:#475569;">` + (p.notes || '-') + `</td>
@@ -2861,6 +2977,16 @@
       `).join('');
     }
 
+    /**
+     * 當幹部在新增團練選擇日期時，自動將「請假登記截止時間」設為當天中午 12:00
+     */
+    function handlePracticeDateAutoDeadline() {
+      const dateVal = document.getElementById('pracDateInput').value;
+      if (dateVal) {
+        document.getElementById('pracDeadlineInput').value = dateVal + 'T12:00';
+      }
+    }
+
     function openPracticeModal(editData = null) {
       closeAllModals();
       const modal = document.getElementById('modalPractice');
@@ -2869,17 +2995,21 @@
         title.innerText = '✏️ 編輯團練場次';
         document.getElementById('practiceEditId').value = editData.id;
         document.getElementById('pracDateInput').value = editData.date;
-        document.getElementById('pracStartTime').value = editData.startTime || '18:30';
-        document.getElementById('pracEndTime').value = editData.endTime || '21:30';
-        document.getElementById('pracLocationInput').value = editData.location;
-        document.getElementById('pracDeadlineInput').value = toDatetimeLocalInput(editData.deadline);
+        document.getElementById('pracStartTime').value = editData.startTime || '18:15';
+        document.getElementById('pracEndTime').value = editData.endTime || '20:30';
+        document.getElementById('pracLocationInput').value = editData.location || 'D0130';
+        document.getElementById('pracDeadlineInput').value = toDatetimeLocalInput(editData.deadline || (editData.date + ' 12:00'));
         document.getElementById('pracNotesInput').value = editData.notes || '';
       } else {
         title.innerText = '➕ 新增團練場次';
         document.getElementById('practiceEditId').value = '';
         document.getElementById('practiceForm').reset();
-        document.getElementById('pracStartTime').value = '18:30';
-        document.getElementById('pracEndTime').value = '21:30';
+        const todayStr = toLocalDateStr(new Date());
+        document.getElementById('pracDateInput').value = todayStr;
+        document.getElementById('pracStartTime').value = '18:15';
+        document.getElementById('pracEndTime').value = '20:30';
+        document.getElementById('pracLocationInput').value = 'D0130';
+        document.getElementById('pracDeadlineInput').value = todayStr + 'T12:00';
       }
       modal.classList.add('open');
     }
@@ -2926,7 +3056,7 @@
 
     async function renderAdminAbsenceStats() {
       const pRes = await api('getPractices');
-      const practices = pRes.practices || [];
+      const practices = sortByDateClosestFirst(pRes.practices || [], 'date');
       const select = document.getElementById('adminAbsencePracticeSelect');
 
       if (practices.length === 0) {
@@ -2969,7 +3099,7 @@
         return `
           <div style="background:#ffffff; border:1px solid var(--border); border-radius:var(--radius-md); padding:12px; box-shadow:var(--shadow-sm);">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-              <span style="font-weight:700; color:var(--primary);">` + sec.abbr + ` ` + sec.name + `</span>
+              <span style="font-weight:700; color:var(--primary);">` + sec.fullLabel + `</span>
               <span style="font-size:0.9rem; font-weight:700; color:` + (secRate >= 80 ? '#15803d' : '#b91c1c') + `;">` + secPresent + `/` + secTotal + ` 人 (` + secRate + `%)</span>
             </div>
             <div style="background:#e2e8f0; height:8px; border-radius:4px; overflow:hidden;">
@@ -2981,12 +3111,11 @@
 
       const tbody = document.getElementById('adminAbsenceDetailTableBody');
       if (currentAdminAbsences.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:var(--text-muted);">本場次目前全員出席，無人請假！🎺</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:var(--text-muted);">本場次目前全員出席，無人請假！🎺</td></tr>';
       } else {
         tbody.innerHTML = currentAdminAbsences.map(a => `
           <tr>
             <td><strong>` + a.name + `</strong></td>
-            <td>` + a.section + `</td>
             <td>` + formatInstrumentDisplay(a.instrument, a.section) + `</td>
             <td>` + a.reason + `</td>
             <td style="font-size:0.85rem; color:#64748b;">` + formatDateTimeDisplay(a.createdAt) + `</td>
@@ -3000,20 +3129,19 @@
         showToast('本場次無請假名單可匯出', 'info');
         return;
       }
-      const headers = ['姓名', '聲部', '樂器', '請假事由', '登記時間'];
+      const headers = ['姓名', '負責樂器', '請假事由', '登記時間'];
       const rows = currentAdminAbsences.map(a => [
         a.name,
-        a.section,
         formatInstrumentDisplay(a.instrument, a.section),
         '"' + (a.reason || '').replace(/"/g, '""') + '"',
         formatDateTimeDisplay(a.createdAt)
       ]);
 
-      downloadCSV('東吳管樂社_團練請假名單_' + new Date().toISOString().split('T')[0] + '.csv', headers, rows);
+      downloadCSV('東吳管樂社_團練請假名單_' + toLocalDateStr(new Date()) + '.csv', headers, rows);
     }
 
     // ==========================================
-    // 幹部後台：5. 社員管理
+    // 幹部後台：5. 社員管理（合併負責樂器）
     // ==========================================
     let allMembersCache = [];
 
@@ -3028,13 +3156,12 @@
         list = list.filter(m => 
           m.name.toLowerCase().includes(search) || 
           (m.email || '').toLowerCase().includes(search) || 
-          (m.instrument || '').toLowerCase().includes(search) ||
-          m.section.toLowerCase().includes(search)
+          (m.instrument || '').toLowerCase().includes(search)
         );
       }
 
       if (list.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:var(--text-muted);">無符合條件之社員</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:var(--text-muted);">無符合條件之社員</td></tr>';
         return;
       }
 
@@ -3042,8 +3169,7 @@
         <tr>
           <td><strong>` + m.name + `</strong></td>
           <td>` + (m.email || '<span style="color:var(--text-muted); font-size:0.85rem;">尚未綁定信箱</span>') + `</td>
-          <td><span class="badge" style="background:#e8eaf6; color:#1a237e;">` + m.section + `</span></td>
-          <td>` + formatInstrumentDisplay(m.instrument, m.section) + `</td>
+          <td><span class="badge" style="background:#e8eaf6; color:#1a237e;">` + formatInstrumentDisplay(m.instrument, m.section) + `</span></td>
           <td>
             <select class="form-control" style="width:120px; padding:4px 8px; font-size:0.85rem;" onchange="changeMemberRole('` + m.email + `', '` + m.name + `', this.value)">
               <option value="member" ` + (m.role === 'member' ? 'selected' : '') + `>一般社員</option>
@@ -3095,16 +3221,9 @@
       } catch (err) {}
     }
 
-    function syncNewMemberInstrumentHint() {
-      const sel = document.getElementById('newMemberSection');
-      const optText = sel.options[sel.selectedIndex].text;
-      document.getElementById('newMemberInstrument').value = optText;
-    }
-
     function openAddMemberModal() {
       closeAllModals();
       document.getElementById('addMemberForm').reset();
-      syncNewMemberInstrumentHint();
       document.getElementById('modalAddMember').classList.add('open');
     }
     function closeAddMemberModal() {
@@ -3115,8 +3234,8 @@
       e.preventDefault();
       const name = document.getElementById('newMemberName').value.trim();
       const email = document.getElementById('newMemberEmail').value.trim();
-      const section = document.getElementById('newMemberSection').value;
-      const instrument = formatInstrumentDisplay(document.getElementById('newMemberInstrument').value.trim(), section);
+      const instrument = document.getElementById('newMemberInstrument').value;
+      const section = extractSectionAbbr(instrument);
       const role = document.getElementById('newMemberRole').value;
 
       try {
@@ -3133,6 +3252,8 @@
     async function renderAdminSettingsTab() {
       const res = await api('getSettings');
       cachedSettings = res.settings;
+
+      document.getElementById('settingsBookingDeadlineDay').value = cachedSettings.bookingDeadlineDay || '5';
 
       const satGrid = document.getElementById('settingsSatPeriodsGrid');
       const sunGrid = document.getElementById('settingsSunPeriodsGrid');
@@ -3172,15 +3293,16 @@
     }
 
     async function saveSystemSettings() {
+      const bookingDeadlineDay = document.getElementById('settingsBookingDeadlineDay').value;
       const satPeriods = [];
       document.querySelectorAll('input[name="setSatPeriod"]:checked').forEach(cb => satPeriods.push(cb.value));
       const sunPeriods = [];
       document.querySelectorAll('input[name="setSunPeriod"]:checked').forEach(cb => sunPeriods.push(cb.value));
 
       try {
-        await api('saveSettings', { satPeriods, sunPeriods });
-        cachedSettings = { satPeriods, sunPeriods };
-        showToast('系統假日開放借用節次已儲存！', 'success');
+        await api('saveSettings', { satPeriods, sunPeriods, bookingDeadlineDay });
+        cachedSettings = { satPeriods, sunPeriods, bookingDeadlineDay };
+        showToast('系統設定已儲存！', 'success');
       } catch (err) {}
     }
 
@@ -3189,13 +3311,10 @@
     }
 
     // ==========================================
-    // 個人資料與修改密碼（單層切換無疊疊樂）
+    // 個人資料與修改密碼
     // ==========================================
     let isForcedPasswordChange = false;
 
-    /**
-     * 從「個人設定」切換到「修改密碼」：先關閉個人設定，再開啟修改密碼
-     */
     function switchToChangePasswordModal() {
       closeProfileModal();
       openChangePasswordModal(false);
@@ -3288,8 +3407,7 @@
       closeAllModals();
       document.getElementById('profNameInput').value = session.name;
       document.getElementById('profEmailInput').value = session.email || '';
-      document.getElementById('profSectionSelect').value = session.section;
-      document.getElementById('profInstrumentInput').value = formatInstrumentDisplay(session.instrument, session.section);
+      document.getElementById('profInstrumentSelect').value = formatInstrumentDisplay(session.instrument, session.section);
       document.getElementById('profRoleInput').value = session.role === 'admin' ? '社團幹部' : '一般社員';
       document.getElementById('profNotifyEmail').checked = session.notifyEmail !== false;
 
@@ -3304,8 +3422,8 @@
       const oldName = session.name;
       const name = document.getElementById('profNameInput').value.trim();
       const newEmail = document.getElementById('profEmailInput').value.trim();
-      const section = document.getElementById('profSectionSelect').value;
-      const instrument = formatInstrumentDisplay(document.getElementById('profInstrumentInput').value.trim(), section);
+      const instrument = document.getElementById('profInstrumentSelect').value;
+      const section = extractSectionAbbr(instrument);
       const notifyEmail = document.getElementById('profNotifyEmail').checked;
 
       try {
@@ -3356,7 +3474,7 @@
     function initMockDatabase() {
       if (!localStorage.getItem('band_mock_users')) {
         const defaultUsers = [
-          { email: 'admin@scu.edu.tw', password: '0000', name: '廖社長', instrument: 'Sax. 中音薩克斯風', section: 'Sax.', role: 'admin', notifyEmail: true, isDefaultPassword: true },
+          { email: 'admin@scu.edu.tw', password: '0000', name: '廖社長', instrument: 'Sax. 薩克斯風', section: 'Sax.', role: 'admin', notifyEmail: true, isDefaultPassword: true },
           { email: 'member@scu.edu.tw', password: '0000', name: '陳小笛', instrument: 'Fl. 長笛', section: 'Fl.', role: 'member', notifyEmail: true, isDefaultPassword: true }
         ];
         localStorage.setItem('band_mock_users', JSON.stringify(defaultUsers));

@@ -4,44 +4,54 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>東吳管樂社 管理系統</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --primary: #1e293b;
-      --brand: #2563eb;
-      --brand-dark: #1d4ed8;
-      --brand-indigo: #312e81;
-      --accent: #f59e0b;
-      --accent-soft: #fef3c7;
-      --bg: #f4f7fb;
-      --card-bg: #ffffff;
-      --text: #0f172a;
-      --text-muted: #64748b;
-      --border: #e2e8f0;
+      /* 頂級奢華配色：曜石黑 x 皇家靛藍 x 香檳金 */
+      --obsidian: #0b0f19;
+      --obsidian-light: #161f33;
+      --accent-indigo: #4f46e5;
+      --accent-indigo-hover: #4338ca;
+      --champagne: #f59e0b;
+      --champagne-light: #fef3c7;
 
+      --bg-base: #f4f5f8;
+      --card-bg: rgba(255, 255, 255, 0.92);
+      --text-main: #0f172a;
+      --text-secondary: #475569;
+      --text-muted: #94a3b8;
+      --border-subtle: rgba(226, 232, 240, 0.85);
+
+      /* 精緻狀態膠囊色系 */
       --status-blue-text: #1d4ed8;
       --status-blue-bg: #eff6ff;
-      --status-blue-border: #bfdbfe;
+      --status-blue-dot: #3b82f6;
 
-      --status-green-text: #15803d;
-      --status-green-bg: #f0fdf4;
-      --status-green-border: #bbf7d0;
+      --status-green-text: #047857;
+      --status-green-bg: #ecfdf5;
+      --status-green-dot: #10b981;
 
-      --status-red-text: #b91c1c;
-      --status-red-bg: #fef2f2;
-      --status-red-border: #fecaca;
+      --status-red-text: #be123c;
+      --status-red-bg: #fff1f2;
+      --status-red-dot: #f43f5e;
 
-      --status-orange-text: #c2410c;
-      --status-orange-bg: #fff7ed;
-      --status-orange-border: #fed7aa;
+      --status-orange-text: #b45309;
+      --status-orange-bg: #fffbeb;
+      --status-orange-dot: #f59e0b;
 
-      --radius-xl: 20px;
+      --radius-2xl: 28px;
+      --radius-xl: 22px;
       --radius-lg: 16px;
-      --radius-md: 10px;
-      --radius-sm: 6px;
-      --shadow-sm: 0 2px 8px -2px rgba(15, 23, 42, 0.05);
-      --shadow-md: 0 10px 25px -5px rgba(15, 23, 42, 0.06), 0 4px 10px -3px rgba(15, 23, 42, 0.03);
-      --shadow-lg: 0 20px 40px -10px rgba(30, 41, 59, 0.14);
-      --transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+      --radius-md: 12px;
+      --radius-sm: 8px;
+
+      --shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.03);
+      --shadow-sm: 0 4px 12px -2px rgba(15, 23, 42, 0.05);
+      --shadow-card: 0 12px 32px -8px rgba(15, 23, 42, 0.06), 0 2px 6px -1px rgba(15, 23, 42, 0.03);
+      --shadow-float: 0 20px 45px -10px rgba(15, 23, 42, 0.14), 0 0 1px 1px rgba(15, 23, 42, 0.04);
+      --ease-spring: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     * {
@@ -51,11 +61,14 @@
     }
 
     body {
-      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
-      background-color: var(--bg);
-      background-image: radial-gradient(at 0% 0%, rgba(37, 99, 235, 0.05) 0px, transparent 50%),
-                        radial-gradient(at 100% 100%, rgba(99, 102, 241, 0.05) 0px, transparent 50%);
-      color: var(--text);
+      font-family: "Inter", "Noto Sans TC", -apple-system, BlinkMacSystemFont, "PingFang TC", "Microsoft JhengHei", sans-serif;
+      background-color: var(--bg-base);
+      background-image: 
+        radial-gradient(at 10% 0%, rgba(79, 70, 229, 0.06) 0px, transparent 45%),
+        radial-gradient(at 90% 10%, rgba(245, 158, 11, 0.06) 0px, transparent 45%),
+        radial-gradient(at 50% 100%, rgba(56, 189, 248, 0.05) 0px, transparent 50%);
+      background-attachment: fixed;
+      color: var(--text-main);
       line-height: 1.6;
       min-height: 100vh;
       display: flex;
@@ -71,190 +84,530 @@
       display: flex !important;
     }
     body.is-admin .mobile-menu .admin-only-nav {
-      display: block !important;
+      display: flex !important;
     }
 
-    /* 現代化按鈕設計 */
+    /* ==================== 現代奢華按鈕 ==================== */
     .btn {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 6px;
-      padding: 10px 18px;
+      gap: 8px;
+      padding: 11px 22px;
       border-radius: var(--radius-md);
       font-size: 0.92rem;
       font-weight: 600;
       cursor: pointer;
       border: 1px solid transparent;
-      transition: var(--transition);
+      transition: var(--ease-spring);
       text-decoration: none;
       white-space: nowrap;
       letter-spacing: 0.2px;
     }
     .btn:active:not(:disabled) {
-      transform: scale(0.98);
+      transform: scale(0.97);
     }
     .btn:disabled {
-      opacity: 0.5;
+      opacity: 0.45;
       cursor: not-allowed;
+      filter: grayscale(0.3);
     }
     .btn-primary {
-      background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+      background: linear-gradient(135deg, var(--obsidian) 0%, #1e293b 100%);
       color: #ffffff;
-      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.22);
+      box-shadow: 0 8px 20px -4px rgba(11, 15, 25, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.15);
     }
     .btn-primary:hover:not(:disabled) {
-      background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
-      box-shadow: 0 6px 16px rgba(37, 99, 235, 0.32);
-      transform: translateY(-1px);
+      background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+      box-shadow: 0 12px 24px -4px rgba(11, 15, 25, 0.45);
+      transform: translateY(-1.5px);
     }
     .btn-secondary {
-      background-color: #ffffff;
-      color: #334155;
-      border-color: #cbd5e1;
-      box-shadow: var(--shadow-sm);
+      background: #ffffff;
+      color: var(--text-main);
+      border-color: #e2e8f0;
+      box-shadow: var(--shadow-xs);
     }
     .btn-secondary:hover:not(:disabled) {
-      background-color: #f8fafc;
-      border-color: #94a3b8;
-      color: #0f172a;
+      background: #f8fafc;
+      border-color: #cbd5e1;
+      box-shadow: var(--shadow-sm);
+      transform: translateY(-1px);
     }
     .btn-outline {
-      background-color: #eff6ff;
-      border-color: #bfdbfe;
-      color: #1d4ed8;
+      background: rgba(79, 70, 229, 0.06);
+      border-color: rgba(79, 70, 229, 0.2);
+      color: var(--accent-indigo);
     }
     .btn-outline:hover:not(:disabled) {
-      background-color: #dbeafe;
-      border-color: #93c5fd;
+      background: var(--accent-indigo);
+      color: #ffffff;
+      border-color: var(--accent-indigo);
+      box-shadow: 0 6px 16px rgba(79, 70, 229, 0.28);
+      transform: translateY(-1px);
     }
     .btn-danger {
-      background-color: #fef2f2;
-      color: #dc2626;
-      border-color: #fecaca;
+      background: #fff1f2;
+      color: #e11d48;
+      border-color: #ffe4e6;
     }
     .btn-danger:hover:not(:disabled) {
-      background-color: #dc2626;
+      background: #e11d48;
       color: #ffffff;
-      border-color: #dc2626;
+      border-color: #e11d48;
+      box-shadow: 0 6px 16px rgba(225, 29, 72, 0.25);
     }
     .btn-sm {
-      padding: 6px 12px;
+      padding: 7px 14px;
       font-size: 0.84rem;
-      border-radius: 8px;
+      border-radius: 10px;
     }
 
-    /* 膠囊狀態標籤 */
+    /* ==================== 狀態燈號膠囊 ==================== */
     .badge {
       display: inline-flex;
       align-items: center;
-      gap: 4px;
-      padding: 4px 12px;
+      gap: 6px;
+      padding: 5px 12px;
       border-radius: 9999px;
       font-size: 0.78rem;
-      font-weight: 600;
-      border: 1px solid transparent;
+      font-weight: 700;
+      letter-spacing: 0.2px;
       white-space: nowrap;
+    }
+    .badge::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      display: inline-block;
     }
     .badge-received {
       background-color: var(--status-blue-bg);
       color: var(--status-blue-text);
-      border-color: var(--status-blue-border);
     }
+    .badge-received::before { background-color: var(--status-blue-dot); }
+
     .badge-approved {
       background-color: var(--status-green-bg);
       color: var(--status-green-text);
-      border-color: var(--status-green-border);
     }
+    .badge-approved::before { background-color: var(--status-green-dot); }
+
     .badge-rejected {
       background-color: var(--status-red-bg);
       color: var(--status-red-text);
-      border-color: var(--status-red-border);
     }
+    .badge-rejected::before { background-color: var(--status-red-dot); }
+
     .badge-noroom {
       background-color: var(--status-orange-bg);
       color: var(--status-orange-text);
-      border-color: var(--status-orange-border);
     }
+    .badge-noroom::before { background-color: var(--status-orange-dot); }
+
     .badge-admin {
       background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
       color: #92400e;
-      border-color: #fcd34d;
+      box-shadow: inset 0 0 0 1px rgba(245, 158, 11, 0.3);
     }
+    .badge-admin::before { background-color: #d97706; }
+
     .badge-member {
-      background-color: rgba(255, 255, 255, 0.16);
+      background: #f1f5f9;
+      color: #334155;
+    }
+    .badge-member::before { background-color: #64748b; }
+
+    /* ==================== 頂部懸浮毛玻璃導覽島 (Floating Island) ==================== */
+    .navbar-wrapper {
+      position: sticky;
+      top: 14px;
+      z-index: 100;
+      padding: 0 20px;
+      margin-bottom: 8px;
+    }
+    .navbar {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, 0.82);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      border-radius: 9999px;
+      padding: 8px 12px 8px 20px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 10px 30px -10px rgba(15, 23, 42, 0.08), 0 0 0 1px rgba(15, 23, 42, 0.04);
+    }
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 1.08rem;
+      font-weight: 800;
+      color: var(--obsidian);
+      text-decoration: none;
+      letter-spacing: -0.2px;
+      cursor: pointer;
+    }
+    .nav-brand .music-note {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--obsidian);
+      color: var(--champagne);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      box-shadow: 0 4px 12px rgba(11, 15, 25, 0.2);
+    }
+    .nav-menu {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      list-style: none;
+      background: rgba(241, 245, 249, 0.8);
+      padding: 4px;
+      border-radius: 9999px;
+    }
+    .nav-item {
+      padding: 7px 18px;
+      border-radius: 9999px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      color: var(--text-secondary);
+      transition: var(--ease-spring);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      user-select: none;
+    }
+    .nav-item:hover {
+      color: var(--obsidian);
+    }
+    .nav-item.active {
+      background: var(--obsidian);
       color: #ffffff;
-      border-color: rgba(255, 255, 255, 0.25);
+      box-shadow: 0 4px 12px rgba(11, 15, 25, 0.2);
+    }
+    .nav-user {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.88rem;
+      padding: 4px 10px 4px 4px;
+      border-radius: 9999px;
+      background: rgba(248, 250, 252, 0.9);
+      border: 1px solid #e2e8f0;
+    }
+    .nav-icon-btn {
+      background: #ffffff;
+      color: var(--text-main);
+      border: 1px solid #e2e8f0;
+      padding: 7px 13px;
+      border-radius: 9999px;
+      font-size: 0.84rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--ease-spring);
+    }
+    .nav-icon-btn:hover {
+      background: var(--obsidian);
+      color: #ffffff;
+      border-color: var(--obsidian);
+    }
+    .nav-hamburger {
+      display: none;
+      background: #f1f5f9;
+      border: none;
+      color: var(--obsidian);
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      font-size: 1.3rem;
+      cursor: pointer;
     }
 
-    /* 卡片與區塊設計 */
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      top: 86px;
+      left: 20px;
+      right: 20px;
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(20px);
+      border: 1px solid #e2e8f0;
+      border-radius: var(--radius-xl);
+      padding: 14px;
+      box-shadow: var(--shadow-float);
+      z-index: 99;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .mobile-menu.open {
+      display: flex;
+      animation: fadeIn 0.2s ease;
+    }
+    .mobile-menu .nav-item {
+      padding: 12px 18px;
+      border-radius: var(--radius-md);
+      width: 100%;
+    }
+
+    /* ==================== 主內容容器与卡片 ==================== */
+    .main-content {
+      flex: 1;
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 18px 20px 48px;
+    }
+
+    .page-section {
+      display: none;
+    }
+    .page-section.active {
+      display: block;
+      animation: fadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
     .card {
-      background-color: var(--card-bg);
-      border-radius: var(--radius-lg);
-      padding: 26px;
-      box-shadow: var(--shadow-md);
-      border: 1px solid rgba(226, 232, 240, 0.85);
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      border-radius: var(--radius-xl);
+      padding: 28px 30px;
+      box-shadow: var(--shadow-card);
+      border: 1px solid rgba(255, 255, 255, 0.9);
       margin-bottom: 24px;
-      transition: var(--transition);
+      transition: var(--ease-spring);
     }
     .card-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 20px;
-      padding-bottom: 14px;
-      border-bottom: 1px solid #f1f5f9;
+      margin-bottom: 22px;
       flex-wrap: wrap;
       gap: 12px;
     }
     .card-title {
-      font-size: 1.2rem;
+      font-size: 1.22rem;
       font-weight: 800;
-      color: #0f172a;
+      color: var(--obsidian);
       display: flex;
       align-items: center;
-      gap: 8px;
-      letter-spacing: -0.2px;
+      gap: 10px;
+      letter-spacing: -0.3px;
     }
     .card-desc {
-      color: var(--text-muted);
+      color: var(--text-secondary);
       font-size: 0.88rem;
-      margin-top: 3px;
+      margin-top: 4px;
     }
 
-    /* 表單元件 */
+    /* ==================== 首頁 Bento 視覺設計 ==================== */
+    .welcome-banner {
+      background: radial-gradient(circle at 85% 20%, #1e293b 0%, var(--obsidian) 65%);
+      color: #ffffff;
+      border-radius: var(--radius-2xl);
+      padding: 36px 40px;
+      margin-bottom: 26px;
+      box-shadow: 0 20px 40px -15px rgba(11, 15, 25, 0.35);
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .welcome-banner::before {
+      content: '';
+      position: absolute;
+      width: 320px;
+      height: 320px;
+      background: radial-gradient(circle, rgba(245, 158, 11, 0.18) 0%, transparent 70%);
+      top: -120px;
+      right: -60px;
+      pointer-events: none;
+    }
+    .welcome-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(245, 158, 11, 0.15);
+      border: 1px solid rgba(245, 158, 11, 0.35);
+      color: #fcd34d;
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 9999px;
+      margin-bottom: 12px;
+      letter-spacing: 0.5px;
+    }
+    .welcome-title {
+      font-size: 1.85rem;
+      font-weight: 800;
+      margin-bottom: 6px;
+      letter-spacing: -0.5px;
+    }
+    .welcome-subtitle {
+      font-size: 0.98rem;
+      color: #94a3b8;
+      font-weight: 500;
+    }
+
+    /* 團練日曆大字卡 */
+    .upcoming-hero-box {
+      display: flex;
+      align-items: flex-start;
+      gap: 18px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      padding: 18px;
+      border-radius: var(--radius-lg);
+      margin-bottom: 14px;
+    }
+    .cal-badge {
+      min-width: 68px;
+      height: 72px;
+      background: var(--obsidian);
+      color: #ffffff;
+      border-radius: 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 16px -4px rgba(11, 15, 25, 0.25);
+      overflow: hidden;
+    }
+    .cal-badge-month {
+      background: var(--champagne);
+      color: var(--obsidian);
+      width: 100%;
+      text-align: center;
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 2px 0;
+      letter-spacing: 0.5px;
+    }
+    .cal-badge-day {
+      font-size: 1.5rem;
+      font-weight: 800;
+      line-height: 1.2;
+      margin-top: 2px;
+    }
+
+    /* Bento 互動動作磚 */
+    .quick-tiles-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+    .quick-tile {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 18px;
+      min-height: 112px;
+      border-radius: var(--radius-lg);
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      cursor: pointer;
+      transition: var(--ease-spring);
+      text-align: left;
+      position: relative;
+      overflow: hidden;
+    }
+    .quick-tile:hover {
+      background: var(--obsidian);
+      border-color: var(--obsidian);
+      box-shadow: 0 14px 28px -8px rgba(11, 15, 25, 0.28);
+      transform: translateY(-3px);
+    }
+    .quick-tile-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+    }
+    .quick-tile-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      transition: var(--ease-spring);
+    }
+    .quick-tile:hover .quick-tile-icon {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+    .quick-tile-arrow {
+      font-size: 1rem;
+      color: var(--text-muted);
+      transition: var(--ease-spring);
+    }
+    .quick-tile:hover .quick-tile-arrow {
+      color: var(--champagne);
+      transform: translate(3px, -3px);
+    }
+    .quick-tile-title {
+      font-weight: 800;
+      font-size: 0.98rem;
+      color: var(--obsidian);
+      margin-top: 14px;
+      transition: var(--ease-spring);
+    }
+    .quick-tile:hover .quick-tile-title {
+      color: #ffffff;
+    }
+
+    /* ==================== 表單與無勾勾觸控磚 (Tactile Chips) ==================== */
     .form-group {
-      margin-bottom: 18px;
+      margin-bottom: 20px;
     }
     .form-label {
       display: block;
-      margin-bottom: 6px;
-      font-weight: 600;
-      font-size: 0.9rem;
-      color: #334155;
+      margin-bottom: 8px;
+      font-weight: 700;
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      letter-spacing: 0.2px;
     }
     .form-label .required {
-      color: #ef4444;
+      color: #e11d48;
       margin-left: 3px;
     }
     .form-control {
       width: 100%;
-      padding: 10px 14px;
-      border: 1.5px solid #cbd5e1;
+      padding: 12px 16px;
+      border: 1.5px solid #e2e8f0;
       border-radius: var(--radius-md);
       font-size: 0.94rem;
-      color: var(--text);
+      font-family: inherit;
+      color: var(--text-main);
       background-color: #f8fafc;
-      transition: var(--transition);
+      transition: var(--ease-spring);
       outline: none;
     }
     .form-control:hover {
-      border-color: #94a3b8;
+      border-color: #cbd5e1;
+      background-color: #ffffff;
     }
     .form-control:focus {
       background-color: #ffffff;
-      border-color: var(--brand);
-      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+      border-color: var(--obsidian);
+      box-shadow: 0 0 0 4px rgba(15, 23, 42, 0.08);
     }
     select.form-control option:disabled {
       color: #94a3b8;
@@ -262,65 +615,76 @@
     }
     textarea.form-control {
       resize: vertical;
-      min-height: 90px;
+      min-height: 96px;
     }
     .form-row {
       display: flex;
-      gap: 16px;
+      gap: 18px;
       flex-wrap: wrap;
     }
     .form-col {
       flex: 1;
-      min-width: 200px;
+      min-width: 210px;
     }
 
-    /* 節次晶片按鈕 */
+    /* 隱藏原生 Checkbox，打造一鍵點選發光方塊 */
     .period-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(105px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(95px, 1fr));
       gap: 10px;
       margin-top: 8px;
     }
     .period-chip {
+      position: relative;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 6px;
-      padding: 9px 12px;
+      padding: 12px 14px;
       background-color: #f8fafc;
       border: 1.5px solid #e2e8f0;
       border-radius: var(--radius-md);
       cursor: pointer;
       user-select: none;
-      transition: var(--transition);
-      font-size: 0.9rem;
-      color: #475569;
-    }
-    .period-chip:hover {
-      background-color: #f1f5f9;
-      border-color: #cbd5e1;
-      transform: translateY(-1px);
-    }
-    .period-chip.selected {
-      background-color: #eff6ff;
-      border-color: var(--brand);
-      color: var(--brand-dark);
-      font-weight: 700;
-      box-shadow: 0 2px 8px rgba(37, 99, 235, 0.12);
+      transition: var(--ease-spring);
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: var(--text-secondary);
     }
     .period-chip input[type="checkbox"] {
-      cursor: pointer;
-      accent-color: var(--brand);
-      width: 16px;
-      height: 16px;
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .period-chip:hover {
+      background-color: #ffffff;
+      border-color: #94a3b8;
+      color: var(--obsidian);
+      transform: translateY(-1.5px);
+    }
+    .period-chip.selected {
+      background: var(--obsidian);
+      border-color: var(--obsidian);
+      color: #ffffff;
+      font-weight: 700;
+      box-shadow: 0 8px 18px -4px rgba(11, 15, 25, 0.3);
+      transform: translateY(-1.5px);
+    }
+    .period-chip.selected::after {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--champagne);
+      display: inline-block;
     }
 
-    /* 現代化表格 */
+    /* ==================== 空氣感無邊框表格 ==================== */
     .table-container {
       width: 100%;
       overflow-x: auto;
-      border-radius: 12px;
-      border: 1px solid #e2e8f0;
+      border-radius: var(--radius-lg);
+      border: 1px solid #eef2f6;
       background: #ffffff;
     }
     table {
@@ -331,18 +695,18 @@
     }
     th {
       background-color: #f8fafc;
-      color: #475569;
-      padding: 13px 16px;
+      color: #64748b;
+      padding: 14px 18px;
       font-weight: 700;
-      font-size: 0.84rem;
-      letter-spacing: 0.3px;
-      border-bottom: 1.5px solid #e2e8f0;
+      font-size: 0.8rem;
+      letter-spacing: 0.4px;
+      border-bottom: 1px solid #e2e8f0;
       white-space: nowrap;
     }
     td {
-      padding: 14px 16px;
+      padding: 16px 18px;
       border-bottom: 1px solid #f1f5f9;
-      color: #1e293b;
+      color: var(--text-main);
       vertical-align: middle;
     }
     tbody tr {
@@ -355,159 +719,13 @@
       border-bottom: none;
     }
 
-    /* 頂部毛玻璃導覽列 */
-    .navbar {
-      background: rgba(15, 23, 42, 0.92);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      color: #ffffff;
-      padding: 0 28px;
-      height: 68px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      box-shadow: 0 4px 20px rgba(15, 23, 42, 0.12);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    }
-    .nav-brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 1.2rem;
-      font-weight: 800;
-      color: #ffffff;
-      text-decoration: none;
-      letter-spacing: 0.3px;
-      cursor: pointer;
-    }
-    .nav-brand .music-note {
-      width: 36px;
-      height: 36px;
-      border-radius: 10px;
-      background: linear-gradient(135deg, #3b82f6 0%, #6366f1 100%);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.15rem;
-      box-shadow: 0 4px 10px rgba(59, 130, 246, 0.35);
-    }
-    .nav-menu {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      list-style: none;
-      background: rgba(255, 255, 255, 0.06);
-      padding: 5px;
-      border-radius: 12px;
-    }
-    .nav-item {
-      padding: 7px 16px;
-      border-radius: 9px;
-      font-size: 0.92rem;
-      font-weight: 600;
-      cursor: pointer;
-      color: #cbd5e1;
-      transition: var(--transition);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      user-select: none;
-    }
-    .nav-item:hover {
-      color: #ffffff;
-      background-color: rgba(255, 255, 255, 0.08);
-    }
-    .nav-item.active {
-      background: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%);
-      color: #ffffff;
-      box-shadow: 0 2px 10px rgba(37, 99, 235, 0.4);
-    }
-    .nav-user {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .user-info {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.9rem;
-      background: rgba(255, 255, 255, 0.07);
-      padding: 5px 12px 5px 6px;
-      border-radius: 999px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-    .nav-icon-btn {
-      background: rgba(255, 255, 255, 0.1);
-      color: #f8fafc;
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      padding: 6px 12px;
-      border-radius: 9px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: var(--transition);
-    }
-    .nav-icon-btn:hover {
-      background: rgba(255, 255, 255, 0.2);
-    }
-    .nav-hamburger {
-      display: none;
-      background: none;
-      border: none;
-      color: #ffffff;
-      font-size: 1.6rem;
-      cursor: pointer;
-    }
-
-    .mobile-menu {
-      display: none;
-      position: fixed;
-      top: 68px;
-      left: 0;
-      right: 0;
-      background-color: #0f172a;
-      padding: 16px 20px;
-      box-shadow: 0 12px 24px rgba(0,0,0,0.3);
-      z-index: 99;
-      flex-direction: column;
-      gap: 8px;
-    }
-    .mobile-menu.open {
-      display: flex;
-    }
-    .mobile-menu .nav-item {
-      padding: 12px 16px;
-      border-radius: var(--radius-md);
-      width: 100%;
-    }
-
-    .main-content {
-      flex: 1;
-      max-width: 1220px;
-      width: 100%;
-      margin: 0 auto;
-      padding: 28px 18px;
-    }
-
-    .page-section {
-      display: none;
-    }
-    .page-section.active {
-      display: block;
-      animation: fadeIn 0.3s ease;
-    }
-
-    /* 現代化登入畫面 */
+    /* ==================== 登入頁面（奢華黑金劇院風） ==================== */
     .login-container {
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      background: radial-gradient(circle at 20% 20%, #1e3a8a 0%, #0f172a 55%, #090d16 100%);
+      background: radial-gradient(circle at 50% 0%, #1e293b 0%, #090d16 70%);
       padding: 20px;
       position: relative;
       overflow: hidden;
@@ -515,137 +733,64 @@
     .login-container::before {
       content: '';
       position: absolute;
-      width: 500px;
-      height: 500px;
+      width: 600px;
+      height: 600px;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(59, 130, 246, 0.22) 0%, transparent 70%);
-      top: -120px;
-      right: -100px;
+      background: radial-gradient(circle, rgba(245, 158, 11, 0.12) 0%, transparent 65%);
+      top: -220px;
+      left: 50%;
+      transform: translateX(-50%);
       pointer-events: none;
     }
     .login-card {
       background: rgba(255, 255, 255, 0.98);
-      border-radius: 24px;
-      padding: 44px 36px;
+      border-radius: var(--radius-2xl);
+      padding: 48px 40px;
       width: 100%;
-      max-width: 430px;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      max-width: 440px;
+      box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.15);
       text-align: center;
-      border: 1px solid rgba(255, 255, 255, 0.4);
       position: relative;
       z-index: 2;
     }
     .login-logo {
-      width: 68px;
-      height: 68px;
-      background: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%);
-      color: #ffffff;
-      border-radius: 20px;
+      width: 72px;
+      height: 72px;
+      background: var(--obsidian);
+      color: var(--champagne);
+      border-radius: 22px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 2.1rem;
-      margin: 0 auto 18px;
-      box-shadow: 0 10px 25px rgba(37, 99, 235, 0.35);
-      transform: rotate(-4deg);
+      font-size: 2.2rem;
+      margin: 0 auto 20px;
+      box-shadow: 0 14px 28px -6px rgba(11, 15, 25, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
     }
     .login-title {
-      font-size: 1.6rem;
+      font-size: 1.65rem;
       font-weight: 800;
-      color: #0f172a;
+      color: var(--obsidian);
       margin-bottom: 6px;
-      letter-spacing: -0.4px;
+      letter-spacing: -0.5px;
     }
     .login-subtitle {
       font-size: 0.92rem;
-      color: var(--text-muted);
-      margin-bottom: 28px;
+      color: var(--text-secondary);
+      margin-bottom: 30px;
     }
     .login-hint {
       background-color: #f8fafc;
       border: 1px solid #e2e8f0;
-      border-radius: 12px;
-      padding: 12px 14px;
-      font-size: 0.85rem;
-      color: #475569;
-      margin-top: 22px;
+      border-radius: var(--radius-md);
+      padding: 13px 16px;
+      font-size: 0.84rem;
+      color: var(--text-secondary);
+      margin-top: 24px;
       text-align: left;
-      line-height: 1.5;
+      line-height: 1.55;
     }
 
-    /* 首頁歡迎橫幅與快速動作磚 */
-    .welcome-banner {
-      background: linear-gradient(125deg, #0f172a 0%, #1e3a8a 55%, #312e81 100%);
-      color: #ffffff;
-      border-radius: var(--radius-xl);
-      padding: 32px 34px;
-      margin-bottom: 26px;
-      box-shadow: var(--shadow-lg);
-      position: relative;
-      overflow: hidden;
-    }
-    .welcome-banner::after {
-      content: '🎼';
-      position: absolute;
-      right: 28px;
-      bottom: -18px;
-      font-size: 8.5rem;
-      opacity: 0.08;
-      pointer-events: none;
-    }
-    .welcome-title {
-      font-size: 1.65rem;
-      font-weight: 800;
-      margin-bottom: 6px;
-      letter-spacing: -0.3px;
-    }
-    .welcome-subtitle {
-      font-size: 0.98rem;
-      color: #cbd5e1;
-      font-weight: 500;
-    }
-
-    .quick-tiles-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
-    }
-    .quick-tile {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 8px;
-      padding: 16px;
-      border-radius: 14px;
-      background: #f8fafc;
-      border: 1.5px solid #e2e8f0;
-      cursor: pointer;
-      transition: var(--transition);
-      text-align: left;
-    }
-    .quick-tile:hover {
-      background: #ffffff;
-      border-color: var(--brand);
-      box-shadow: 0 8px 20px -4px rgba(37, 99, 235, 0.14);
-      transform: translateY(-2px);
-    }
-    .quick-tile-icon {
-      width: 38px;
-      height: 38px;
-      border-radius: 10px;
-      background: #eff6ff;
-      color: var(--brand);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.2rem;
-    }
-    .quick-tile-title {
-      font-weight: 700;
-      font-size: 0.94rem;
-      color: #0f172a;
-    }
-
+    /* ==================== KPI 統計與團練卡片 ==================== */
     .dashboard-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -655,47 +800,49 @@
     .stat-card {
       background: #ffffff;
       border-radius: var(--radius-lg);
-      padding: 20px;
-      border: 1px solid var(--border);
+      padding: 22px;
+      border: 1px solid #eef2f6;
       box-shadow: var(--shadow-sm);
       display: flex;
       align-items: center;
       gap: 16px;
     }
     .stat-icon {
-      width: 50px;
-      height: 50px;
+      width: 52px;
+      height: 52px;
       border-radius: 14px;
-      background-color: #eff6ff;
-      color: var(--brand);
+      background-color: #f1f5f9;
+      color: var(--obsidian);
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 1.5rem;
     }
     .stat-value {
-      font-size: 1.5rem;
+      font-size: 1.55rem;
       font-weight: 800;
-      color: #0f172a;
+      color: var(--obsidian);
+      letter-spacing: -0.5px;
     }
     .stat-label {
-      font-size: 0.85rem;
-      color: var(--text-muted);
+      font-size: 0.84rem;
+      color: var(--text-secondary);
+      font-weight: 500;
     }
 
-    /* 團練卡片與「FB 條列式可摺疊公告框」 */
     .practice-card {
-      border: 1.5px solid #e2e8f0;
+      border: 1px solid #e2e8f0;
       border-radius: var(--radius-lg);
-      padding: 22px;
-      margin-bottom: 16px;
+      padding: 24px;
+      margin-bottom: 18px;
       background: #ffffff;
-      box-shadow: var(--shadow-sm);
-      transition: var(--transition);
+      box-shadow: var(--shadow-xs);
+      transition: var(--ease-spring);
     }
     .practice-card:hover {
       border-color: #cbd5e1;
-      box-shadow: var(--shadow-md);
+      box-shadow: var(--shadow-card);
+      transform: translateY(-2px);
     }
     .practice-header {
       display: flex;
@@ -706,50 +853,50 @@
       gap: 8px;
     }
     .practice-date {
-      font-size: 1.2rem;
+      font-size: 1.22rem;
       font-weight: 800;
-      color: #0f172a;
+      color: var(--obsidian);
     }
     .practice-deadline-badge {
       font-size: 0.82rem;
-      color: #b45309;
+      color: #92400e;
       background: #fef3c7;
-      padding: 5px 12px;
+      padding: 6px 14px;
       border-radius: 9999px;
-      font-weight: 600;
+      font-weight: 700;
     }
 
     /* 智慧條列式公告框（支援摺疊省空間） */
     .notes-box {
       background: #f8fafc;
       border: 1px solid #e2e8f0;
-      border-left: 4px solid var(--brand);
-      border-radius: 12px;
-      padding: 14px 16px;
+      border-radius: var(--radius-md);
+      padding: 16px 18px;
       margin: 12px 0 16px;
       position: relative;
     }
     .notes-box-header {
-      font-size: 0.85rem;
-      font-weight: 700;
-      color: #475569;
-      margin-bottom: 8px;
+      font-size: 0.82rem;
+      font-weight: 800;
+      color: var(--text-secondary);
+      margin-bottom: 10px;
       display: flex;
       align-items: center;
       justify-content: space-between;
+      letter-spacing: 0.3px;
     }
     .notes-list {
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 7px;
       font-size: 0.92rem;
-      color: #1e293b;
-      line-height: 1.55;
+      color: var(--text-main);
+      line-height: 1.6;
       overflow: hidden;
-      transition: max-height 0.3s ease;
+      transition: max-height 0.35s ease;
     }
     .notes-list.collapsed {
-      max-height: 86px;
+      max-height: 88px;
       mask-image: linear-gradient(to bottom, black 55%, transparent 100%);
       -webkit-mask-image: linear-gradient(to bottom, black 55%, transparent 100%);
     }
@@ -761,74 +908,78 @@
     }
     .note-line-highlight {
       font-weight: 700;
-      color: #b91c1c;
-      background: #fef2f2;
-      padding: 3px 8px;
-      border-radius: 6px;
+      color: #be123c;
+      background: #fff1f2;
+      border: 1px solid #ffe4e6;
+      padding: 4px 10px;
+      border-radius: 8px;
       width: fit-content;
     }
     .note-line-section {
       font-weight: 800;
-      color: #1e3a8a;
-      margin-top: 2px;
+      color: var(--obsidian);
+      margin-top: 4px;
     }
     .notes-toggle-btn {
-      margin-top: 8px;
-      background: #eff6ff;
-      border: 1px solid #bfdbfe;
-      color: #1d4ed8;
+      margin-top: 10px;
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      color: var(--obsidian);
       font-size: 0.8rem;
       font-weight: 700;
-      padding: 4px 12px;
+      padding: 5px 14px;
       border-radius: 999px;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: 4px;
-      transition: var(--transition);
+      gap: 5px;
+      transition: var(--ease-spring);
+      box-shadow: var(--shadow-xs);
     }
     .notes-toggle-btn:hover {
-      background: #dbeafe;
+      background: var(--obsidian);
+      color: #ffffff;
+      border-color: var(--obsidian);
     }
 
-    /* 膠囊式子分頁 (Pill Subtabs) */
+    /* ==================== 後台分段控制器 (Segmented Control) ==================== */
     .subtabs {
       display: inline-flex;
-      gap: 6px;
+      gap: 4px;
       background: #f1f5f9;
-      padding: 6px;
+      padding: 5px;
       border-radius: 14px;
-      margin-bottom: 8px;
       overflow-x: auto;
       max-width: 100%;
     }
     .subtab-item {
-      padding: 8px 16px;
+      padding: 8px 18px;
       border-radius: 10px;
-      font-weight: 600;
-      font-size: 0.9rem;
-      color: #64748b;
+      font-weight: 700;
+      font-size: 0.88rem;
+      color: var(--text-secondary);
       cursor: pointer;
       user-select: none;
-      transition: var(--transition);
+      transition: var(--ease-spring);
       white-space: nowrap;
     }
     .subtab-item:hover {
-      color: #0f172a;
+      color: var(--obsidian);
     }
     .subtab-item.active {
-      color: #ffffff;
-      background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-      box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
+      color: var(--obsidian);
+      background: #ffffff;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
     }
     .subtab-content {
       display: none;
     }
     .subtab-content.active {
       display: block;
-      animation: fadeIn 0.25s ease;
+      animation: fadeIn 0.28s ease;
     }
 
+    /* ==================== 點陣舞台座位表畫布 ==================== */
     .seating-controls {
       display: flex;
       gap: 12px;
@@ -836,11 +987,13 @@
       flex-wrap: wrap;
     }
     .seating-wrapper {
-      background: #ffffff;
-      border: 1.5px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 18px;
-      box-shadow: var(--shadow-sm);
+      background-color: #ffffff;
+      background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
+      background-size: 20px 20px;
+      border: 1.5px solid #e2e8f0;
+      border-radius: var(--radius-xl);
+      padding: 20px;
+      box-shadow: inset 0 2px 10px rgba(15, 23, 42, 0.02);
       overflow-x: auto;
       text-align: center;
       user-select: none;
@@ -860,19 +1013,19 @@
     }
     .draggable-section.selected-sec rect.sec-highlight,
     .draggable-section.selected-sec circle.sec-seat {
-      stroke: #2563eb;
+      stroke: var(--accent-indigo);
       stroke-width: 3.5px;
     }
 
-    /* 現代化彈出視窗 */
+    /* ==================== 彈出視窗與通知 ==================== */
     .modal-overlay {
       position: fixed;
       top: 0;
       left: 0;
       right: 0;
       bottom: 0;
-      background: rgba(15, 23, 42, 0.55);
-      backdrop-filter: blur(5px);
+      background: rgba(11, 15, 25, 0.6);
+      backdrop-filter: blur(8px);
       display: none;
       align-items: center;
       justify-content: center;
@@ -885,51 +1038,53 @@
     }
     .modal-card {
       background: #ffffff;
-      border-radius: 20px;
+      border-radius: var(--radius-2xl);
       width: 100%;
       max-width: 520px;
-      box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.3);
+      box-shadow: var(--shadow-float);
       overflow: hidden;
-      animation: modalSlide 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      animation: modalSlide 0.28s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .modal-header {
-      padding: 20px 24px;
-      background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
-      color: #ffffff;
+      padding: 22px 28px;
+      background: #ffffff;
+      color: var(--obsidian);
+      border-bottom: 1px solid #f1f5f9;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
     .modal-title {
-      font-size: 1.12rem;
-      font-weight: 700;
+      font-size: 1.18rem;
+      font-weight: 800;
       display: flex;
       align-items: center;
       gap: 8px;
     }
     .modal-close {
-      background: rgba(255, 255, 255, 0.12);
+      background: #f1f5f9;
       border: none;
-      color: #ffffff;
-      width: 32px;
-      height: 32px;
-      border-radius: 8px;
-      font-size: 1.1rem;
+      color: var(--text-secondary);
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      font-size: 1rem;
       cursor: pointer;
-      transition: var(--transition);
+      transition: var(--ease-spring);
     }
     .modal-close:hover {
-      background: rgba(255, 255, 255, 0.25);
+      background: var(--obsidian);
+      color: #ffffff;
     }
     .modal-body {
-      padding: 24px;
-      max-height: 78vh;
+      padding: 26px 28px;
+      max-height: 76vh;
       overflow-y: auto;
     }
     .modal-footer {
-      padding: 16px 24px;
+      padding: 18px 28px;
       background: #f8fafc;
-      border-top: 1px solid var(--border);
+      border-top: 1px solid #f1f5f9;
       display: flex;
       justify-content: flex-end;
       gap: 10px;
@@ -937,8 +1092,8 @@
 
     .toast-container {
       position: fixed;
-      top: 20px;
-      right: 20px;
+      top: 24px;
+      right: 24px;
       z-index: 9999;
       display: flex;
       flex-direction: column;
@@ -948,9 +1103,10 @@
     .toast {
       min-width: 280px;
       max-width: 400px;
-      padding: 14px 18px;
-      border-radius: 12px;
-      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.2);
+      padding: 14px 20px;
+      border-radius: 14px;
+      box-shadow: var(--shadow-float);
+      background: var(--obsidian);
       color: #ffffff;
       font-weight: 600;
       font-size: 0.9rem;
@@ -958,25 +1114,16 @@
       align-items: center;
       gap: 10px;
       pointer-events: auto;
-      animation: toastIn 0.3s ease;
+      animation: toastIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
       transition: opacity 0.3s ease, transform 0.3s ease;
     }
     .toast.hide {
       opacity: 0;
       transform: translateX(30px);
     }
-    .toast-success {
-      background-color: #15803d;
-      border-left: 5px solid #4ade80;
-    }
-    .toast-error {
-      background-color: #b91c1c;
-      border-left: 5px solid #f87171;
-    }
-    .toast-info {
-      background-color: #1d4ed8;
-      border-left: 5px solid #60a5fa;
-    }
+    .toast-success { border-left: 4px solid #10b981; }
+    .toast-error { border-left: 4px solid #f43f5e; }
+    .toast-info { border-left: 4px solid var(--champagne); }
 
     .loading-overlay {
       position: fixed;
@@ -984,34 +1131,34 @@
       left: 0;
       right: 0;
       bottom: 0;
-      background: rgba(15, 23, 42, 0.45);
-      backdrop-filter: blur(3px);
+      background: rgba(11, 15, 25, 0.45);
+      backdrop-filter: blur(4px);
       z-index: 9998;
       display: none;
       align-items: center;
       justify-content: center;
       flex-direction: column;
-      gap: 12px;
+      gap: 14px;
       color: #ffffff;
     }
     .loading-overlay.active {
       display: flex;
     }
     .spinner {
-      width: 46px;
-      height: 46px;
-      border: 4px solid rgba(255, 255, 255, 0.25);
-      border-top-color: #38bdf8;
+      width: 44px;
+      height: 44px;
+      border: 3.5px solid rgba(255, 255, 255, 0.2);
+      border-top-color: var(--champagne);
       border-radius: 50%;
-      animation: spin 0.75s linear infinite;
+      animation: spin 0.7s linear infinite;
     }
 
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(6px); }
+      from { opacity: 0; transform: translateY(8px); }
       to { opacity: 1; transform: translateY(0); }
     }
     @keyframes modalSlide {
-      from { opacity: 0; transform: scale(0.96) translateY(-10px); }
+      from { opacity: 0; transform: scale(0.95) translateY(10px); }
       to { opacity: 1; transform: scale(1) translateY(0); }
     }
     @keyframes toastIn {
@@ -1022,19 +1169,24 @@
       to { transform: rotate(360deg); }
     }
 
-    @media (max-width: 860px) {
+    @media (max-width: 880px) {
       .nav-menu, .user-name-text {
         display: none;
       }
       .nav-hamburger {
-        display: block;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
       }
       .form-row {
         flex-direction: column;
         gap: 0;
       }
-      .quick-tiles-grid {
-        grid-template-columns: 1fr;
+      .welcome-banner {
+        padding: 28px 24px;
+      }
+      .card {
+        padding: 22px 20px;
       }
     }
   </style>
@@ -1047,20 +1199,20 @@
   <!-- 讀取遮罩 -->
   <div id="loadingOverlay" class="loading-overlay">
     <div class="spinner"></div>
-    <div style="font-weight:600; font-size:0.95rem; letter-spacing:1px;">資料同步中，請稍候...</div>
+    <div style="font-weight:600; font-size:0.92rem; letter-spacing:1px;">同步資料中...</div>
   </div>
 
-  <!-- ==================== 1. 登入頁面（已移除快速測試帳號） ==================== -->
+  <!-- ==================== 1. 登入頁面 ==================== -->
   <div id="loginPage" class="login-container">
     <div class="login-card">
       <div class="login-logo">🎺</div>
-      <h1 class="login-title">東吳管樂社 管理系統</h1>
-      <p class="login-subtitle">團務排程、教室借用與座位管理平台</p>
+      <h1 class="login-title">東吳管樂社</h1>
+      <p class="login-subtitle">團務排程・琴房預約・數位座位系統</p>
       
       <form id="loginForm" onsubmit="handleLoginSubmit(event)">
         <div class="form-group" style="text-align: left;">
-          <label class="form-label">帳號（姓名 或 電子信箱）<span class="required">*</span></label>
-          <input type="text" id="loginIdentifier" class="form-control" placeholder="請輸入您的姓名或常用電子信箱" required autofocus>
+          <label class="form-label">帳號（姓名 或 常用信箱）<span class="required">*</span></label>
+          <input type="text" id="loginIdentifier" class="form-control" placeholder="請直接輸入您的姓名或信箱" required autofocus>
         </div>
         
         <div class="form-group" style="text-align: left;">
@@ -1068,49 +1220,54 @@
           <input type="password" id="loginPassword" class="form-control" placeholder="請輸入密碼" required>
         </div>
 
-        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 13px; font-size: 1rem; margin-top: 6px; border-radius: 12px;">
-          登入系統
+        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 14px; font-size: 0.98rem; margin-top: 8px; border-radius: 14px;">
+          進入系統 →
         </button>
       </form>
 
       <div class="login-hint">
-        💡 <strong>登入提示：</strong> 可直接輸入您的<strong>姓名</strong>登入！首次登入預設密碼為 <strong>0000</strong>，登入後系統將引導修改密碼與綁定常用電子信箱。
+        💡 <strong>首次登入提示：</strong> 可直接輸入<strong>中文姓名</strong>登入，預設密碼為 <strong>0000</strong>。首次進入後系統將引導綁定信箱並更新密碼。
       </div>
     </div>
   </div>
 
   <!-- ==================== 2. 社員主畫面 ==================== -->
   <div id="mainApp" style="display: none; flex-direction: column; min-height: 100vh;">
-    <header class="navbar">
-      <div class="nav-brand" onclick="showTab('tabHome')">
-        <span class="music-note">🎵</span>
-        <span>東吳管樂社</span>
-      </div>
-
-      <ul class="nav-menu">
-        <li class="nav-item active" id="navItem-tabHome" onclick="showTab('tabHome')">首頁</li>
-        <li class="nav-item" id="navItem-tabRoom" onclick="showTab('tabRoom')">借教室</li>
-        <li class="nav-item" id="navItem-tabAbsence" onclick="showTab('tabAbsence')">請假</li>
-        <li class="nav-item" id="navItem-tabSeating" onclick="showTab('tabSeating')">座位表</li>
-        <li class="nav-item admin-only-nav" id="navItem-tabAdmin" onclick="showTab('tabAdmin')">幹部後台</li>
-      </ul>
-
-      <div class="nav-user">
-        <div class="user-info">
-          <span id="navRoleBadge" class="badge badge-member">社員</span>
-          <span id="navUserName" class="user-name-text" style="font-weight: 600; padding-right: 4px;">使用者</span>
+    
+    <!-- 懸浮膠囊導覽島 -->
+    <div class="navbar-wrapper">
+      <header class="navbar">
+        <div class="nav-brand" onclick="showTab('tabHome')">
+          <span class="music-note">🎵</span>
+          <span>東吳管樂社</span>
         </div>
-        <button type="button" class="nav-icon-btn" onclick="openProfileModal()" title="個人資料">👤 設定</button>
-        <button type="button" class="nav-icon-btn" onclick="handleLogout()" title="登出">登出</button>
-        <button type="button" class="nav-hamburger" onclick="toggleMobileMenu()" aria-label="切換選單">☰</button>
-      </div>
-    </header>
 
+        <ul class="nav-menu">
+          <li class="nav-item active" id="navItem-tabHome" onclick="showTab('tabHome')">首頁總覽</li>
+          <li class="nav-item" id="navItem-tabRoom" onclick="showTab('tabRoom')">預約教室</li>
+          <li class="nav-item" id="navItem-tabAbsence" onclick="showTab('tabAbsence')">團練請假</li>
+          <li class="nav-item" id="navItem-tabSeating" onclick="showTab('tabSeating')">座位配置</li>
+          <li class="nav-item admin-only-nav" id="navItem-tabAdmin" onclick="showTab('tabAdmin')">幹部後台</li>
+        </ul>
+
+        <div class="nav-user">
+          <div class="user-info">
+            <span id="navRoleBadge" class="badge badge-member">社員</span>
+            <span id="navUserName" class="user-name-text" style="font-weight: 700; color: var(--obsidian); padding-right: 4px;">使用者</span>
+          </div>
+          <button type="button" class="nav-icon-btn" onclick="openProfileModal()" title="個人設定">設定</button>
+          <button type="button" class="nav-icon-btn" onclick="handleLogout()" title="登出">登出</button>
+          <button type="button" class="nav-hamburger" onclick="toggleMobileMenu()" aria-label="選單">☰</button>
+        </div>
+      </header>
+    </div>
+
+    <!-- 手機版懸浮選單 -->
     <div id="mobileMenu" class="mobile-menu">
-      <div class="nav-item active" id="mobNavItem-tabHome" onclick="showTab('tabHome'); toggleMobileMenu();">首頁</div>
-      <div class="nav-item" id="mobNavItem-tabRoom" onclick="showTab('tabRoom'); toggleMobileMenu();">借教室</div>
-      <div class="nav-item" id="mobNavItem-tabAbsence" onclick="showTab('tabAbsence'); toggleMobileMenu();">請假</div>
-      <div class="nav-item" id="mobNavItem-tabSeating" onclick="showTab('tabSeating'); toggleMobileMenu();">座位表</div>
+      <div class="nav-item active" id="mobNavItem-tabHome" onclick="showTab('tabHome'); toggleMobileMenu();">首頁總覽</div>
+      <div class="nav-item" id="mobNavItem-tabRoom" onclick="showTab('tabRoom'); toggleMobileMenu();">預約教室</div>
+      <div class="nav-item" id="mobNavItem-tabAbsence" onclick="showTab('tabAbsence'); toggleMobileMenu();">團練請假</div>
+      <div class="nav-item" id="mobNavItem-tabSeating" onclick="showTab('tabSeating'); toggleMobileMenu();">座位配置</div>
       <div class="nav-item admin-only-nav" id="mobNavItem-tabAdmin" onclick="showTab('tabAdmin'); toggleMobileMenu();">幹部後台</div>
     </div>
 
@@ -1119,19 +1276,20 @@
       <!-- ================= 1. 首頁 ================= -->
       <div id="tabHome" class="page-section active">
         <div class="welcome-banner">
-          <h2 class="welcome-title" id="homeWelcomeTitle">歡迎回來，同學！🎶</h2>
+          <div class="welcome-tag">✨ 東吳大學管樂社 數位團務中心</div>
+          <h2 class="welcome-title" id="homeWelcomeTitle">歡迎回來，同學！</h2>
           <p class="welcome-subtitle" id="homeWelcomeSubtitle">東吳管樂社  ・負責樂器：</p>
         </div>
 
         <div class="form-row">
-          <div class="form-col" style="flex: 1.35;">
+          <div class="form-col" style="flex: 1.4;">
             <div class="card">
               <div class="card-header">
                 <div>
-                  <h3 class="card-title">🎺 下次團練資訊</h3>
-                  <div class="card-desc">合奏排程與重要時程公告</div>
+                  <h3 class="card-title">🎺 下次團練排程</h3>
+                  <div class="card-desc">近期全團合奏時間、地點與重要公告</div>
                 </div>
-                <button class="btn btn-outline btn-sm" onclick="showTab('tabAbsence')">我要請假</button>
+                <button class="btn btn-outline btn-sm" onclick="showTab('tabAbsence')">請假登記 →</button>
               </div>
               <div id="homeUpcomingPracticeContent">
                 <p style="color: var(--text-muted);">載入團練資料中...</p>
@@ -1139,30 +1297,42 @@
             </div>
           </div>
 
-          <div class="form-col" style="flex: 0.85;">
+          <div class="form-col" style="flex: 0.9;">
             <div class="card">
               <div class="card-header">
                 <div>
-                  <h3 class="card-title">⚡ 快速功能捷徑</h3>
-                  <div class="card-desc">常用社團服務一鍵前往</div>
+                  <h3 class="card-title">⚡ 快速操作</h3>
+                  <div class="card-desc">點選下方功能卡片立即前往</div>
                 </div>
               </div>
               <div class="quick-tiles-grid">
                 <button type="button" class="quick-tile" onclick="showTab('tabRoom')">
-                  <div class="quick-tile-icon">🚪</div>
-                  <div class="quick-tile-title">我要借教室</div>
+                  <div class="quick-tile-top">
+                    <div class="quick-tile-icon">🚪</div>
+                    <span class="quick-tile-arrow">↗</span>
+                  </div>
+                  <div class="quick-tile-title">預約排練教室</div>
                 </button>
                 <button type="button" class="quick-tile" onclick="showTab('tabAbsence')">
-                  <div class="quick-tile-icon">📝</div>
-                  <div class="quick-tile-title">我要請假</div>
+                  <div class="quick-tile-top">
+                    <div class="quick-tile-icon">📝</div>
+                    <span class="quick-tile-arrow">↗</span>
+                  </div>
+                  <div class="quick-tile-title">團練請假登記</div>
                 </button>
                 <button type="button" class="quick-tile" onclick="showTab('tabSeating')">
-                  <div class="quick-tile-icon">🎼</div>
-                  <div class="quick-tile-title">查看座位表</div>
+                  <div class="quick-tile-top">
+                    <div class="quick-tile-icon">🎼</div>
+                    <span class="quick-tile-arrow">↗</span>
+                  </div>
+                  <div class="quick-tile-title">檢視座位配置</div>
                 </button>
                 <button type="button" class="quick-tile" onclick="openProfileModal()">
-                  <div class="quick-tile-icon">👤</div>
-                  <div class="quick-tile-title">個人設定</div>
+                  <div class="quick-tile-top">
+                    <div class="quick-tile-icon">👤</div>
+                    <span class="quick-tile-arrow">↗</span>
+                  </div>
+                  <div class="quick-tile-title">個人帳號設定</div>
                 </button>
               </div>
             </div>
@@ -1172,10 +1342,10 @@
         <div class="card">
           <div class="card-header">
             <div>
-              <h3 class="card-title">📅 最近借教室申請</h3>
-              <div class="card-desc">顯示您最近 3 次預約之審核進度</div>
+              <h3 class="card-title">📅 最近借教室紀錄</h3>
+              <div class="card-desc">顯示您近期預約之審核進度與核定教室</div>
             </div>
-            <button class="btn btn-primary btn-sm" onclick="showTab('tabRoom')">查看全部申請</button>
+            <button class="btn btn-secondary btn-sm" onclick="showTab('tabRoom')">查看全部紀錄</button>
           </div>
           <div class="table-container">
             <table>
@@ -1205,12 +1375,12 @@
         <div class="card">
           <div class="card-header">
             <div>
-              <h2 class="card-title">🚪 借用排練教室 / 琴房</h2>
-              <div class="card-desc">當週僅開放借用「下週」之教室，並請於本週截止時間前完成填寫。</div>
+              <h2 class="card-title">🚪 預約排練教室 / 琴房</h2>
+              <div class="card-desc">當週僅開放預約「下週」之時段，請直接點選下方節次與需求方塊進行申請。</div>
             </div>
           </div>
 
-          <div id="roomBookingRuleBanner" style="background: #fffbeb; border: 1.5px solid #fcd34d; border-radius: 12px; padding: 13px 18px; margin-bottom: 22px; font-size: 0.9rem; color: #92400e; line-height: 1.5;">
+          <div id="roomBookingRuleBanner" style="background: #fffbeb; border: 1px solid #fde68a; border-radius: var(--radius-md); padding: 14px 18px; margin-bottom: 24px; font-size: 0.9rem; color: #92400e; line-height: 1.55;">
             載入借用規則中...
           </div>
 
@@ -1220,7 +1390,7 @@
                 <div class="form-group">
                   <label class="form-label">借用日期<span class="required">*</span></label>
                   <input type="date" id="roomDateInput" class="form-control" required onchange="handleRoomDateChange()">
-                  <div id="roomWeekdayIndicator" style="font-size: 0.86rem; font-weight: 700; color: var(--brand); margin-top: 6px;">
+                  <div id="roomWeekdayIndicator" style="font-size: 0.85rem; font-weight: 700; color: var(--accent-indigo); margin-top: 6px;">
                     請選擇借用日期
                   </div>
                 </div>
@@ -1250,11 +1420,11 @@
             <div class="form-row">
               <div class="form-col">
                 <div class="form-group">
-                  <label class="form-label">勿擾</label>
-                  <div style="margin-top: 8px;">
-                    <label class="period-chip" style="display: inline-flex; width: auto; padding: 9px 16px;">
+                  <label class="form-label">勿擾設定（點選切換）</label>
+                  <div style="margin-top: 6px;">
+                    <label class="period-chip" style="display: inline-flex; width: auto; padding: 11px 20px;">
                       <input type="checkbox" id="roomDoNotDisturb" onchange="this.parentElement.classList.toggle('selected', this.checked)">
-                      <span>勿擾（不開放他人併間練習）</span>
+                      <span>🔒 勿擾（不開放他人併間練習）</span>
                     </label>
                   </div>
                 </div>
@@ -1262,13 +1432,13 @@
 
               <div class="form-col">
                 <div class="form-group">
-                  <label class="form-label">需求</label>
-                  <div style="display: flex; gap: 12px; margin-top: 8px; flex-wrap: wrap;">
-                    <label class="period-chip" style="display: inline-flex; width: auto; padding: 9px 16px;">
+                  <label class="form-label">器材需求（可複選）</label>
+                  <div style="display: flex; gap: 10px; margin-top: 6px; flex-wrap: wrap;">
+                    <label class="period-chip" style="display: inline-flex; width: auto; padding: 11px 20px;">
                       <input type="checkbox" name="roomNeedCheckbox" value="鋼琴" onchange="this.parentElement.classList.toggle('selected', this.checked)">
                       <span>🎹 鋼琴</span>
                     </label>
-                    <label class="period-chip" style="display: inline-flex; width: auto; padding: 9px 16px;">
+                    <label class="period-chip" style="display: inline-flex; width: auto; padding: 11px 20px;">
                       <input type="checkbox" name="roomNeedCheckbox" value="打擊樂器" onchange="this.parentElement.classList.toggle('selected', this.checked)">
                       <span>🥁 打擊樂器</span>
                     </label>
@@ -1279,14 +1449,14 @@
 
             <div class="form-group">
               <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                <label class="form-label" style="margin-bottom:0;">借用節次<span class="required">*</span></label>
+                <label class="form-label" style="margin-bottom:0;">點選借用節次<span class="required">*</span></label>
                 <div style="display: flex; gap: 6px;">
-                  <button type="button" class="btn btn-secondary btn-sm" onclick="toggleAllPeriods(true)">全選</button>
-                  <button type="button" class="btn btn-secondary btn-sm" onclick="toggleAllPeriods(false)">清空</button>
+                  <button type="button" class="btn btn-secondary btn-sm" onclick="toggleAllPeriods(true)">全選節次</button>
+                  <button type="button" class="btn btn-secondary btn-sm" onclick="toggleAllPeriods(false)">全部清除</button>
                 </div>
               </div>
               <div id="roomPeriodGrid" class="period-grid"></div>
-              <div id="roomPeriodWeekendNote" style="display: none; font-size: 0.85rem; color: #b45309; margin-top: 8px;">
+              <div id="roomPeriodWeekendNote" style="display: none; font-size: 0.84rem; color: #b45309; margin-top: 8px; font-weight: 500;">
                 ⚠️ 假日僅開放幹部後台「系統設定」所勾選之節次。
               </div>
             </div>
@@ -1297,8 +1467,8 @@
             </div>
 
             <div style="text-align: right;">
-              <button type="submit" id="roomSubmitBtn" class="btn btn-primary" style="padding: 11px 28px;">
-                🚀 送出借用申請
+              <button type="submit" id="roomSubmitBtn" class="btn btn-primary" style="padding: 13px 32px;">
+                送出借用申請 →
               </button>
             </div>
           </form>
@@ -1307,10 +1477,10 @@
         <div class="card">
           <div class="card-header">
             <div>
-              <h3 class="card-title">📋 我的申請記錄</h3>
-              <div class="card-desc">依借用日期由近到遠排列・已收件(藍)、已通過(綠)、未通過(紅)、無教室(橘)</div>
+              <h3 class="card-title">📋 我的申請紀錄</h3>
+              <div class="card-desc">依借用日期由近到遠排列</div>
             </div>
-            <button class="btn btn-secondary btn-sm" onclick="loadMyRoomRequests()">🔄 重新整理</button>
+            <button class="btn btn-secondary btn-sm" onclick="loadMyRoomRequests()">重新整理</button>
           </div>
 
           <div class="table-container">
@@ -1344,7 +1514,7 @@
           <div class="card-header">
             <div>
               <h2 class="card-title">📝 團練請假登記</h2>
-              <div class="card-desc">團練前 7 天開放請假登記，請務必於團練當天中午 12:00 前完成填寫；請假後座位表將自動重排。</div>
+              <div class="card-desc">團練前 7 天開放登記，請於團練當天中午 12:00 前完成填寫；請假後座位表將自動重排。</div>
             </div>
           </div>
 
@@ -1356,8 +1526,8 @@
         <div class="card">
           <div class="card-header">
             <div>
-              <h3 class="card-title">📖 我的請假記錄</h3>
-              <div class="card-desc">過往所有團練請假登記紀錄（依團練日期由近到遠排列）</div>
+              <h3 class="card-title">📖 我的請假紀錄</h3>
+              <div class="card-desc">過往所有團練請假紀錄（依團練日期由近到遠排列）</div>
             </div>
           </div>
 
@@ -1386,32 +1556,32 @@
         <div class="card">
           <div class="card-header">
             <div>
-              <h2 class="card-title">🎼 團練座位表</h2>
-              <div class="card-desc">僅開放檢視最近一場團練之實際出席座位配置（遠期場次尚未確定出缺席，故反灰鎖定）。</div>
+              <h2 class="card-title">🎼 團練座位配置圖</h2>
+              <div class="card-desc">僅開放檢視最近一場團練之實際出席座位（已請假人員將自動隱藏並重新排列）。</div>
             </div>
             
             <div class="seating-controls">
               <div style="display: flex; align-items: center; gap: 8px;">
-                <label style="font-weight: 600; font-size: 0.9rem;">團練場次：</label>
-                <select id="seatingPracticeSelect" class="form-control" style="width: auto;" onchange="handleSeatingChange()"></select>
+                <label style="font-weight: 700; font-size: 0.88rem; color: var(--text-secondary);">場次：</label>
+                <select id="seatingPracticeSelect" class="form-control" style="width: auto; padding: 8px 14px;" onchange="handleSeatingChange()"></select>
               </div>
-              <button class="btn btn-secondary btn-sm" onclick="handleSeatingChange()">🔄 重新整理</button>
+              <button class="btn btn-secondary btn-sm" onclick="handleSeatingChange()">重新整理</button>
             </div>
           </div>
 
           <div class="seating-wrapper" id="seatingChartContainer"></div>
 
-          <div id="seatingSectionSummary" style="margin-top: 24px; display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px;"></div>
+          <div id="seatingSectionSummary" style="margin-top: 24px; display: grid; grid-template-columns: repeat(auto-fill, minmax(185px, 1fr)); gap: 14px;"></div>
         </div>
       </div>
 
       <!-- ================= 5. 幹部後台 ================= -->
       <div id="tabAdmin" class="page-section">
-        <div class="card" style="padding: 20px 24px 16px;">
-          <div class="card-header" style="margin-bottom: 14px; border: none; padding-bottom: 0;">
+        <div class="card" style="padding: 22px 28px;">
+          <div class="card-header" style="margin-bottom: 16px;">
             <div>
-              <h2 class="card-title">⚙️ 東吳管樂社 幹部後台管理</h2>
-              <div class="card-desc">社團借教室審批、團練排程、請假統計、座位表拖曳調整、社員批次管理與系統設定。</div>
+              <h2 class="card-title">⚙️ 幹部後台管理中心</h2>
+              <div class="card-desc">借教室審批、團練排程、請假統計、座位拖曳調整、社員批次建檔與系統設定</div>
             </div>
           </div>
 
@@ -1431,17 +1601,17 @@
             <div class="card-header">
               <div>
                 <h3 class="card-title">🚪 全社借教室申請審查</h3>
-                <div class="card-desc">依借用日期由近到遠排列；可線上填寫審核狀態、可借用時間與核定教室，並支援匯出報表。</div>
+                <div class="card-desc">依借用日期由近到遠排列；可線上填寫審核狀態、可借用時間與核定教室。</div>
               </div>
               <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-                <select id="adminRoomFilterStatus" class="form-control" style="width: auto;" onchange="renderAdminRoomTable()">
+                <select id="adminRoomFilterStatus" class="form-control" style="width: auto; padding: 8px 14px;" onchange="renderAdminRoomTable()">
                   <option value="ALL">全部狀態</option>
                   <option value="已收件">已收件</option>
                   <option value="已通過">已通過</option>
                   <option value="未通過">未通過</option>
                   <option value="無教室">無教室</option>
                 </select>
-                <input type="date" id="adminRoomFilterDate" class="form-control" style="width: auto;" onchange="renderAdminRoomTable()">
+                <input type="date" id="adminRoomFilterDate" class="form-control" style="width: auto; padding: 7px 14px;" onchange="renderAdminRoomTable()">
                 <button class="btn btn-secondary btn-sm" onclick="exportRoomRequestsCSV()">📥 匯出報表</button>
               </div>
             </div>
@@ -1479,7 +1649,7 @@
                 <h3 class="card-title">🎺 團練場次排程管理</h3>
                 <div class="card-desc">依排練日期由近到遠排列；新增團練時系統將自動帶入預設時間、地點與當天中午 12:00 截止。</div>
               </div>
-              <button class="btn btn-primary btn-sm" onclick="openPracticeModal()">➕ 新增團練場次</button>
+              <button class="btn btn-primary btn-sm" onclick="openPracticeModal()">＋ 新增團練場次</button>
             </div>
 
             <div class="table-container">
@@ -1510,13 +1680,13 @@
                 <div class="card-desc">選取團練場次，即時統計全體與各樂器出缺席狀態，並可匯出名單。</div>
               </div>
               <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-                <label style="font-weight: 600; font-size: 0.9rem;">選取團練：</label>
-                <select id="adminAbsencePracticeSelect" class="form-control" style="width: auto;" onchange="renderAdminAbsenceStats()"></select>
+                <label style="font-weight: 700; font-size: 0.88rem; color: var(--text-secondary);">選取團練：</label>
+                <select id="adminAbsencePracticeSelect" class="form-control" style="width: auto; padding: 8px 14px;" onchange="renderAdminAbsenceStats()"></select>
                 <button class="btn btn-secondary btn-sm" onclick="exportAbsenceCSV()">📥 匯出假單</button>
               </div>
             </div>
 
-            <div class="dashboard-grid" style="margin-bottom: 20px;">
+            <div class="dashboard-grid" style="margin-bottom: 24px;">
               <div class="stat-card">
                 <div class="stat-icon">👥</div>
                 <div>
@@ -1525,21 +1695,21 @@
                 </div>
               </div>
               <div class="stat-card">
-                <div class="stat-icon" style="background:#f0fdf4; color:#15803d;">✅</div>
+                <div class="stat-icon" style="background:#ecfdf5; color:#047857;">✅</div>
                 <div>
                   <div class="stat-value" id="adminStatPresent">0 人</div>
                   <div class="stat-label">實際出席</div>
                 </div>
               </div>
               <div class="stat-card">
-                <div class="stat-icon" style="background:#fef2f2; color:#b91c1c;">❌</div>
+                <div class="stat-icon" style="background:#fff1f2; color:#be123c;">❌</div>
                 <div>
                   <div class="stat-value" id="adminStatAbsent">0 人</div>
                   <div class="stat-label">登記請假</div>
                 </div>
               </div>
               <div class="stat-card">
-                <div class="stat-icon" style="background:#fef3c7; color:#b45309;">📈</div>
+                <div class="stat-icon" style="background:#fffbeb; color:#b45309;">📈</div>
                 <div>
                   <div class="stat-value" id="adminStatRate">0%</div>
                   <div class="stat-label">出席率</div>
@@ -1547,10 +1717,10 @@
               </div>
             </div>
 
-            <h4 style="margin-bottom: 12px; color: var(--primary); font-size: 1.05rem;">各樂器出席率分佈</h4>
-            <div id="adminSectionBreakdownGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; margin-bottom: 24px;"></div>
+            <h4 style="margin-bottom: 12px; color: var(--obsidian); font-size: 1rem; font-weight: 800;">各樂器出席率分佈</h4>
+            <div id="adminSectionBreakdownGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; margin-bottom: 26px;"></div>
 
-            <h4 style="margin-bottom: 12px; color: var(--primary); font-size: 1.05rem;">請假詳細名冊</h4>
+            <h4 style="margin-bottom: 12px; color: var(--obsidian); font-size: 1rem; font-weight: 800;">請假詳細名冊</h4>
             <div class="table-container">
               <table>
                 <thead>
@@ -1573,29 +1743,28 @@
             <div class="card-header">
               <div>
                 <h3 class="card-title">🎼 座位表視覺化拖曳調整</h3>
-                <div class="card-desc">直接在下方座位圖中「按住滑鼠或手指拖曳」即可移動位置；點擊聲部可微調人數與角度。</div>
+                <div class="card-desc">直接在下方畫布「按住滑鼠或手指拖曳」即可移動聲部位置；點選聲部可微調人數與角度。</div>
               </div>
               <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-                <label style="font-weight: 600; font-size: 0.9rem;">調整目標：</label>
-                <select id="adminSeatingTargetSelect" class="form-control" style="width: auto;" onchange="handleAdminSeatingTargetChange()"></select>
-                <button type="button" class="btn btn-secondary btn-sm" onclick="resetAdminSeatingToDefault()">🔄 恢復預設位置</button>
+                <select id="adminSeatingTargetSelect" class="form-control" style="width: auto; padding: 8px 14px;" onchange="handleAdminSeatingTargetChange()"></select>
+                <button type="button" class="btn btn-secondary btn-sm" onclick="resetAdminSeatingToDefault()">恢復預設</button>
                 <button type="button" class="btn btn-primary btn-sm" onclick="saveAdminSeatingLayout()">💾 儲存座位表</button>
               </div>
             </div>
 
-            <div id="adminSeatingQuickBar" style="background: #f8fafc; border: 1.5px solid var(--border); border-radius: var(--radius-md); padding: 12px 18px; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+            <div id="adminSeatingQuickBar" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: var(--radius-md); padding: 14px 18px; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
               <div style="display: flex; align-items: center; gap: 10px;">
-                <span style="font-weight: 700; color: var(--brand);" id="selectedSecTitle">💡 請點擊或拖曳下方任一聲部進行調整</span>
+                <span style="font-weight: 700; color: var(--obsidian);" id="selectedSecTitle">💡 請點擊或按住拖曳下方任一聲部進行調整</span>
               </div>
               <div id="selectedSecControls" style="display: none; align-items: center; gap: 16px; flex-wrap: wrap;">
                 <div style="display: flex; align-items: center; gap: 6px;">
-                  <span style="font-size: 0.9rem; font-weight: 600;">編制人數：</span>
+                  <span style="font-size: 0.88rem; font-weight: 700; color: var(--text-secondary);">編制人數：</span>
                   <button type="button" class="btn btn-secondary btn-sm" onclick="adjustSelectedSection('count', -1)">－</button>
                   <span id="selectedSecCountVal" style="font-weight: 800; min-width: 28px; text-align: center;">0</span>
                   <button type="button" class="btn btn-secondary btn-sm" onclick="adjustSelectedSection('count', 1)">＋</button>
                 </div>
                 <div style="display: flex; align-items: center; gap: 6px;">
-                  <span style="font-size: 0.9rem; font-weight: 600;">傾斜角度：</span>
+                  <span style="font-size: 0.88rem; font-weight: 700; color: var(--text-secondary);">傾斜角度：</span>
                   <button type="button" class="btn btn-secondary btn-sm" onclick="adjustSelectedSection('angle', -5)">↺ 左轉</button>
                   <span id="selectedSecAngleVal" style="font-weight: 800; min-width: 40px; text-align: center;">0°</span>
                   <button type="button" class="btn btn-secondary btn-sm" onclick="adjustSelectedSection('angle', 5)">↻ 右轉</button>
@@ -1607,7 +1776,7 @@
           </div>
         </div>
 
-        <!-- 5.5 社員管理（支援批次新增 & 刪除社員） -->
+        <!-- 5.5 社員管理 -->
         <div id="subtab-adminMembers" class="subtab-content">
           <div class="card">
             <div class="card-header">
@@ -1616,8 +1785,8 @@
                 <div class="card-desc">支援依樂器聲部一次批次建立多位社員帳號、變更角色權限、重設密碼或刪除退社帳號。</div>
               </div>
               <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-                <input type="text" id="adminMemberSearchInput" class="form-control" placeholder="搜尋姓名、信箱、樂器..." style="width: 220px;" oninput="renderAdminMembersTable()">
-                <button class="btn btn-primary btn-sm" onclick="openAddMemberModal()">➕ 批次新增社員</button>
+                <input type="text" id="adminMemberSearchInput" class="form-control" placeholder="搜尋姓名、信箱、樂器..." style="width: 220px; padding: 8px 14px;" oninput="renderAdminMembersTable()">
+                <button class="btn btn-primary btn-sm" onclick="openAddMemberModal()">＋ 批次新增社員</button>
               </div>
             </div>
 
@@ -1659,22 +1828,22 @@
               </select>
             </div>
 
-            <hr style="border: 0; border-top: 1px solid var(--border); margin: 24px 0;">
+            <hr style="border: 0; border-top: 1px solid #f1f5f9; margin: 24px 0;">
 
             <div style="margin-bottom: 24px;">
-              <h4 style="font-size: 1.05rem; color: var(--primary); margin-bottom: 10px; display: flex; align-items: center; gap: 8px;">
-                <span>📅 星期六開放節次</span>
+              <h4 style="font-size: 1rem; color: var(--obsidian); margin-bottom: 12px; display: flex; align-items: center; gap: 10px;">
+                <span>📅 星期六開放節次（點選啟用）</span>
                 <button type="button" class="btn btn-secondary btn-sm" onclick="toggleWeekendPeriods('sat', true)">全選</button>
                 <button type="button" class="btn btn-secondary btn-sm" onclick="toggleWeekendPeriods('sat', false)">全關</button>
               </h4>
               <div id="settingsSatPeriodsGrid" class="period-grid"></div>
             </div>
 
-            <hr style="border: 0; border-top: 1px solid var(--border); margin: 24px 0;">
+            <hr style="border: 0; border-top: 1px solid #f1f5f9; margin: 24px 0;">
 
             <div style="margin-bottom: 16px;">
-              <h4 style="font-size: 1.05rem; color: var(--primary); margin-bottom: 10px; display: flex; align-items: center; gap: 8px;">
-                <span>📅 星期日開放節次</span>
+              <h4 style="font-size: 1rem; color: var(--obsidian); margin-bottom: 12px; display: flex; align-items: center; gap: 10px;">
+                <span>📅 星期日開放節次（點選啟用）</span>
                 <button type="button" class="btn btn-secondary btn-sm" onclick="toggleWeekendPeriods('sun', true)">全選</button>
                 <button type="button" class="btn btn-secondary btn-sm" onclick="toggleWeekendPeriods('sun', false)">全關</button>
               </h4>
@@ -1770,15 +1939,15 @@
           </div>
 
           <div class="form-group" style="margin-top: 10px;">
-            <label style="display: inline-flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 600;">
-              <input type="checkbox" id="profNotifyEmail" style="width: 18px; height: 18px; accent-color: var(--brand);">
-              <span>接收借教室審核結果之電子信箱通知</span>
+            <label class="period-chip" style="display: inline-flex; width: 100%; justify-content: flex-start; padding: 12px 16px;">
+              <input type="checkbox" id="profNotifyEmail" onchange="this.parentElement.classList.toggle('selected', this.checked)">
+              <span>🔔 接收借教室審核結果之電子信箱通知</span>
             </label>
           </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" onclick="switchToChangePasswordModal()">修改密碼</button>
-          <button type="submit" class="btn btn-primary">儲存個人設定</button>
+          <button type="submit" class="btn btn-primary">儲存設定</button>
         </div>
       </form>
     </div>
@@ -1838,7 +2007,7 @@
     </div>
   </div>
 
-  <!-- 4. 批次快速新增社員（1.社員姓名[多行] 2.負責樂器 3.系統角色身分） -->
+  <!-- 4. 批次快速新增社員 -->
   <div id="modalAddMember" class="modal-overlay">
     <div class="modal-card">
       <div class="modal-header">
@@ -1875,7 +2044,7 @@
             </select>
           </div>
 
-          <p style="font-size: 0.85rem; color: var(--text-muted);">
+          <p style="font-size: 0.84rem; color: var(--text-secondary);">
             💡 預設密碼皆為 <strong>0000</strong>。社員首次用姓名登入後，系統會引導他自行填寫常用電子信箱並修改密碼。
           </p>
         </div>
@@ -1897,7 +2066,7 @@
       <form id="submitAbsenceForm" onsubmit="handleAbsenceSubmit(event)">
         <div class="modal-body">
           <input type="hidden" id="absenceTargetPracticeId">
-          <div id="absencePracticeInfo" style="background: #eff6ff; padding: 12px 14px; border-radius: 10px; margin-bottom: 16px; font-size: 0.92rem; font-weight: 700; color: var(--brand-dark);">
+          <div id="absencePracticeInfo" style="background: #f1f5f9; padding: 12px 16px; border-radius: 12px; margin-bottom: 18px; font-size: 0.92rem; font-weight: 700; color: var(--obsidian);">
             團練場次載入中...
           </div>
 
@@ -1971,13 +2140,12 @@
     }
 
     /**
-     * 智慧排版解析器：將 FB 社團公告（即使被擠成一大段）自動拆解為條列式，並提供「展開/收合」功能以節省空間
+     * 智慧排版解析器：將 FB 社團公告自動拆解為條列式，並提供展開/收合功能
      */
     function formatPracticeNotesHtml(rawNotes, uid) {
       let text = String(rawNotes || '全體合奏排練').trim();
       text = text.replace(/^["']|["']$/g, '').trim();
 
-      // 遇到 FB 常見的條列符號（⭐、‼️、✦✦、✏️）若在句中自動補換行
       text = text
         .replace(/\s*(⭐|🌟|✏️|📌|📍)/g, '\n$1')
         .replace(/\s*(✦✦[^✦]+✦✦)/g, '\n$1\n')
@@ -2008,7 +2176,7 @@
             ${itemsHtml}
           </div>
           ${isLong ? `
-            <button type="button" id="${btnId}" class="notes-toggle-btn" onclick="toggleNotesCollapse('${listId}', '${btnId}')">
+            <button type="button" id="${btnId}" class="notes-toggle-btn" onclick="toggleNotesCollapse('${listId}', '${btnId}', ${lines.length})">
               🔽 展開完整公告（共 ${lines.length} 項）
             </button>
           ` : ''}
@@ -2016,12 +2184,12 @@
       `;
     }
 
-    function toggleNotesCollapse(listId, btnId) {
+    function toggleNotesCollapse(listId, btnId, count) {
       const listEl = document.getElementById(listId);
       const btnEl = document.getElementById(btnId);
       if (!listEl || !btnEl) return;
       const isCollapsed = listEl.classList.toggle('collapsed');
-      btnEl.innerHTML = isCollapsed ? '🔽 展開完整公告' : '🔼 收合公告';
+      btnEl.innerHTML = isCollapsed ? `🔽 展開完整公告（共 ${count} 項）` : '🔼 收合公告';
     }
 
     function toLocalDateStr(d) {
@@ -2122,11 +2290,11 @@
       const toast = document.createElement('div');
       toast.className = 'toast toast-' + (type === 'success' ? 'success' : type === 'error' ? 'error' : 'info');
 
-      let icon = '🔔';
+      let icon = '✨';
       if (type === 'success') icon = '✅';
       if (type === 'error') icon = '⚠️';
 
-      toast.innerHTML = '<span style="font-size:1.15rem;">' + icon + '</span><span>' + msg + '</span>';
+      toast.innerHTML = '<span style="font-size:1.1rem;">' + icon + '</span><span>' + msg + '</span>';
       container.appendChild(toast);
 
       setTimeout(() => {
@@ -2227,7 +2395,7 @@
           session.section = extractSectionAbbr(session.instrument, session.section);
           localStorage.setItem('band_session', JSON.stringify(session));
 
-          showToast('登入成功，歡迎 ' + session.name, 'success');
+          showToast('歡迎回來，' + session.name, 'success');
           setupUserSessionUI();
           showPage('mainApp');
           showTab('tabHome');
@@ -2245,7 +2413,7 @@
       localStorage.removeItem('band_session');
       document.getElementById('loginPassword').value = '';
       closeAllModals();
-      showToast('已登出系統', 'info');
+      showToast('已安全登出系統', 'info');
       showPage('loginPage');
     }
 
@@ -2275,7 +2443,7 @@
     async function loadDashboard() {
       if (!session) return;
       const cleanInst = formatInstrumentDisplay(session.instrument, session.section);
-      document.getElementById('homeWelcomeTitle').innerText = '歡迎回來，' + session.name + '！🎶';
+      document.getElementById('homeWelcomeTitle').innerText = '歡迎回來，' + session.name + '！';
       document.getElementById('homeWelcomeSubtitle').innerText = '東吳管樂社  ・負責樂器：' + cleanInst;
 
       const data = await api('getDashboard', { email: session.email, name: session.name });
@@ -2284,43 +2452,55 @@
       const upcomingEl = document.getElementById('homeUpcomingPracticeContent');
       if (nextPrac) {
         const myAbsence = data.myNextPracticeAbsence;
-        let statusBadgeHtml = '<span class="badge badge-approved" style="font-size:0.85rem;">✅ 出席預定</span>';
+        let statusBadgeHtml = '<span class="badge badge-approved">出席預定</span>';
         if (myAbsence) {
-          statusBadgeHtml = '<span class="badge badge-rejected" style="font-size:0.85rem;">⚠️ 已請假 (' + escapeHtml(myAbsence.reason) + ')</span>';
+          statusBadgeHtml = '<span class="badge badge-rejected">已請假 (' + escapeHtml(myAbsence.reason) + ')</span>';
         }
 
+        const dParts = String(nextPrac.date).split('-');
+        const monthNum = parseInt(dParts[1] || '1', 10);
+        const dayNum = dParts[2] || '';
+
         upcomingEl.innerHTML = `
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:8px;">
-            <div style="font-size:1.18rem; font-weight:800; color:#0f172a;">
-              📅 ` + nextPrac.date + ` (週` + getWeekday(nextPrac.date) + `) ` + (nextPrac.startTime || '18:15') + ` - ` + (nextPrac.endTime || '20:30') + `
+          <div class="upcoming-hero-box">
+            <div class="cal-badge">
+              <div class="cal-badge-month">${monthNum}月</div>
+              <div class="cal-badge-day">${dayNum}</div>
             </div>
-            ` + statusBadgeHtml + `
-          </div>
-          <div style="font-size:0.9rem; color:#475569; margin-bottom:6px;">
-            📍 地點：<strong>` + escapeHtml(nextPrac.location) + `</strong> &nbsp;|&nbsp; 截止登記：<span style="color:#b45309; font-weight:700;">` + formatDateTimeDisplay(nextPrac.deadline) + `</span>
+            <div style="flex: 1;">
+              <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:4px;">
+                <div style="font-size:1.15rem; font-weight:800; color:var(--obsidian);">
+                  ${nextPrac.date}（週${getWeekday(nextPrac.date)}）${nextPrac.startTime || '18:15'} - ${nextPrac.endTime || '20:30'}
+                </div>
+                ${statusBadgeHtml}
+              </div>
+              <div style="font-size:0.88rem; color:var(--text-secondary);">
+                📍 地點：<strong>${escapeHtml(nextPrac.location)}</strong> &nbsp;・&nbsp; 請假截止：<span style="color:#b45309; font-weight:700;">${formatDateTimeDisplay(nextPrac.deadline)}</span>
+              </div>
+            </div>
           </div>
           ` + formatPracticeNotesHtml(nextPrac.notes, 'home_' + nextPrac.id) + `
         `;
       } else {
-        upcomingEl.innerHTML = '<p style="color:var(--text-muted);">目前無即將進行之排練場次。</p>';
+        upcomingEl.innerHTML = '<p style="color:var(--text-muted); padding: 12px 0;">目前無即將進行之排練場次。</p>';
       }
 
       const recentTable = document.getElementById('homeRecentRoomsTableBody');
       const recentList = sortByDateClosestFirst(data.recentRoomRequests || [], 'date').slice(0, 3);
       if (recentList.length === 0) {
-        recentTable.innerHTML = '<tr><td colspan="9" style="text-align:center; color:var(--text-muted);">尚無借教室記錄</td></tr>';
+        recentTable.innerHTML = '<tr><td colspan="9" style="text-align:center; color:var(--text-muted);">尚無借教室紀錄</td></tr>';
       } else {
         recentTable.innerHTML = recentList.map(item => `
           <tr>
             <td><strong>` + item.date + `</strong></td>
             <td>週` + getWeekday(item.date) + `</td>
-            <td>` + (Array.isArray(item.periods) ? item.periods.join('') : item.periods) + `</td>
+            <td><strong>` + (Array.isArray(item.periods) ? item.periods.join('') : item.periods) + `</strong></td>
             <td>` + item.category + `</td>
             <td>` + (item.doNotDisturb ? '<span class="badge badge-rejected">是</span>' : 'X') + `</td>
             <td>` + (item.needs && item.needs.length > 0 ? item.needs.join('、') : '-') + `</td>
             <td>` + getStatusBadgeHtml(item.status) + `</td>
             <td><strong style="color:#0369a1;">` + (item.approvedTime || '-') + `</strong></td>
-            <td><strong style="color:var(--brand-dark);">` + (item.assignedRoom || '尚未分配') + `</strong></td>
+            <td><strong style="color:var(--accent-indigo);">` + (item.assignedRoom || '尚未分配') + `</strong></td>
           </tr>
         `).join('');
       }
@@ -2388,10 +2568,10 @@
       }
 
       if (win.isPastDeadline) {
-        banner.style.background = '#fef2f2';
-        banner.style.borderColor = '#fecaca';
-        banner.style.color = '#991b1b';
-        banner.innerHTML = `⛔ <strong>本週借教室申請已截止：</strong> 欲借下週（${win.minDateStr} ～ ${win.maxDateStr}）教室者，已於 <strong>${win.deadlineLabel}</strong> 截止收件。`;
+        banner.style.background = '#fff1f2';
+        banner.style.borderColor = '#fecdd3';
+        banner.style.color = '#be123c';
+        banner.innerHTML = `⛔ <strong>本週預約已截止：</strong> 欲借下週（${win.minDateStr} ～ ${win.maxDateStr}）教室者，已於 <strong>${win.deadlineLabel}</strong> 截止收件。`;
         submitBtn.disabled = true;
       } else {
         banner.style.background = '#fffbeb';
@@ -2410,7 +2590,7 @@
       if (!dateVal) return;
       const weekday = getWeekday(dateVal);
       const indicator = document.getElementById('roomWeekdayIndicator');
-      indicator.innerText = '📅 預約日期：' + dateVal + ' (星期' + weekday + ')';
+      indicator.innerText = '📅 預約日期：' + dateVal + '（星期' + weekday + '）';
 
       if (!cachedSettings) {
         const res = await api('getSettings');
@@ -2440,7 +2620,7 @@
       }
 
       if (allowedPeriods.length === 0) {
-        grid.innerHTML = '<div style="color:#b91c1c; font-weight:600; padding:10px;">本日社團教室未開放借用。</div>';
+        grid.innerHTML = '<div style="color:#be123c; font-weight:700; padding:10px;">本日社團教室未開放借用。</div>';
         return;
       }
 
@@ -2494,7 +2674,7 @@
       });
 
       if (checkedPeriods.length === 0) {
-        showToast('請至少勾選一個借用節次！', 'error');
+        showToast('請至少點選一個借用節次！', 'error');
         return;
       }
 
@@ -2532,7 +2712,7 @@
       const tbody = document.getElementById('myRoomRequestsTableBody');
       const list = sortByDateClosestFirst(res.requests || [], 'date');
       if (list.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="11" style="text-align:center; color:var(--text-muted);">目前無借用申請記錄</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="11" style="text-align:center; color:var(--text-muted);">目前無借用申請紀錄</td></tr>';
         return;
       }
 
@@ -2540,7 +2720,7 @@
         <tr>
           <td><strong>` + item.date + `</strong></td>
           <td>週` + getWeekday(item.date) + `</td>
-          <td>` + (Array.isArray(item.periods) ? item.periods.join('') : item.periods) + `</td>
+          <td><strong>` + (Array.isArray(item.periods) ? item.periods.join('') : item.periods) + `</strong></td>
           <td>` + item.category + `</td>
           <td>` + (item.headcount || 1) + `</td>
           <td>` + (item.doNotDisturb ? '<span class="badge badge-rejected">是</span>' : 'X') + `</td>
@@ -2548,7 +2728,7 @@
           <td style="font-size:0.86rem; color:#475569;">` + escapeHtml(item.notes || '-') + `</td>
           <td>` + getStatusBadgeHtml(item.status) + `</td>
           <td><strong style="color:#0369a1;">` + (item.approvedTime || '-') + `</strong></td>
-          <td><strong style="color:var(--brand-dark);">` + (item.assignedRoom || '待分配') + `</strong></td>
+          <td><strong style="color:var(--accent-indigo);">` + (item.assignedRoom || '待分配') + `</strong></td>
         </tr>
       `).join('');
     }
@@ -2579,10 +2759,10 @@
           const isTooEarly = now < openDateObj;
           const openDateStr = toLocalDateStr(openDateObj);
 
-          let statusHtml = '<span class="badge badge-approved" style="font-size:0.85rem;">✅ 出席預定</span>';
+          let statusHtml = '<span class="badge badge-approved">出席預定</span>';
           let actionBtnText = '📝 我要請假';
           if (myRec) {
-            statusHtml = '<span class="badge badge-rejected" style="font-size:0.85rem;">⚠️ 已請假 (' + escapeHtml(myRec.reason) + ')</span>';
+            statusHtml = '<span class="badge badge-rejected">已請假 (' + escapeHtml(myRec.reason) + ')</span>';
             actionBtnText = '✏️ 修改請假事由';
           } else if (isTooEarly) {
             actionBtnText = `⏳ ${openDateStr} 開放請假`;
@@ -2596,8 +2776,8 @@
             <div class="practice-card">
               <div class="practice-header">
                 <div>
-                  <div class="practice-date">🎺 ` + p.date + ` (週` + getWeekday(p.date) + `) ` + (p.startTime || '18:15') + ` - ` + (p.endTime || '20:30') + `</div>
-                  <div style="font-size:0.9rem; color:#475569; margin-top:4px;">📍 排練地點：<strong>` + escapeHtml(p.location) + `</strong></div>
+                  <div class="practice-date">🎺 ` + p.date + `（週` + getWeekday(p.date) + `）` + (p.startTime || '18:15') + ` - ` + (p.endTime || '20:30') + `</div>
+                  <div style="font-size:0.9rem; color:var(--text-secondary); margin-top:4px;">📍 排練地點：<strong>` + escapeHtml(p.location) + `</strong></div>
                 </div>
                 <div>` + statusHtml + `</div>
               </div>
@@ -2617,7 +2797,7 @@
 
       const historyTbody = document.getElementById('myAbsenceHistoryTableBody');
       if (myAbsences.length === 0) {
-        historyTbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:var(--text-muted);">無請假記錄，全勤出席！🎺</td></tr>';
+        historyTbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:var(--text-muted);">無請假紀錄，全勤出席！🎺</td></tr>';
       } else {
         historyTbody.innerHTML = myAbsences.map(a => {
           const shortNote = String(a.practiceNotes || '常態團練').split('\n')[0].substring(0, 32);
@@ -2638,7 +2818,7 @@
     function openSubmitAbsenceModal(practiceId, dateStr, existingReason = '') {
       closeAllModals();
       document.getElementById('absenceTargetPracticeId').value = practiceId;
-      document.getElementById('absencePracticeInfo').innerText = '團練場次：' + dateStr + ' (週' + getWeekday(dateStr) + ')';
+      document.getElementById('absencePracticeInfo').innerText = '團練場次：' + dateStr + '（週' + getWeekday(dateStr) + '）';
       document.getElementById('absenceReasonText').value = existingReason;
       document.getElementById('modalSubmitAbsence').classList.add('open');
     }
@@ -2771,28 +2951,34 @@
 
       let svg = `
         <svg id="svg_${containerId}" class="seating-svg" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">
-          <rect x="20" y="20" width="860" height="580" rx="14" fill="#ffffff" stroke="#1e293b" stroke-width="2"/>
+          <defs>
+            <filter id="seatShadow" x="-15%" y="-15%" width="130%" height="130%">
+              <feDropShadow dx="0" dy="2" stdDeviation="2.5" flood-color="#0f172a" flood-opacity="0.08"/>
+            </filter>
+          </defs>
+
+          <rect x="20" y="20" width="860" height="580" rx="18" fill="#ffffff" stroke="#0f172a" stroke-width="2" filter="url(#seatShadow)"/>
 
           <g transform="translate(85, 36)">
-            <rect x="0" y="0" width="130" height="44" fill="#ffffff" stroke="#1e293b" stroke-width="2"/>
-            <text x="65" y="28" font-size="20" font-weight="700" fill="#1e293b" text-anchor="middle">Door</text>
+            <rect x="0" y="0" width="130" height="44" rx="6" fill="#f8fafc" stroke="#0f172a" stroke-width="2"/>
+            <text x="65" y="28" font-size="19" font-weight="800" fill="#0f172a" text-anchor="middle">Door</text>
           </g>
 
           <g transform="translate(650, 36)">
-            <rect x="0" y="0" width="120" height="44" fill="#ffffff" stroke="#1e293b" stroke-width="2"/>
-            <text x="60" y="28" font-size="20" font-weight="700" fill="#1e293b" text-anchor="middle">Door</text>
+            <rect x="0" y="0" width="120" height="44" rx="6" fill="#f8fafc" stroke="#0f172a" stroke-width="2"/>
+            <text x="60" y="28" font-size="19" font-weight="800" fill="#0f172a" text-anchor="middle">Door</text>
           </g>
 
-          <rect x="775" y="100" width="52" height="435" fill="#ffffff" stroke="#1e293b" stroke-width="2"/>
+          <rect x="775" y="100" width="52" height="435" rx="6" fill="#f8fafc" stroke="#0f172a" stroke-width="2"/>
 
           <g transform="translate(360, 445)">
-            <rect x="0" y="0" width="180" height="48" fill="#ffffff" stroke="#1e293b" stroke-width="2"/>
-            <text x="90" y="32" font-size="22" font-weight="800" fill="#1e293b" text-anchor="middle" letter-spacing="8">指揮</text>
+            <rect x="0" y="0" width="180" height="48" rx="8" fill="#0b0f19" stroke="#0b0f19" stroke-width="2" filter="url(#seatShadow)"/>
+            <text x="90" y="32" font-size="20" font-weight="800" fill="#f59e0b" text-anchor="middle" letter-spacing="8">指揮</text>
           </g>
 
           <g transform="translate(160, 515)">
-            <rect x="0" y="0" width="570" height="62" fill="#ffffff" stroke="#1e293b" stroke-width="2"/>
-            <text x="285" y="40" font-size="26" font-weight="700" fill="#1e293b" text-anchor="middle" letter-spacing="3">Window</text>
+            <rect x="0" y="0" width="570" height="62" rx="8" fill="#f8fafc" stroke="#0f172a" stroke-width="2"/>
+            <text x="285" y="40" font-size="24" font-weight="800" fill="#0f172a" text-anchor="middle" letter-spacing="4">Window</text>
           </g>
       `;
 
@@ -2824,9 +3010,9 @@
         if (group.type === 'box') {
           svg += `
             <g transform="rotate(${angle})">
-              <rect class="sec-highlight" x="-95" y="-36" width="190" height="72" fill="#ffffff" stroke="#1e293b" stroke-width="2"/>
+              <rect class="sec-highlight" x="-95" y="-36" width="190" height="72" rx="6" fill="#ffffff" stroke="#0f172a" stroke-width="2" filter="url(#seatShadow)"/>
             </g>
-            <text x="0" y="6" font-size="20" font-weight="700" fill="#1e293b" text-anchor="middle">${group.label}</text>
+            <text x="0" y="6" font-size="20" font-weight="800" fill="#0f172a" text-anchor="middle">${group.label}</text>
           `;
         } else {
           const r = 17;
@@ -2837,14 +3023,14 @@
           if (drawCount > 0) {
             const totalW = (drawCount - 1) * spacing;
             const lineHalf = (totalW / 2) + r + 14;
-            svg += `<line x1="${-lineHalf}" y1="0" x2="${lineHalf}" y2="0" stroke="#1e293b" stroke-width="2"/>`;
+            svg += `<line x1="${-lineHalf}" y1="0" x2="${lineHalf}" y2="0" stroke="#0f172a" stroke-width="2"/>`;
 
             for (let i = 0; i < drawCount; i++) {
               const dotX = -(totalW / 2) + i * spacing;
-              svg += `<circle class="sec-seat" cx="${dotX}" cy="0" r="${r}" fill="#ffffff" stroke="#1e293b" stroke-width="2"/>`;
+              svg += `<circle class="sec-seat" cx="${dotX}" cy="0" r="${r}" fill="#ffffff" stroke="#0f172a" stroke-width="2" filter="url(#seatShadow)"/>`;
             }
           } else if (interactive) {
-            svg += `<rect class="sec-highlight" x="-30" y="-18" width="60" height="36" stroke="#94a3b8" stroke-dasharray="4,4" fill="none"/>`;
+            svg += `<rect class="sec-highlight" x="-30" y="-18" width="60" height="36" rx="6" stroke="#94a3b8" stroke-dasharray="4,4" fill="none"/>`;
           }
           svg += `</g>`;
 
@@ -2858,7 +3044,7 @@
             labelY = 38;
           }
 
-          svg += `<text x="${labelX}" y="${labelY}" font-size="18" font-weight="700" fill="#1e293b" text-anchor="middle">${group.label}</text>`;
+          svg += `<text x="${labelX}" y="${labelY}" font-size="18" font-weight="800" fill="#0f172a" text-anchor="middle">${group.label}</text>`;
         }
 
         svg += `</g>`;
@@ -2895,13 +3081,13 @@
         const rate = total > 0 ? Math.round((present / total) * 100) : 0;
 
         return `
-          <div style="background:#ffffff; border:1px solid var(--border); border-radius:12px; padding:12px 14px; box-shadow:var(--shadow-sm);">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-              <span style="font-weight:700; color:#0f172a;">` + s.fullLabel + `</span>
-              <span style="font-weight:700; color:` + (rate >= 80 ? '#15803d' : '#b91c1c') + `;">出席 ` + present + `/` + total + `</span>
+          <div style="background:#ffffff; border:1px solid #eef2f6; border-radius:14px; padding:14px 16px; box-shadow:var(--shadow-xs);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+              <span style="font-weight:800; color:var(--obsidian);">` + s.fullLabel + `</span>
+              <span style="font-weight:800; font-size:0.88rem; color:` + (rate >= 80 ? '#047857' : '#be123c') + `;">出席 ` + present + `/` + total + `</span>
             </div>
-            <div style="background:#e2e8f0; height:6px; border-radius:3px; overflow:hidden;">
-              <div style="background:` + (rate >= 80 ? '#22c55e' : '#ef4444') + `; height:100%; width:` + rate + `%;"></div>
+            <div style="background:#f1f5f9; height:6px; border-radius:3px; overflow:hidden;">
+              <div style="background:` + (rate >= 80 ? '#10b981' : '#f43f5e') + `; height:100%; width:` + rate + `%;"></div>
             </div>
           </div>
         `;
@@ -3082,7 +3268,7 @@
       }
 
       if (list.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="13" style="text-align:center; color:var(--text-muted);">無符合條件之借教室申請記錄</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="13" style="text-align:center; color:var(--text-muted);">無符合條件之借教室申請紀錄</td></tr>';
         return;
       }
 
@@ -3098,7 +3284,7 @@
           <td>` + (item.needs && item.needs.length > 0 ? item.needs.join('、') : '-') + `</td>
           <td style="font-size:0.82rem; color:#64748b; max-width:140px;">` + escapeHtml(item.notes || '-') + `</td>
           <td>
-            <select class="form-control" style="padding:4px 8px; font-size:0.85rem; width:96px;" id="adminRoomStatus_` + item.id + `">
+            <select class="form-control" style="padding:5px 8px; font-size:0.84rem; width:96px;" id="adminRoomStatus_` + item.id + `">
               <option value="已收件" ` + (item.status === '已收件' ? 'selected' : '') + `>已收件</option>
               <option value="已通過" ` + (item.status === '已通過' ? 'selected' : '') + `>已通過</option>
               <option value="未通過" ` + (item.status === '未通過' ? 'selected' : '') + `>未通過</option>
@@ -3106,10 +3292,10 @@
             </select>
           </td>
           <td>
-            <input type="text" class="form-control" style="padding:4px 8px; font-size:0.85rem; width:95px;" id="adminRoomTime_` + item.id + `" value="` + escapeHtml(item.approvedTime || '') + `" placeholder="如：5678">
+            <input type="text" class="form-control" style="padding:5px 8px; font-size:0.84rem; width:95px;" id="adminRoomTime_` + item.id + `" value="` + escapeHtml(item.approvedTime || '') + `" placeholder="如：5678">
           </td>
           <td>
-            <input type="text" class="form-control" style="padding:4px 8px; font-size:0.85rem; width:95px;" id="adminRoomAssigned_` + item.id + `" value="` + escapeHtml(item.assignedRoom || '') + `" placeholder="如：B209">
+            <input type="text" class="form-control" style="padding:5px 8px; font-size:0.84rem; width:95px;" id="adminRoomAssigned_` + item.id + `" value="` + escapeHtml(item.assignedRoom || '') + `" placeholder="如：B209">
           </td>
           <td>
             <button class="btn btn-primary btn-sm" onclick="saveAdminRoomRow('` + item.id + `')">儲存</button>
@@ -3188,7 +3374,7 @@
           <td>週` + getWeekday(p.date) + `</td>
           <td>` + (p.startTime || '18:15') + ` - ` + (p.endTime || '20:30') + `</td>
           <td>` + escapeHtml(p.location) + `</td>
-          <td><span style="color:#b45309; font-weight:600;">` + formatDateTimeDisplay(p.deadline) + `</span></td>
+          <td><span style="color:#b45309; font-weight:700;">` + formatDateTimeDisplay(p.deadline) + `</span></td>
           <td style="min-width: 280px; max-width: 420px;">` + formatPracticeNotesHtml(p.notes, 'admin_' + p.id) + `</td>
           <td>
             <div style="display:flex; gap:6px;">
@@ -3317,13 +3503,13 @@
         const secRate = secTotal > 0 ? Math.round((secPresent / secTotal) * 100) : 0;
 
         return `
-          <div style="background:#ffffff; border:1px solid var(--border); border-radius:12px; padding:14px; box-shadow:var(--shadow-sm);">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-              <span style="font-weight:700; color:#0f172a;">` + sec.fullLabel + `</span>
-              <span style="font-size:0.9rem; font-weight:700; color:` + (secRate >= 80 ? '#15803d' : '#b91c1c') + `;">` + secPresent + `/` + secTotal + ` 人 (` + secRate + `%)</span>
+          <div style="background:#ffffff; border:1px solid #eef2f6; border-radius:14px; padding:14px 16px; box-shadow:var(--shadow-xs);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+              <span style="font-weight:800; color:var(--obsidian);">` + sec.fullLabel + `</span>
+              <span style="font-size:0.88rem; font-weight:800; color:` + (secRate >= 80 ? '#047857' : '#be123c') + `;">` + secPresent + `/` + secTotal + ` 人 (` + secRate + `%)</span>
             </div>
-            <div style="background:#e2e8f0; height:8px; border-radius:4px; overflow:hidden;">
-              <div style="background:` + (secRate >= 80 ? '#22c55e' : '#ef4444') + `; height:100%; width:` + secRate + `%;"></div>
+            <div style="background:#f1f5f9; height:8px; border-radius:4px; overflow:hidden;">
+              <div style="background:` + (secRate >= 80 ? '#10b981' : '#f43f5e') + `; height:100%; width:` + secRate + `%;"></div>
             </div>
           </div>
         `;
@@ -3361,7 +3547,7 @@
     }
 
     // ==========================================
-    // 幹部後台：5. 社員管理（支援批次新增 & 刪除帳號）
+    // 幹部後台：5. 社員管理
     // ==========================================
     let allMembersCache = [];
 
@@ -3388,10 +3574,10 @@
       tbody.innerHTML = list.map(m => `
         <tr>
           <td><strong>` + escapeHtml(m.name) + `</strong></td>
-          <td>` + (m.email ? escapeHtml(m.email) : '<span style="color:var(--text-muted); font-size:0.85rem;">尚未綁定信箱</span>') + `</td>
-          <td><span class="badge" style="background:#eff6ff; color:#1d4ed8; border-color:#bfdbfe;">` + formatInstrumentDisplay(m.instrument, m.section) + `</span></td>
+          <td>` + (m.email ? escapeHtml(m.email) : '<span style="color:var(--text-muted); font-size:0.84rem;">尚未綁定信箱</span>') + `</td>
+          <td><span class="badge badge-received">` + formatInstrumentDisplay(m.instrument, m.section) + `</span></td>
           <td>
-            <select class="form-control" style="width:120px; padding:4px 8px; font-size:0.85rem;" onchange="changeMemberRole('` + m.email + `', '` + m.name + `', this.value)">
+            <select class="form-control" style="width:120px; padding:5px 8px; font-size:0.84rem;" onchange="changeMemberRole('` + m.email + `', '` + m.name + `', this.value)">
               <option value="member" ` + (m.role === 'member' ? 'selected' : '') + `>一般社員</option>
               <option value="admin" ` + (m.role === 'admin' ? 'selected' : '') + `>社團幹部</option>
             </select>
@@ -3402,10 +3588,10 @@
           <td>
             <div style="display:flex; gap:6px;">
               <button class="btn btn-secondary btn-sm" onclick="resetMemberPasswordConfirm('` + m.email + `', '` + m.name + `')">
-                🔑 重設密碼
+                重設密碼
               </button>
               <button class="btn btn-danger btn-sm" onclick="deleteMemberConfirm('` + m.email + `', '` + m.name + `')">
-                🗑️ 刪除
+                刪除
               </button>
             </div>
           </td>
@@ -3663,7 +3849,9 @@
       document.getElementById('profEmailInput').value = session.email || '';
       document.getElementById('profInstrumentSelect').value = formatInstrumentDisplay(session.instrument, session.section);
       document.getElementById('profRoleInput').value = session.role === 'admin' ? '社團幹部' : '一般社員';
-      document.getElementById('profNotifyEmail').checked = session.notifyEmail !== false;
+      const notifyCb = document.getElementById('profNotifyEmail');
+      notifyCb.checked = session.notifyEmail !== false;
+      notifyCb.parentElement.classList.toggle('selected', notifyCb.checked);
 
       document.getElementById('modalProfile').classList.add('open');
     }

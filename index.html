@@ -6,41 +6,42 @@
   <title>東吳管樂社 管理系統</title>
   <style>
     :root {
-      --primary: #1a237e;
-      --primary-light: #283593;
-      --primary-dark: #0d1642;
-      --accent: #ffd700;
-      --accent-hover: #ffca28;
-      --bg: #f5f5f5;
+      --primary: #1e293b;
+      --brand: #2563eb;
+      --brand-dark: #1d4ed8;
+      --brand-indigo: #312e81;
+      --accent: #f59e0b;
+      --accent-soft: #fef3c7;
+      --bg: #f4f7fb;
       --card-bg: #ffffff;
-      --text: #1e293b;
+      --text: #0f172a;
       --text-muted: #64748b;
       --border: #e2e8f0;
-      --border-focus: #1a237e;
 
-      --status-blue-text: #1565c0;
-      --status-blue-bg: #e3f2fd;
-      --status-blue-border: #90caf9;
+      --status-blue-text: #1d4ed8;
+      --status-blue-bg: #eff6ff;
+      --status-blue-border: #bfdbfe;
 
-      --status-green-text: #2e7d32;
-      --status-green-bg: #e8f5e9;
-      --status-green-border: #a5d6a7;
+      --status-green-text: #15803d;
+      --status-green-bg: #f0fdf4;
+      --status-green-border: #bbf7d0;
 
-      --status-red-text: #c62828;
-      --status-red-bg: #ffebee;
-      --status-red-border: #ef9a9a;
+      --status-red-text: #b91c1c;
+      --status-red-bg: #fef2f2;
+      --status-red-border: #fecaca;
 
-      --status-orange-text: #e65100;
-      --status-orange-bg: #fff3e0;
-      --status-orange-border: #ffcc80;
+      --status-orange-text: #c2410c;
+      --status-orange-bg: #fff7ed;
+      --status-orange-border: #fed7aa;
 
-      --radius-lg: 12px;
-      --radius-md: 8px;
-      --radius-sm: 4px;
-      --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
-      --shadow-md: 0 4px 14px rgba(0,0,0,0.08);
-      --shadow-lg: 0 10px 25px rgba(26,35,126,0.12);
-      --transition: all 0.25s ease;
+      --radius-xl: 20px;
+      --radius-lg: 16px;
+      --radius-md: 10px;
+      --radius-sm: 6px;
+      --shadow-sm: 0 2px 8px -2px rgba(15, 23, 42, 0.05);
+      --shadow-md: 0 10px 25px -5px rgba(15, 23, 42, 0.06), 0 4px 10px -3px rgba(15, 23, 42, 0.03);
+      --shadow-lg: 0 20px 40px -10px rgba(30, 41, 59, 0.14);
+      --transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     * {
@@ -50,16 +51,19 @@
     }
 
     body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", "PingFang TC", "Microsoft JhengHei", sans-serif;
+      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
       background-color: var(--bg);
+      background-image: radial-gradient(at 0% 0%, rgba(37, 99, 235, 0.05) 0px, transparent 50%),
+                        radial-gradient(at 100% 100%, rgba(99, 102, 241, 0.05) 0px, transparent 50%);
       color: var(--text);
-      line-height: 1.5;
+      line-height: 1.6;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
+      -webkit-font-smoothing: antialiased;
     }
 
-    /* 嚴格控制幹部後台按鈕顯示：預設完全隱藏，只有幹部登入時才顯示 */
+    /* 嚴格控制幹部後台按鈕顯示 */
     .admin-only-nav {
       display: none !important;
     }
@@ -70,77 +74,84 @@
       display: block !important;
     }
 
+    /* 現代化按鈕設計 */
     .btn {
       display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 6px;
-      padding: 9px 18px;
+      padding: 10px 18px;
       border-radius: var(--radius-md);
-      font-size: 0.95rem;
+      font-size: 0.92rem;
       font-weight: 600;
       cursor: pointer;
       border: 1px solid transparent;
       transition: var(--transition);
       text-decoration: none;
       white-space: nowrap;
+      letter-spacing: 0.2px;
+    }
+    .btn:active:not(:disabled) {
+      transform: scale(0.98);
     }
     .btn:disabled {
-      opacity: 0.55;
+      opacity: 0.5;
       cursor: not-allowed;
     }
     .btn-primary {
-      background-color: var(--primary);
+      background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
       color: #ffffff;
-      border-color: var(--primary);
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.22);
     }
     .btn-primary:hover:not(:disabled) {
-      background-color: var(--primary-light);
-      box-shadow: 0 4px 12px rgba(26,35,126,0.25);
-    }
-    .btn-accent {
-      background-color: var(--accent);
-      color: #1a237e;
-      border-color: var(--accent);
-    }
-    .btn-accent:hover:not(:disabled) {
-      background-color: var(--accent-hover);
+      background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+      box-shadow: 0 6px 16px rgba(37, 99, 235, 0.32);
+      transform: translateY(-1px);
     }
     .btn-secondary {
-      background-color: #f1f5f9;
+      background-color: #ffffff;
       color: #334155;
       border-color: #cbd5e1;
+      box-shadow: var(--shadow-sm);
     }
     .btn-secondary:hover:not(:disabled) {
-      background-color: #e2e8f0;
+      background-color: #f8fafc;
+      border-color: #94a3b8;
+      color: #0f172a;
     }
     .btn-outline {
-      background-color: transparent;
-      border-color: var(--primary);
-      color: var(--primary);
+      background-color: #eff6ff;
+      border-color: #bfdbfe;
+      color: #1d4ed8;
     }
     .btn-outline:hover:not(:disabled) {
-      background-color: rgba(26,35,126,0.06);
+      background-color: #dbeafe;
+      border-color: #93c5fd;
     }
     .btn-danger {
-      background-color: #dc2626;
-      color: #ffffff;
+      background-color: #fef2f2;
+      color: #dc2626;
+      border-color: #fecaca;
     }
     .btn-danger:hover:not(:disabled) {
-      background-color: #b91c1c;
+      background-color: #dc2626;
+      color: #ffffff;
+      border-color: #dc2626;
     }
     .btn-sm {
-      padding: 5px 12px;
-      font-size: 0.85rem;
-      border-radius: var(--radius-sm);
+      padding: 6px 12px;
+      font-size: 0.84rem;
+      border-radius: 8px;
     }
 
+    /* 膠囊狀態標籤 */
     .badge {
       display: inline-flex;
       align-items: center;
-      padding: 4px 10px;
+      gap: 4px;
+      padding: 4px 12px;
       border-radius: 9999px;
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       font-weight: 600;
       border: 1px solid transparent;
       white-space: nowrap;
@@ -166,22 +177,23 @@
       border-color: var(--status-orange-border);
     }
     .badge-admin {
-      background-color: #fff9c4;
-      color: #b78103;
-      border-color: #fbc02d;
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+      color: #92400e;
+      border-color: #fcd34d;
     }
     .badge-member {
-      background-color: #e0f2fe;
-      color: #0369a1;
-      border-color: #bae6fd;
+      background-color: rgba(255, 255, 255, 0.16);
+      color: #ffffff;
+      border-color: rgba(255, 255, 255, 0.25);
     }
 
+    /* 卡片與區塊設計 */
     .card {
       background-color: var(--card-bg);
       border-radius: var(--radius-lg);
-      padding: 24px;
+      padding: 26px;
       box-shadow: var(--shadow-md);
-      border: 1px solid var(--border);
+      border: 1px solid rgba(226, 232, 240, 0.85);
       margin-bottom: 24px;
       transition: var(--transition);
     }
@@ -189,26 +201,28 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 18px;
-      padding-bottom: 12px;
+      margin-bottom: 20px;
+      padding-bottom: 14px;
       border-bottom: 1px solid #f1f5f9;
       flex-wrap: wrap;
       gap: 12px;
     }
     .card-title {
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: var(--primary);
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: #0f172a;
       display: flex;
       align-items: center;
       gap: 8px;
+      letter-spacing: -0.2px;
     }
     .card-desc {
       color: var(--text-muted);
-      font-size: 0.9rem;
-      margin-top: 2px;
+      font-size: 0.88rem;
+      margin-top: 3px;
     }
 
+    /* 表單元件 */
     .form-group {
       margin-bottom: 18px;
     }
@@ -216,27 +230,31 @@
       display: block;
       margin-bottom: 6px;
       font-weight: 600;
-      font-size: 0.92rem;
+      font-size: 0.9rem;
       color: #334155;
     }
     .form-label .required {
-      color: #dc2626;
-      margin-left: 2px;
+      color: #ef4444;
+      margin-left: 3px;
     }
     .form-control {
       width: 100%;
       padding: 10px 14px;
-      border: 1.5px solid var(--border);
+      border: 1.5px solid #cbd5e1;
       border-radius: var(--radius-md);
-      font-size: 0.95rem;
+      font-size: 0.94rem;
       color: var(--text);
-      background-color: #ffffff;
+      background-color: #f8fafc;
       transition: var(--transition);
       outline: none;
     }
+    .form-control:hover {
+      border-color: #94a3b8;
+    }
     .form-control:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(26,35,126,0.12);
+      background-color: #ffffff;
+      border-color: var(--brand);
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
     }
     select.form-control option:disabled {
       color: #94a3b8;
@@ -244,7 +262,7 @@
     }
     textarea.form-control {
       resize: vertical;
-      min-height: 80px;
+      min-height: 90px;
     }
     .form-row {
       display: flex;
@@ -256,115 +274,142 @@
       min-width: 200px;
     }
 
+    /* 節次晶片按鈕 */
     .period-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
-      gap: 8px;
-      margin-top: 6px;
+      grid-template-columns: repeat(auto-fill, minmax(105px, 1fr));
+      gap: 10px;
+      margin-top: 8px;
     }
     .period-chip {
       display: flex;
       align-items: center;
+      justify-content: center;
       gap: 6px;
-      padding: 8px 10px;
+      padding: 9px 12px;
       background-color: #f8fafc;
-      border: 1.5px solid var(--border);
+      border: 1.5px solid #e2e8f0;
       border-radius: var(--radius-md);
       cursor: pointer;
       user-select: none;
       transition: var(--transition);
-      font-size: 0.88rem;
+      font-size: 0.9rem;
+      color: #475569;
     }
     .period-chip:hover {
       background-color: #f1f5f9;
       border-color: #cbd5e1;
+      transform: translateY(-1px);
     }
     .period-chip.selected {
-      background-color: #e8eaf6;
-      border-color: var(--primary);
-      color: var(--primary);
-      font-weight: 600;
+      background-color: #eff6ff;
+      border-color: var(--brand);
+      color: var(--brand-dark);
+      font-weight: 700;
+      box-shadow: 0 2px 8px rgba(37, 99, 235, 0.12);
     }
     .period-chip input[type="checkbox"] {
       cursor: pointer;
-      accent-color: var(--primary);
+      accent-color: var(--brand);
+      width: 16px;
+      height: 16px;
     }
 
+    /* 現代化表格 */
     .table-container {
       width: 100%;
       overflow-x: auto;
-      border-radius: var(--radius-md);
-      border: 1px solid var(--border);
+      border-radius: 12px;
+      border: 1px solid #e2e8f0;
       background: #ffffff;
     }
     table {
       width: 100%;
       border-collapse: collapse;
       text-align: left;
-      font-size: 0.92rem;
+      font-size: 0.9rem;
     }
     th {
       background-color: #f8fafc;
       color: #475569;
-      padding: 12px 16px;
-      font-weight: 600;
-      border-bottom: 1.5px solid var(--border);
+      padding: 13px 16px;
+      font-weight: 700;
+      font-size: 0.84rem;
+      letter-spacing: 0.3px;
+      border-bottom: 1.5px solid #e2e8f0;
       white-space: nowrap;
     }
     td {
-      padding: 12px 16px;
-      border-bottom: 1px solid var(--border);
-      color: var(--text);
+      padding: 14px 16px;
+      border-bottom: 1px solid #f1f5f9;
+      color: #1e293b;
       vertical-align: middle;
     }
+    tbody tr {
+      transition: background-color 0.15s ease;
+    }
     tbody tr:hover {
-      background-color: #fcfcfd;
+      background-color: #f8fafc;
     }
     tbody tr:last-child td {
       border-bottom: none;
     }
 
+    /* 頂部毛玻璃導覽列 */
     .navbar {
-      background-color: var(--primary);
+      background: rgba(15, 23, 42, 0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       color: #ffffff;
-      padding: 0 24px;
-      height: 64px;
+      padding: 0 28px;
+      height: 68px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+      box-shadow: 0 4px 20px rgba(15, 23, 42, 0.12);
       position: sticky;
       top: 0;
       z-index: 100;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     }
     .nav-brand {
       display: flex;
       align-items: center;
       gap: 10px;
-      font-size: 1.25rem;
+      font-size: 1.2rem;
       font-weight: 800;
       color: #ffffff;
       text-decoration: none;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.3px;
       cursor: pointer;
     }
     .nav-brand .music-note {
-      color: var(--accent);
-      font-size: 1.4rem;
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #3b82f6 0%, #6366f1 100%);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.15rem;
+      box-shadow: 0 4px 10px rgba(59, 130, 246, 0.35);
     }
     .nav-menu {
       display: flex;
       align-items: center;
-      gap: 4px;
+      gap: 6px;
       list-style: none;
+      background: rgba(255, 255, 255, 0.06);
+      padding: 5px;
+      border-radius: 12px;
     }
     .nav-item {
-      padding: 8px 14px;
-      border-radius: var(--radius-md);
-      font-size: 0.95rem;
-      font-weight: 500;
+      padding: 7px 16px;
+      border-radius: 9px;
+      font-size: 0.92rem;
+      font-weight: 600;
       cursor: pointer;
-      color: #e0e7ff;
+      color: #cbd5e1;
       transition: var(--transition);
       display: flex;
       align-items: center;
@@ -372,13 +417,13 @@
       user-select: none;
     }
     .nav-item:hover {
-      background-color: rgba(255,255,255,0.12);
       color: #ffffff;
+      background-color: rgba(255, 255, 255, 0.08);
     }
     .nav-item.active {
-      background-color: rgba(255,215,0,0.22);
-      color: var(--accent);
-      font-weight: 700;
+      background: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%);
+      color: #ffffff;
+      box-shadow: 0 2px 10px rgba(37, 99, 235, 0.4);
     }
     .nav-user {
       display: flex;
@@ -389,7 +434,25 @@
       display: flex;
       align-items: center;
       gap: 8px;
-      font-size: 0.92rem;
+      font-size: 0.9rem;
+      background: rgba(255, 255, 255, 0.07);
+      padding: 5px 12px 5px 6px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .nav-icon-btn {
+      background: rgba(255, 255, 255, 0.1);
+      color: #f8fafc;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 6px 12px;
+      border-radius: 9px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .nav-icon-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
     }
     .nav-hamburger {
       display: none;
@@ -403,12 +466,12 @@
     .mobile-menu {
       display: none;
       position: fixed;
-      top: 64px;
+      top: 68px;
       left: 0;
       right: 0;
-      background-color: var(--primary);
+      background-color: #0f172a;
       padding: 16px 20px;
-      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+      box-shadow: 0 12px 24px rgba(0,0,0,0.3);
       z-index: 99;
       flex-direction: column;
       gap: 8px;
@@ -424,10 +487,10 @@
 
     .main-content {
       flex: 1;
-      max-width: 1200px;
+      max-width: 1220px;
       width: 100%;
       margin: 0 auto;
-      padding: 24px 16px;
+      padding: 28px 18px;
     }
 
     .page-section {
@@ -438,107 +501,155 @@
       animation: fadeIn 0.3s ease;
     }
 
+    /* 現代化登入畫面 */
     .login-container {
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      background: linear-gradient(135deg, #0d1642 0%, #1a237e 60%, #283593 100%);
+      background: radial-gradient(circle at 20% 20%, #1e3a8a 0%, #0f172a 55%, #090d16 100%);
       padding: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+    .login-container::before {
+      content: '';
+      position: absolute;
+      width: 500px;
+      height: 500px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(59, 130, 246, 0.22) 0%, transparent 70%);
+      top: -120px;
+      right: -100px;
+      pointer-events: none;
     }
     .login-card {
-      background: #ffffff;
-      border-radius: 16px;
-      padding: 40px 32px;
+      background: rgba(255, 255, 255, 0.98);
+      border-radius: 24px;
+      padding: 44px 36px;
       width: 100%;
-      max-width: 440px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+      max-width: 430px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
       text-align: center;
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      position: relative;
+      z-index: 2;
     }
     .login-logo {
-      width: 64px;
-      height: 64px;
-      background: linear-gradient(135deg, #1a237e, #283593);
-      color: var(--accent);
-      border-radius: 50%;
+      width: 68px;
+      height: 68px;
+      background: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%);
+      color: #ffffff;
+      border-radius: 20px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 2rem;
-      margin: 0 auto 16px;
-      box-shadow: 0 4px 12px rgba(26,35,126,0.3);
+      font-size: 2.1rem;
+      margin: 0 auto 18px;
+      box-shadow: 0 10px 25px rgba(37, 99, 235, 0.35);
+      transform: rotate(-4deg);
     }
     .login-title {
-      font-size: 1.55rem;
+      font-size: 1.6rem;
       font-weight: 800;
-      color: var(--primary);
+      color: #0f172a;
       margin-bottom: 6px;
+      letter-spacing: -0.4px;
     }
     .login-subtitle {
       font-size: 0.92rem;
       color: var(--text-muted);
-      margin-bottom: 24px;
+      margin-bottom: 28px;
     }
     .login-hint {
-      background-color: #fffbeb;
-      border: 1px solid #fde68a;
-      border-radius: var(--radius-md);
-      padding: 10px 14px;
-      font-size: 0.88rem;
-      color: #92400e;
-      margin-top: 18px;
+      background-color: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 12px 14px;
+      font-size: 0.85rem;
+      color: #475569;
+      margin-top: 22px;
       text-align: left;
-      line-height: 1.4;
-    }
-    .demo-users {
-      margin-top: 20px;
-      padding-top: 16px;
-      border-top: 1px dashed var(--border);
-      text-align: left;
-    }
-    .demo-users-title {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      margin-bottom: 8px;
-      font-weight: 600;
-    }
-    .demo-btn-group {
-      display: flex;
-      gap: 8px;
+      line-height: 1.5;
     }
 
+    /* 首頁歡迎橫幅與快速動作磚 */
     .welcome-banner {
-      background: linear-gradient(135deg, #1a237e, #283593);
+      background: linear-gradient(125deg, #0f172a 0%, #1e3a8a 55%, #312e81 100%);
       color: #ffffff;
-      border-radius: var(--radius-lg);
-      padding: 28px;
-      margin-bottom: 24px;
-      box-shadow: var(--shadow-md);
+      border-radius: var(--radius-xl);
+      padding: 32px 34px;
+      margin-bottom: 26px;
+      box-shadow: var(--shadow-lg);
       position: relative;
       overflow: hidden;
     }
     .welcome-banner::after {
-      content: '🎵';
+      content: '🎼';
       position: absolute;
-      right: 20px;
-      bottom: -10px;
-      font-size: 8rem;
+      right: 28px;
+      bottom: -18px;
+      font-size: 8.5rem;
       opacity: 0.08;
       pointer-events: none;
     }
     .welcome-title {
-      font-size: 1.6rem;
+      font-size: 1.65rem;
       font-weight: 800;
       margin-bottom: 6px;
+      letter-spacing: -0.3px;
     }
     .welcome-subtitle {
-      font-size: 1rem;
-      opacity: 0.9;
+      font-size: 0.98rem;
+      color: #cbd5e1;
+      font-weight: 500;
     }
+
+    .quick-tiles-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+    .quick-tile {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+      padding: 16px;
+      border-radius: 14px;
+      background: #f8fafc;
+      border: 1.5px solid #e2e8f0;
+      cursor: pointer;
+      transition: var(--transition);
+      text-align: left;
+    }
+    .quick-tile:hover {
+      background: #ffffff;
+      border-color: var(--brand);
+      box-shadow: 0 8px 20px -4px rgba(37, 99, 235, 0.14);
+      transform: translateY(-2px);
+    }
+    .quick-tile-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: #eff6ff;
+      color: var(--brand);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+    }
+    .quick-tile-title {
+      font-weight: 700;
+      font-size: 0.94rem;
+      color: #0f172a;
+    }
+
     .dashboard-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 18px;
       margin-bottom: 24px;
     }
     .stat-card {
@@ -552,37 +663,38 @@
       gap: 16px;
     }
     .stat-icon {
-      width: 52px;
-      height: 52px;
-      border-radius: var(--radius-md);
-      background-color: #e8eaf6;
-      color: var(--primary);
+      width: 50px;
+      height: 50px;
+      border-radius: 14px;
+      background-color: #eff6ff;
+      color: var(--brand);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.6rem;
+      font-size: 1.5rem;
     }
     .stat-value {
-      font-size: 1.45rem;
+      font-size: 1.5rem;
       font-weight: 800;
-      color: var(--primary);
+      color: #0f172a;
     }
     .stat-label {
-      font-size: 0.86rem;
+      font-size: 0.85rem;
       color: var(--text-muted);
     }
 
+    /* 團練卡片與「FB 條列式可摺疊公告框」 */
     .practice-card {
       border: 1.5px solid #e2e8f0;
       border-radius: var(--radius-lg);
-      padding: 20px;
+      padding: 22px;
       margin-bottom: 16px;
       background: #ffffff;
       box-shadow: var(--shadow-sm);
       transition: var(--transition);
     }
     .practice-card:hover {
-      border-color: var(--primary-light);
+      border-color: #cbd5e1;
       box-shadow: var(--shadow-md);
     }
     .practice-header {
@@ -594,41 +706,107 @@
       gap: 8px;
     }
     .practice-date {
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: var(--primary);
-    }
-    .practice-notes {
-      background: #f8fafc;
-      padding: 10px 14px;
-      border-radius: var(--radius-md);
-      font-size: 0.9rem;
-      color: #334155;
-      margin-bottom: 16px;
-      border-left: 3px solid var(--accent);
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: #0f172a;
     }
     .practice-deadline-badge {
       font-size: 0.82rem;
       color: #b45309;
       background: #fef3c7;
-      padding: 4px 10px;
+      padding: 5px 12px;
       border-radius: 9999px;
       font-weight: 600;
     }
 
-    .subtabs {
+    /* 智慧條列式公告框（支援摺疊省空間） */
+    .notes-box {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-left: 4px solid var(--brand);
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin: 12px 0 16px;
+      position: relative;
+    }
+    .notes-box-header {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #475569;
+      margin-bottom: 8px;
       display: flex;
-      gap: 8px;
-      border-bottom: 2px solid var(--border);
-      margin-bottom: 24px;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .notes-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 0.92rem;
+      color: #1e293b;
+      line-height: 1.55;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+    .notes-list.collapsed {
+      max-height: 86px;
+      mask-image: linear-gradient(to bottom, black 55%, transparent 100%);
+      -webkit-mask-image: linear-gradient(to bottom, black 55%, transparent 100%);
+    }
+    .note-line {
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+      word-break: break-word;
+    }
+    .note-line-highlight {
+      font-weight: 700;
+      color: #b91c1c;
+      background: #fef2f2;
+      padding: 3px 8px;
+      border-radius: 6px;
+      width: fit-content;
+    }
+    .note-line-section {
+      font-weight: 800;
+      color: #1e3a8a;
+      margin-top: 2px;
+    }
+    .notes-toggle-btn {
+      margin-top: 8px;
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      color: #1d4ed8;
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 999px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: var(--transition);
+    }
+    .notes-toggle-btn:hover {
+      background: #dbeafe;
+    }
+
+    /* 膠囊式子分頁 (Pill Subtabs) */
+    .subtabs {
+      display: inline-flex;
+      gap: 6px;
+      background: #f1f5f9;
+      padding: 6px;
+      border-radius: 14px;
+      margin-bottom: 8px;
       overflow-x: auto;
-      padding-bottom: 2px;
+      max-width: 100%;
     }
     .subtab-item {
-      padding: 10px 18px;
-      border-radius: var(--radius-md) var(--radius-md) 0 0;
+      padding: 8px 16px;
+      border-radius: 10px;
       font-weight: 600;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       color: #64748b;
       cursor: pointer;
       user-select: none;
@@ -636,13 +814,12 @@
       white-space: nowrap;
     }
     .subtab-item:hover {
-      color: var(--primary);
-      background-color: #f1f5f9;
+      color: #0f172a;
     }
     .subtab-item.active {
-      color: var(--primary);
-      border-bottom: 3px solid var(--primary);
-      background-color: #e8eaf6;
+      color: #ffffff;
+      background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+      box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
     }
     .subtab-content {
       display: none;
@@ -654,7 +831,7 @@
 
     .seating-controls {
       display: flex;
-      gap: 16px;
+      gap: 12px;
       align-items: center;
       flex-wrap: wrap;
     }
@@ -662,8 +839,8 @@
       background: #ffffff;
       border: 1.5px solid var(--border);
       border-radius: var(--radius-lg);
-      padding: 16px;
-      box-shadow: var(--shadow-md);
+      padding: 18px;
+      box-shadow: var(--shadow-sm);
       overflow-x: auto;
       text-align: center;
       user-select: none;
@@ -683,18 +860,19 @@
     }
     .draggable-section.selected-sec rect.sec-highlight,
     .draggable-section.selected-sec circle.sec-seat {
-      stroke: #1a237e;
+      stroke: #2563eb;
       stroke-width: 3.5px;
     }
 
+    /* 現代化彈出視窗 */
     .modal-overlay {
       position: fixed;
       top: 0;
       left: 0;
       right: 0;
       bottom: 0;
-      background: rgba(15, 23, 42, 0.6);
-      backdrop-filter: blur(4px);
+      background: rgba(15, 23, 42, 0.55);
+      backdrop-filter: blur(5px);
       display: none;
       align-items: center;
       justify-content: center;
@@ -707,47 +885,49 @@
     }
     .modal-card {
       background: #ffffff;
-      border-radius: var(--radius-lg);
+      border-radius: 20px;
       width: 100%;
       max-width: 520px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+      box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.3);
       overflow: hidden;
       animation: modalSlide 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .modal-header {
-      padding: 18px 24px;
-      background: var(--primary);
+      padding: 20px 24px;
+      background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
       color: #ffffff;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
     .modal-title {
-      font-size: 1.15rem;
+      font-size: 1.12rem;
       font-weight: 700;
       display: flex;
       align-items: center;
       gap: 8px;
     }
     .modal-close {
-      background: transparent;
+      background: rgba(255, 255, 255, 0.12);
       border: none;
       color: #ffffff;
-      font-size: 1.4rem;
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      font-size: 1.1rem;
       cursor: pointer;
-      opacity: 0.8;
       transition: var(--transition);
     }
     .modal-close:hover {
-      opacity: 1;
+      background: rgba(255, 255, 255, 0.25);
     }
     .modal-body {
       padding: 24px;
-      max-height: 80vh;
+      max-height: 78vh;
       overflow-y: auto;
     }
     .modal-footer {
-      padding: 14px 24px;
+      padding: 16px 24px;
       background: #f8fafc;
       border-top: 1px solid var(--border);
       display: flex;
@@ -769,11 +949,11 @@
       min-width: 280px;
       max-width: 400px;
       padding: 14px 18px;
-      border-radius: var(--radius-md);
-      box-shadow: 0 8px 20px rgba(0,0,0,0.18);
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.2);
       color: #ffffff;
-      font-weight: 500;
-      font-size: 0.92rem;
+      font-weight: 600;
+      font-size: 0.9rem;
       display: flex;
       align-items: center;
       gap: 10px;
@@ -805,7 +985,7 @@
       right: 0;
       bottom: 0;
       background: rgba(15, 23, 42, 0.45);
-      backdrop-filter: blur(2px);
+      backdrop-filter: blur(3px);
       z-index: 9998;
       display: none;
       align-items: center;
@@ -818,12 +998,12 @@
       display: flex;
     }
     .spinner {
-      width: 48px;
-      height: 48px;
-      border: 4px solid rgba(255, 215, 0, 0.3);
-      border-top-color: var(--accent);
+      width: 46px;
+      height: 46px;
+      border: 4px solid rgba(255, 255, 255, 0.25);
+      border-top-color: #38bdf8;
       border-radius: 50%;
-      animation: spin 0.8s linear infinite;
+      animation: spin 0.75s linear infinite;
     }
 
     @keyframes fadeIn {
@@ -831,7 +1011,7 @@
       to { opacity: 1; transform: translateY(0); }
     }
     @keyframes modalSlide {
-      from { opacity: 0; transform: scale(0.95) translateY(-10px); }
+      from { opacity: 0; transform: scale(0.96) translateY(-10px); }
       to { opacity: 1; transform: scale(1) translateY(0); }
     }
     @keyframes toastIn {
@@ -853,6 +1033,9 @@
         flex-direction: column;
         gap: 0;
       }
+      .quick-tiles-grid {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
@@ -864,10 +1047,10 @@
   <!-- 讀取遮罩 -->
   <div id="loadingOverlay" class="loading-overlay">
     <div class="spinner"></div>
-    <div style="font-weight:600; font-size:1rem; letter-spacing:1px;">資料處理中，請稍候...</div>
+    <div style="font-weight:600; font-size:0.95rem; letter-spacing:1px;">資料同步中，請稍候...</div>
   </div>
 
-  <!-- ==================== 1. 登入頁面 ==================== -->
+  <!-- ==================== 1. 登入頁面（已移除快速測試帳號） ==================== -->
   <div id="loginPage" class="login-container">
     <div class="login-card">
       <div class="login-logo">🎺</div>
@@ -885,21 +1068,13 @@
           <input type="password" id="loginPassword" class="form-control" placeholder="請輸入密碼" required>
         </div>
 
-        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px; font-size: 1rem; margin-top: 8px;">
+        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 13px; font-size: 1rem; margin-top: 6px; border-radius: 12px;">
           登入系統
         </button>
       </form>
 
       <div class="login-hint">
-        💡 <strong>系統提示：</strong> 可直接輸入您的<strong>姓名</strong>登入！首次登入預設密碼為 <strong>0000</strong>，登入後系統將引導修改密碼與綁定常用電子信箱。
-      </div>
-
-      <div class="demo-users">
-        <div class="demo-users-title">快速測試帳號：</div>
-        <div class="demo-btn-group">
-          <button type="button" class="btn btn-secondary btn-sm" onclick="fillDemoUser('廖社長', '0000')">👑 社團幹部</button>
-          <button type="button" class="btn btn-secondary btn-sm" onclick="fillDemoUser('陳小笛', '0000')">👤 一般社員</button>
-        </div>
+        💡 <strong>登入提示：</strong> 可直接輸入您的<strong>姓名</strong>登入！首次登入預設密碼為 <strong>0000</strong>，登入後系統將引導修改密碼與綁定常用電子信箱。
       </div>
     </div>
   </div>
@@ -909,7 +1084,7 @@
     <header class="navbar">
       <div class="nav-brand" onclick="showTab('tabHome')">
         <span class="music-note">🎵</span>
-        <span>東吳管樂社 管理系統</span>
+        <span>東吳管樂社</span>
       </div>
 
       <ul class="nav-menu">
@@ -923,10 +1098,10 @@
       <div class="nav-user">
         <div class="user-info">
           <span id="navRoleBadge" class="badge badge-member">社員</span>
-          <span id="navUserName" class="user-name-text" style="font-weight: 600;">使用者</span>
+          <span id="navUserName" class="user-name-text" style="font-weight: 600; padding-right: 4px;">使用者</span>
         </div>
-        <button type="button" class="btn btn-secondary btn-sm" onclick="openProfileModal()" title="個人資料">👤</button>
-        <button type="button" class="btn btn-secondary btn-sm" onclick="handleLogout()" title="登出">🚪 登出</button>
+        <button type="button" class="nav-icon-btn" onclick="openProfileModal()" title="個人資料">👤 設定</button>
+        <button type="button" class="nav-icon-btn" onclick="handleLogout()" title="登出">登出</button>
         <button type="button" class="nav-hamburger" onclick="toggleMobileMenu()" aria-label="切換選單">☰</button>
       </div>
     </header>
@@ -949,7 +1124,7 @@
         </div>
 
         <div class="form-row">
-          <div class="form-col" style="flex: 1.2;">
+          <div class="form-col" style="flex: 1.35;">
             <div class="card">
               <div class="card-header">
                 <div>
@@ -964,23 +1139,30 @@
             </div>
           </div>
 
-          <div class="form-col" style="flex: 0.8;">
+          <div class="form-col" style="flex: 0.85;">
             <div class="card">
               <div class="card-header">
-                <h3 class="card-title">⚡ 快速功能捷徑</h3>
+                <div>
+                  <h3 class="card-title">⚡ 快速功能捷徑</h3>
+                  <div class="card-desc">常用社團服務一鍵前往</div>
+                </div>
               </div>
-              <div style="display: flex; flex-direction: column; gap: 10px;">
-                <button class="btn btn-secondary" style="justify-content: flex-start; padding: 12px;" onclick="showTab('tabRoom')">
-                  🚪 我要借教室
+              <div class="quick-tiles-grid">
+                <button type="button" class="quick-tile" onclick="showTab('tabRoom')">
+                  <div class="quick-tile-icon">🚪</div>
+                  <div class="quick-tile-title">我要借教室</div>
                 </button>
-                <button class="btn btn-secondary" style="justify-content: flex-start; padding: 12px;" onclick="showTab('tabAbsence')">
-                  📝 我要請假
+                <button type="button" class="quick-tile" onclick="showTab('tabAbsence')">
+                  <div class="quick-tile-icon">📝</div>
+                  <div class="quick-tile-title">我要請假</div>
                 </button>
-                <button class="btn btn-secondary" style="justify-content: flex-start; padding: 12px;" onclick="showTab('tabSeating')">
-                  🎼 查看座位表
+                <button type="button" class="quick-tile" onclick="showTab('tabSeating')">
+                  <div class="quick-tile-icon">🎼</div>
+                  <div class="quick-tile-title">查看座位表</div>
                 </button>
-                <button class="btn btn-secondary" style="justify-content: flex-start; padding: 12px;" onclick="openProfileModal()">
-                  👤 個人資料與通知設定
+                <button type="button" class="quick-tile" onclick="openProfileModal()">
+                  <div class="quick-tile-icon">👤</div>
+                  <div class="quick-tile-title">個人設定</div>
                 </button>
               </div>
             </div>
@@ -1028,8 +1210,7 @@
             </div>
           </div>
 
-          <!-- 借用規則與當週截止提示橫幅 -->
-          <div id="roomBookingRuleBanner" style="background: #fffbeb; border: 1.5px solid #fcd34d; border-radius: var(--radius-md); padding: 12px 16px; margin-bottom: 20px; font-size: 0.92rem; color: #92400e; line-height: 1.5;">
+          <div id="roomBookingRuleBanner" style="background: #fffbeb; border: 1.5px solid #fcd34d; border-radius: 12px; padding: 13px 18px; margin-bottom: 22px; font-size: 0.9rem; color: #92400e; line-height: 1.5;">
             載入借用規則中...
           </div>
 
@@ -1039,7 +1220,7 @@
                 <div class="form-group">
                   <label class="form-label">借用日期<span class="required">*</span></label>
                   <input type="date" id="roomDateInput" class="form-control" required onchange="handleRoomDateChange()">
-                  <div id="roomWeekdayIndicator" style="font-size: 0.88rem; font-weight: 700; color: var(--primary); margin-top: 6px;">
+                  <div id="roomWeekdayIndicator" style="font-size: 0.86rem; font-weight: 700; color: var(--brand); margin-top: 6px;">
                     請選擇借用日期
                   </div>
                 </div>
@@ -1071,7 +1252,7 @@
                 <div class="form-group">
                   <label class="form-label">勿擾</label>
                   <div style="margin-top: 8px;">
-                    <label class="period-chip" style="display: inline-flex; width: auto; padding: 8px 16px;">
+                    <label class="period-chip" style="display: inline-flex; width: auto; padding: 9px 16px;">
                       <input type="checkbox" id="roomDoNotDisturb" onchange="this.parentElement.classList.toggle('selected', this.checked)">
                       <span>勿擾（不開放他人併間練習）</span>
                     </label>
@@ -1083,11 +1264,11 @@
                 <div class="form-group">
                   <label class="form-label">需求</label>
                   <div style="display: flex; gap: 12px; margin-top: 8px; flex-wrap: wrap;">
-                    <label class="period-chip" style="display: inline-flex; width: auto; padding: 8px 16px;">
+                    <label class="period-chip" style="display: inline-flex; width: auto; padding: 9px 16px;">
                       <input type="checkbox" name="roomNeedCheckbox" value="鋼琴" onchange="this.parentElement.classList.toggle('selected', this.checked)">
                       <span>🎹 鋼琴</span>
                     </label>
-                    <label class="period-chip" style="display: inline-flex; width: auto; padding: 8px 16px;">
+                    <label class="period-chip" style="display: inline-flex; width: auto; padding: 9px 16px;">
                       <input type="checkbox" name="roomNeedCheckbox" value="打擊樂器" onchange="this.parentElement.classList.toggle('selected', this.checked)">
                       <span>🥁 打擊樂器</span>
                     </label>
@@ -1099,13 +1280,13 @@
             <div class="form-group">
               <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
                 <label class="form-label" style="margin-bottom:0;">借用節次<span class="required">*</span></label>
-                <div>
+                <div style="display: flex; gap: 6px;">
                   <button type="button" class="btn btn-secondary btn-sm" onclick="toggleAllPeriods(true)">全選</button>
                   <button type="button" class="btn btn-secondary btn-sm" onclick="toggleAllPeriods(false)">清空</button>
                 </div>
               </div>
               <div id="roomPeriodGrid" class="period-grid"></div>
-              <div id="roomPeriodWeekendNote" style="display: none; font-size: 0.85rem; color: #b45309; margin-top: 6px;">
+              <div id="roomPeriodWeekendNote" style="display: none; font-size: 0.85rem; color: #b45309; margin-top: 8px;">
                 ⚠️ 假日僅開放幹部後台「系統設定」所勾選之節次。
               </div>
             </div>
@@ -1116,7 +1297,7 @@
             </div>
 
             <div style="text-align: right;">
-              <button type="submit" id="roomSubmitBtn" class="btn btn-primary" style="padding: 10px 24px;">
+              <button type="submit" id="roomSubmitBtn" class="btn btn-primary" style="padding: 11px 28px;">
                 🚀 送出借用申請
               </button>
             </div>
@@ -1226,11 +1407,11 @@
 
       <!-- ================= 5. 幹部後台 ================= -->
       <div id="tabAdmin" class="page-section">
-        <div class="card" style="padding: 16px 20px 8px;">
-          <div class="card-header" style="margin-bottom: 12px; border: none; padding-bottom: 0;">
+        <div class="card" style="padding: 20px 24px 16px;">
+          <div class="card-header" style="margin-bottom: 14px; border: none; padding-bottom: 0;">
             <div>
               <h2 class="card-title">⚙️ 東吳管樂社 幹部後台管理</h2>
-              <div class="card-desc">社團借教室審批、團練排程、請假統計、座位表拖曳調整、社員名冊與系統設定。</div>
+              <div class="card-desc">社團借教室審批、團練排程、請假統計、座位表拖曳調整、社員批次管理與系統設定。</div>
             </div>
           </div>
 
@@ -1244,7 +1425,7 @@
           </div>
         </div>
 
-        <!-- 5.1 借教室管理（無申請編號，新增可借用時間與核定教室） -->
+        <!-- 5.1 借教室管理 -->
         <div id="subtab-adminRoom" class="subtab-content active">
           <div class="card">
             <div class="card-header">
@@ -1290,7 +1471,7 @@
           </div>
         </div>
 
-        <!-- 5.2 團練管理（無場次代碼，由近到遠排序） -->
+        <!-- 5.2 團練管理 -->
         <div id="subtab-adminPractice" class="subtab-content">
           <div class="card">
             <div class="card-header">
@@ -1344,21 +1525,21 @@
                 </div>
               </div>
               <div class="stat-card">
-                <div class="stat-icon" style="background:#e8f5e9; color:#2e7d32;">✅</div>
+                <div class="stat-icon" style="background:#f0fdf4; color:#15803d;">✅</div>
                 <div>
                   <div class="stat-value" id="adminStatPresent">0 人</div>
                   <div class="stat-label">實際出席</div>
                 </div>
               </div>
               <div class="stat-card">
-                <div class="stat-icon" style="background:#ffebee; color:#c62828;">❌</div>
+                <div class="stat-icon" style="background:#fef2f2; color:#b91c1c;">❌</div>
                 <div>
                   <div class="stat-value" id="adminStatAbsent">0 人</div>
                   <div class="stat-label">登記請假</div>
                 </div>
               </div>
               <div class="stat-card">
-                <div class="stat-icon" style="background:#fff9c4; color:#b78103;">📈</div>
+                <div class="stat-icon" style="background:#fef3c7; color:#b45309;">📈</div>
                 <div>
                   <div class="stat-value" id="adminStatRate">0%</div>
                   <div class="stat-label">出席率</div>
@@ -1404,7 +1585,7 @@
 
             <div id="adminSeatingQuickBar" style="background: #f8fafc; border: 1.5px solid var(--border); border-radius: var(--radius-md); padding: 12px 18px; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
               <div style="display: flex; align-items: center; gap: 10px;">
-                <span style="font-weight: 700; color: var(--primary);" id="selectedSecTitle">💡 請點擊或拖曳下方任一聲部進行調整</span>
+                <span style="font-weight: 700; color: var(--brand);" id="selectedSecTitle">💡 請點擊或拖曳下方任一聲部進行調整</span>
               </div>
               <div id="selectedSecControls" style="display: none; align-items: center; gap: 16px; flex-wrap: wrap;">
                 <div style="display: flex; align-items: center; gap: 6px;">
@@ -1426,17 +1607,17 @@
           </div>
         </div>
 
-        <!-- 5.5 社員管理（合併負責樂器） -->
+        <!-- 5.5 社員管理（支援批次新增 & 刪除社員） -->
         <div id="subtab-adminMembers" class="subtab-content">
           <div class="card">
             <div class="card-header">
               <div>
                 <h3 class="card-title">👥 全社社員名冊管理</h3>
-                <div class="card-desc">檢視社員清單、變更角色權限、重設密碼為 0000 或建立新社員。</div>
+                <div class="card-desc">支援依樂器聲部一次批次建立多位社員帳號、變更角色權限、重設密碼或刪除退社帳號。</div>
               </div>
               <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
                 <input type="text" id="adminMemberSearchInput" class="form-control" placeholder="搜尋姓名、信箱、樂器..." style="width: 220px;" oninput="renderAdminMembersTable()">
-                <button class="btn btn-primary btn-sm" onclick="openAddMemberModal()">➕ 新增社員</button>
+                <button class="btn btn-primary btn-sm" onclick="openAddMemberModal()">➕ 批次新增社員</button>
               </div>
             </div>
 
@@ -1458,7 +1639,7 @@
           </div>
         </div>
 
-        <!-- 5.6 系統設定（含連假提早截止日設定 + 週末節次設定） -->
+        <!-- 5.6 系統設定 -->
         <div id="subtab-adminSettings" class="subtab-content">
           <div class="card">
             <div class="card-header">
@@ -1517,7 +1698,7 @@
       </div>
       <form id="changePasswordForm" onsubmit="handleChangePasswordSubmit(event)">
         <div class="modal-body">
-          <div id="changePwForcedNotice" style="display: none; background: #fff3cd; border: 1px solid #ffeeba; border-radius: var(--radius-md); padding: 10px 14px; color: #856404; font-size: 0.9rem; margin-bottom: 16px;">
+          <div id="changePwForcedNotice" style="display: none; background: #fffbeb; border: 1px solid #fde68a; border-radius: 12px; padding: 12px 14px; color: #92400e; font-size: 0.88rem; margin-bottom: 16px;">
             ⚠️ <strong>首次登入設定：</strong> 請設定您的常用電子信箱（供借教室審核通知使用），並將預設密碼 <strong>0000</strong> 修改為您的個人密碼！
           </div>
 
@@ -1549,7 +1730,7 @@
     </div>
   </div>
 
-  <!-- 2. 個人資料與通知設定（合併為單一「負責樂器」欄位） -->
+  <!-- 2. 個人資料與通知設定 -->
   <div id="modalProfile" class="modal-overlay">
     <div class="modal-card">
       <div class="modal-header">
@@ -1590,7 +1771,7 @@
 
           <div class="form-group" style="margin-top: 10px;">
             <label style="display: inline-flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 600;">
-              <input type="checkbox" id="profNotifyEmail" style="width: 18px; height: 18px; accent-color: var(--primary);">
+              <input type="checkbox" id="profNotifyEmail" style="width: 18px; height: 18px; accent-color: var(--brand);">
               <span>接收借教室審核結果之電子信箱通知</span>
             </label>
           </div>
@@ -1603,7 +1784,7 @@
     </div>
   </div>
 
-  <!-- 3. 新增/編輯團練場次（預設 18:15、20:30、D0130、當天中午 12:00 截止） -->
+  <!-- 3. 新增/編輯團練場次 -->
   <div id="modalPractice" class="modal-overlay">
     <div class="modal-card">
       <div class="modal-header">
@@ -1645,8 +1826,8 @@
           </div>
 
           <div class="form-group">
-            <label class="form-label">排練曲目與重要備註</label>
-            <textarea id="pracNotesInput" class="form-control" placeholder="例如：請在18:15就位熱嘴，18:30開始團練"></textarea>
+            <label class="form-label">排練曲目與重要備註（可直接貼上 FB 社團公告，系統會自動排版為條列式）</label>
+            <textarea id="pracNotesInput" class="form-control" style="min-height: 120px;" placeholder="可直接複製貼上 FB 社團公告文字..."></textarea>
           </div>
         </div>
         <div class="modal-footer">
@@ -1657,23 +1838,18 @@
     </div>
   </div>
 
-  <!-- 4. 新增社員（合併為單一「負責樂器」欄位） -->
+  <!-- 4. 批次快速新增社員（1.社員姓名[多行] 2.負責樂器 3.系統角色身分） -->
   <div id="modalAddMember" class="modal-overlay">
     <div class="modal-card">
       <div class="modal-header">
-        <div class="modal-title">➕ 新增樂團社員</div>
+        <div class="modal-title">➕ 快速批次新增社員</div>
         <button type="button" class="modal-close" onclick="closeAddMemberModal()">✕</button>
       </div>
       <form id="addMemberForm" onsubmit="handleAddMemberSubmit(event)">
         <div class="modal-body">
           <div class="form-group">
-            <label class="form-label">社員姓名<span class="required">*</span></label>
-            <input type="text" id="newMemberName" class="form-control" placeholder="請輸入姓名（社員可直接用姓名登入）" required>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label">常用電子信箱（選填，可由社員首次登入時自行填寫）</label>
-            <input type="email" id="newMemberEmail" class="form-control" placeholder="未知可留空，例如：example@gmail.com">
+            <label class="form-label">社員姓名（可一次輸入該聲部所有社員，一行一個或以空格分隔）<span class="required">*</span></label>
+            <textarea id="newMemberName" class="form-control" style="min-height: 110px;" placeholder="例如：&#10;王小明&#10;陳小華&#10;林同學" required></textarea>
           </div>
 
           <div class="form-group">
@@ -1700,12 +1876,12 @@
           </div>
 
           <p style="font-size: 0.85rem; color: var(--text-muted);">
-            💡 系統預設密碼為 <strong>0000</strong>，社員首次以姓名登入後，系統會引導他填寫常用電子信箱並修改密碼。
+            💡 預設密碼皆為 <strong>0000</strong>。社員首次用姓名登入後，系統會引導他自行填寫常用電子信箱並修改密碼。
           </p>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" onclick="closeAddMemberModal()">取消</button>
-          <button type="submit" class="btn btn-primary">建立社員帳號</button>
+          <button type="submit" class="btn btn-primary">批次建立帳號</button>
         </div>
       </form>
     </div>
@@ -1721,7 +1897,7 @@
       <form id="submitAbsenceForm" onsubmit="handleAbsenceSubmit(event)">
         <div class="modal-body">
           <input type="hidden" id="absenceTargetPracticeId">
-          <div id="absencePracticeInfo" style="background: #f1f5f9; padding: 12px; border-radius: var(--radius-md); margin-bottom: 16px; font-size: 0.92rem; font-weight: 600; color: var(--primary);">
+          <div id="absencePracticeInfo" style="background: #eff6ff; padding: 12px 14px; border-radius: 10px; margin-bottom: 16px; font-size: 0.92rem; font-weight: 700; color: var(--brand-dark);">
             團練場次載入中...
           </div>
 
@@ -1742,7 +1918,6 @@
   <script>
     const GAS_URL = 'https://script.google.com/macros/s/AKfycbzRYlRMKgd9LOsbk92ayqqtDrdOEbZZtSzfwU5UTXqeQULPtEEC_5AtIas-uiMfzBQ/exec';
 
-    // 節次標籤（E、A、B 不加括號說明）
     const PERIOD_LABELS = {
       '1': '1節',
       '2': '2節',
@@ -1787,7 +1962,68 @@
 
     let session = null;
 
-    // 取得本地 YYYY-MM-DD 字串
+    function escapeHtml(str) {
+      return String(str || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    /**
+     * 智慧排版解析器：將 FB 社團公告（即使被擠成一大段）自動拆解為條列式，並提供「展開/收合」功能以節省空間
+     */
+    function formatPracticeNotesHtml(rawNotes, uid) {
+      let text = String(rawNotes || '全體合奏排練').trim();
+      text = text.replace(/^["']|["']$/g, '').trim();
+
+      // 遇到 FB 常見的條列符號（⭐、‼️、✦✦、✏️）若在句中自動補換行
+      text = text
+        .replace(/\s*(⭐|🌟|✏️|📌|📍)/g, '\n$1')
+        .replace(/\s*(✦✦[^✦]+✦✦)/g, '\n$1\n')
+        .replace(/\s*(‼️[^‼️]+‼️)/g, '\n$1\n');
+
+      const lines = text.split(/\n+/).map(l => l.trim()).filter(Boolean);
+      const isLong = lines.length > 3 || text.length > 110;
+      const listId = 'notes_list_' + uid;
+      const btnId = 'notes_btn_' + uid;
+
+      const itemsHtml = lines.map(line => {
+        const safe = escapeHtml(line);
+        if (safe.includes('‼️')) {
+          return `<div class="note-line note-line-highlight">${safe}</div>`;
+        }
+        if (safe.includes('✦')) {
+          return `<div class="note-line note-line-section">${safe}</div>`;
+        }
+        return `<div class="note-line">${safe}</div>`;
+      }).join('');
+
+      return `
+        <div class="notes-box">
+          <div class="notes-box-header">
+            <span>🎵 排練曲目與注意事項</span>
+          </div>
+          <div id="${listId}" class="notes-list ${isLong ? 'collapsed' : ''}">
+            ${itemsHtml}
+          </div>
+          ${isLong ? `
+            <button type="button" id="${btnId}" class="notes-toggle-btn" onclick="toggleNotesCollapse('${listId}', '${btnId}')">
+              🔽 展開完整公告（共 ${lines.length} 項）
+            </button>
+          ` : ''}
+        </div>
+      `;
+    }
+
+    function toggleNotesCollapse(listId, btnId) {
+      const listEl = document.getElementById(listId);
+      const btnEl = document.getElementById(btnId);
+      if (!listEl || !btnEl) return;
+      const isCollapsed = listEl.classList.toggle('collapsed');
+      btnEl.innerHTML = isCollapsed ? '🔽 展開完整公告' : '🔼 收合公告';
+    }
+
     function toLocalDateStr(d) {
       const yr = d.getFullYear();
       const mo = String(d.getMonth() + 1).padStart(2, '0');
@@ -1795,7 +2031,6 @@
       return `${yr}-${mo}-${da}`;
     }
 
-    // 統一排序：日期最近的排最上面（未來升序，過去排後面）
     function sortByDateClosestFirst(list, dateKey = 'date') {
       const todayStr = toLocalDateStr(new Date());
       return [...list].sort((a, b) => {
@@ -1871,7 +2106,7 @@
       } catch (err) {
         console.error('API Error:', err);
         if (!err.message || (!err.message.includes('連線錯誤') && err.message !== '操作失敗，請稍後再試')) {
-          const isAlreadyShown = err.message && (err.message.includes('找不到') || err.message.includes('密碼') || err.message.includes('已存在') || err.message.includes('已被') || err.message.includes('超過') || err.message.includes('截止') || err.message.includes('開放'));
+          const isAlreadyShown = err.message && (err.message.includes('找不到') || err.message.includes('密碼') || err.message.includes('已存在') || err.message.includes('已被') || err.message.includes('超過') || err.message.includes('截止') || err.message.includes('開放') || err.message.includes('無法刪除'));
           if (!isAlreadyShown) {
             showToast(err.message || '連線錯誤，請稍後再試', 'error');
           }
@@ -1979,11 +2214,6 @@
     // ==========================================
     // 登入與身分狀態
     // ==========================================
-    function fillDemoUser(identifier, pw) {
-      document.getElementById('loginIdentifier').value = identifier;
-      document.getElementById('loginPassword').value = pw;
-    }
-
     async function handleLoginSubmit(e) {
       e.preventDefault();
       const identifier = document.getElementById('loginIdentifier').value.trim();
@@ -2056,22 +2286,20 @@
         const myAbsence = data.myNextPracticeAbsence;
         let statusBadgeHtml = '<span class="badge badge-approved" style="font-size:0.85rem;">✅ 出席預定</span>';
         if (myAbsence) {
-          statusBadgeHtml = '<span class="badge badge-rejected" style="font-size:0.85rem;">⚠️ 已請假 (' + myAbsence.reason + ')</span>';
+          statusBadgeHtml = '<span class="badge badge-rejected" style="font-size:0.85rem;">⚠️ 已請假 (' + escapeHtml(myAbsence.reason) + ')</span>';
         }
 
         upcomingEl.innerHTML = `
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:8px;">
-            <div style="font-size:1.15rem; font-weight:700; color:var(--primary);">
+            <div style="font-size:1.18rem; font-weight:800; color:#0f172a;">
               📅 ` + nextPrac.date + ` (週` + getWeekday(nextPrac.date) + `) ` + (nextPrac.startTime || '18:15') + ` - ` + (nextPrac.endTime || '20:30') + `
             </div>
             ` + statusBadgeHtml + `
           </div>
-          <div style="font-size:0.92rem; color:#475569; margin-bottom:8px;">
-            📍 地點：<strong>` + nextPrac.location + `</strong> &nbsp;|&nbsp; 截止登記：<span style="color:#b45309; font-weight:600;">` + formatDateTimeDisplay(nextPrac.deadline) + `</span>
+          <div style="font-size:0.9rem; color:#475569; margin-bottom:6px;">
+            📍 地點：<strong>` + escapeHtml(nextPrac.location) + `</strong> &nbsp;|&nbsp; 截止登記：<span style="color:#b45309; font-weight:700;">` + formatDateTimeDisplay(nextPrac.deadline) + `</span>
           </div>
-          <div class="practice-notes">
-            <strong>🎵 排練曲目與備註：</strong>` + (nextPrac.notes || '請各聲部準時到場定位調音。') + `
-          </div>
+          ` + formatPracticeNotesHtml(nextPrac.notes, 'home_' + nextPrac.id) + `
         `;
       } else {
         upcomingEl.innerHTML = '<p style="color:var(--text-muted);">目前無即將進行之排練場次。</p>';
@@ -2092,7 +2320,7 @@
             <td>` + (item.needs && item.needs.length > 0 ? item.needs.join('、') : '-') + `</td>
             <td>` + getStatusBadgeHtml(item.status) + `</td>
             <td><strong style="color:#0369a1;">` + (item.approvedTime || '-') + `</strong></td>
-            <td><strong style="color:var(--primary);">` + (item.assignedRoom || '尚未分配') + `</strong></td>
+            <td><strong style="color:var(--brand-dark);">` + (item.assignedRoom || '尚未分配') + `</strong></td>
           </tr>
         `).join('');
       }
@@ -2106,13 +2334,10 @@
     }
 
     // ==========================================
-    // 借教室（當週只能借下週，週五或連假前一日 12:00 截止）
+    // 借教室
     // ==========================================
     let cachedSettings = null;
 
-    /**
-     * 計算本週開放借用的「下週一 ～ 下週日」範圍與本週截止時間
-     */
     function getNextWeekBookingWindow() {
       const now = new Date();
       const day = now.getDay();
@@ -2156,7 +2381,6 @@
       const dateInput = document.getElementById('roomDateInput');
       const submitBtn = document.getElementById('roomSubmitBtn');
 
-      // 設定日期選擇器只允許選下週一～下週日
       dateInput.min = win.minDateStr;
       dateInput.max = win.maxDateStr;
       if (!dateInput.value || dateInput.value < win.minDateStr || dateInput.value > win.maxDateStr) {
@@ -2165,13 +2389,13 @@
 
       if (win.isPastDeadline) {
         banner.style.background = '#fef2f2';
-        banner.style.borderColor = '#f87171';
+        banner.style.borderColor = '#fecaca';
         banner.style.color = '#991b1b';
         banner.innerHTML = `⛔ <strong>本週借教室申請已截止：</strong> 欲借下週（${win.minDateStr} ～ ${win.maxDateStr}）教室者，已於 <strong>${win.deadlineLabel}</strong> 截止收件。`;
         submitBtn.disabled = true;
       } else {
         banner.style.background = '#fffbeb';
-        banner.style.borderColor = '#fcd34d';
+        banner.style.borderColor = '#fde68a';
         banner.style.color = '#92400e';
         banner.innerHTML = `💡 <strong>借教室開放時間規則：</strong> 當週僅開放預約下週 <strong>${win.minDateStr}（一）～ ${win.maxDateStr}（日）</strong> 之教室，請於本週 <strong>${win.deadlineLabel}</strong> 前完成填寫。`;
         submitBtn.disabled = false;
@@ -2321,16 +2545,16 @@
           <td>` + (item.headcount || 1) + `</td>
           <td>` + (item.doNotDisturb ? '<span class="badge badge-rejected">是</span>' : 'X') + `</td>
           <td>` + (item.needs && item.needs.length > 0 ? item.needs.join('、') : '-') + `</td>
-          <td style="font-size:0.86rem; color:#475569;">` + (item.notes || '-') + `</td>
+          <td style="font-size:0.86rem; color:#475569;">` + escapeHtml(item.notes || '-') + `</td>
           <td>` + getStatusBadgeHtml(item.status) + `</td>
           <td><strong style="color:#0369a1;">` + (item.approvedTime || '-') + `</strong></td>
-          <td><strong style="color:var(--primary);">` + (item.assignedRoom || '待分配') + `</strong></td>
+          <td><strong style="color:var(--brand-dark);">` + (item.assignedRoom || '待分配') + `</strong></td>
         </tr>
       `).join('');
     }
 
     // ==========================================
-    // 請假（由近到遠排序 + 團練前 7 天才開放請假）
+    // 請假
     // ==========================================
     async function loadAbsenceTab() {
       if (!session) return;
@@ -2349,7 +2573,6 @@
           const deadlineDate = new Date(String(p.deadline).replace(' ', 'T'));
           const isExpired = !isNaN(deadlineDate.getTime()) && deadlineDate < now;
 
-          // 計算團練前 7 天 00:00 是否已到
           const pracDateObj = new Date(p.date + 'T00:00:00');
           const openDateObj = new Date(pracDateObj);
           openDateObj.setDate(pracDateObj.getDate() - 7);
@@ -2359,7 +2582,7 @@
           let statusHtml = '<span class="badge badge-approved" style="font-size:0.85rem;">✅ 出席預定</span>';
           let actionBtnText = '📝 我要請假';
           if (myRec) {
-            statusHtml = '<span class="badge badge-rejected" style="font-size:0.85rem;">⚠️ 已請假 (' + myRec.reason + ')</span>';
+            statusHtml = '<span class="badge badge-rejected" style="font-size:0.85rem;">⚠️ 已請假 (' + escapeHtml(myRec.reason) + ')</span>';
             actionBtnText = '✏️ 修改請假事由';
           } else if (isTooEarly) {
             actionBtnText = `⏳ ${openDateStr} 開放請假`;
@@ -2374,14 +2597,12 @@
               <div class="practice-header">
                 <div>
                   <div class="practice-date">🎺 ` + p.date + ` (週` + getWeekday(p.date) + `) ` + (p.startTime || '18:15') + ` - ` + (p.endTime || '20:30') + `</div>
-                  <div style="font-size:0.92rem; color:#475569; margin-top:4px;">📍 排練地點：` + p.location + `</div>
+                  <div style="font-size:0.9rem; color:#475569; margin-top:4px;">📍 排練地點：<strong>` + escapeHtml(p.location) + `</strong></div>
                 </div>
                 <div>` + statusHtml + `</div>
               </div>
 
-              <div class="practice-notes">
-                <strong>🎵 排練曲目與備註：</strong>` + (p.notes || '全體合奏排練') + `
-              </div>
+              ` + formatPracticeNotesHtml(p.notes, 'abs_' + p.id) + `
 
               <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
                 <span class="practice-deadline-badge">⏰ 請假截止時間：` + formatDateTimeDisplay(p.deadline) + (isExpired ? ' (已截止)' : '') + `</span>
@@ -2398,16 +2619,19 @@
       if (myAbsences.length === 0) {
         historyTbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:var(--text-muted);">無請假記錄，全勤出席！🎺</td></tr>';
       } else {
-        historyTbody.innerHTML = myAbsences.map(a => `
-          <tr>
-            <td><strong>` + a.practiceDate + `</strong></td>
-            <td>週` + getWeekday(a.practiceDate) + `</td>
-            <td>` + (a.practiceNotes || '常態團練') + `</td>
-            <td>` + a.reason + `</td>
-            <td style="font-size:0.85rem; color:#64748b;">` + formatDateTimeDisplay(a.createdAt) + `</td>
-            <td><span class="badge badge-received">已登記</span></td>
-          </tr>
-        `).join('');
+        historyTbody.innerHTML = myAbsences.map(a => {
+          const shortNote = String(a.practiceNotes || '常態團練').split('\n')[0].substring(0, 32);
+          return `
+            <tr>
+              <td><strong>` + a.practiceDate + `</strong></td>
+              <td>週` + getWeekday(a.practiceDate) + `</td>
+              <td>` + escapeHtml(shortNote) + `</td>
+              <td>` + escapeHtml(a.reason) + `</td>
+              <td style="font-size:0.85rem; color:#64748b;">` + formatDateTimeDisplay(a.createdAt) + `</td>
+              <td><span class="badge badge-received">已登記</span></td>
+            </tr>
+          `;
+        }).join('');
       }
     }
 
@@ -2444,7 +2668,7 @@
     }
 
     // ==========================================
-    // 座位表（僅開放點擊最近一場，其餘反灰）
+    // 座位表
     // ==========================================
     let currentLayouts = [];
 
@@ -2471,7 +2695,6 @@
       if (practices.length === 0) {
         pSelect.innerHTML = '<option value="">目前無團練場次</option>';
       } else {
-        // 第一筆即為距離今天最近的一場團練，其餘遠期場次加上 disabled 反灰不可選
         pSelect.innerHTML = practices.map((p, idx) => {
           const isNearest = (idx === 0);
           const note = isNearest ? '（最近場次）' : '（日期未到）';
@@ -2548,7 +2771,7 @@
 
       let svg = `
         <svg id="svg_${containerId}" class="seating-svg" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">
-          <rect x="20" y="20" width="860" height="580" rx="12" fill="#ffffff" stroke="#1e293b" stroke-width="2"/>
+          <rect x="20" y="20" width="860" height="580" rx="14" fill="#ffffff" stroke="#1e293b" stroke-width="2"/>
 
           <g transform="translate(85, 36)">
             <rect x="0" y="0" width="130" height="44" fill="#ffffff" stroke="#1e293b" stroke-width="2"/>
@@ -2672,9 +2895,9 @@
         const rate = total > 0 ? Math.round((present / total) * 100) : 0;
 
         return `
-          <div style="background:#ffffff; border:1px solid var(--border); border-radius:var(--radius-md); padding:10px 14px; box-shadow:var(--shadow-sm);">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
-              <span style="font-weight:700; color:var(--primary);">` + s.fullLabel + `</span>
+          <div style="background:#ffffff; border:1px solid var(--border); border-radius:12px; padding:12px 14px; box-shadow:var(--shadow-sm);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+              <span style="font-weight:700; color:#0f172a;">` + s.fullLabel + `</span>
               <span style="font-weight:700; color:` + (rate >= 80 ? '#15803d' : '#b91c1c') + `;">出席 ` + present + `/` + total + `</span>
             </div>
             <div style="background:#e2e8f0; height:6px; border-radius:3px; overflow:hidden;">
@@ -2838,7 +3061,7 @@
     }
 
     // ==========================================
-    // 幹部後台：1. 借教室管理（無申請編號，新增可借用時間與核定教室）
+    // 幹部後台：1. 借教室管理
     // ==========================================
     let allRoomRequestsCache = [];
 
@@ -2865,7 +3088,7 @@
 
       tbody.innerHTML = list.map(item => `
         <tr>
-          <td><strong>` + item.name + `</strong></td>
+          <td><strong>` + escapeHtml(item.name) + `</strong></td>
           <td>` + item.date + `</td>
           <td>` + getWeekday(item.date) + `</td>
           <td><strong>` + (Array.isArray(item.periods) ? item.periods.join('') : item.periods) + `</strong></td>
@@ -2873,7 +3096,7 @@
           <td>` + (item.headcount || 1) + `</td>
           <td>` + (item.doNotDisturb ? '<span class="badge badge-rejected">是</span>' : 'X') + `</td>
           <td>` + (item.needs && item.needs.length > 0 ? item.needs.join('、') : '-') + `</td>
-          <td style="font-size:0.82rem; color:#64748b; max-width:140px;">` + (item.notes || '-') + `</td>
+          <td style="font-size:0.82rem; color:#64748b; max-width:140px;">` + escapeHtml(item.notes || '-') + `</td>
           <td>
             <select class="form-control" style="padding:4px 8px; font-size:0.85rem; width:96px;" id="adminRoomStatus_` + item.id + `">
               <option value="已收件" ` + (item.status === '已收件' ? 'selected' : '') + `>已收件</option>
@@ -2883,10 +3106,10 @@
             </select>
           </td>
           <td>
-            <input type="text" class="form-control" style="padding:4px 8px; font-size:0.85rem; width:95px;" id="adminRoomTime_` + item.id + `" value="` + (item.approvedTime || '') + `" placeholder="如：5678">
+            <input type="text" class="form-control" style="padding:4px 8px; font-size:0.85rem; width:95px;" id="adminRoomTime_` + item.id + `" value="` + escapeHtml(item.approvedTime || '') + `" placeholder="如：5678">
           </td>
           <td>
-            <input type="text" class="form-control" style="padding:4px 8px; font-size:0.85rem; width:95px;" id="adminRoomAssigned_` + item.id + `" value="` + (item.assignedRoom || '') + `" placeholder="如：B209">
+            <input type="text" class="form-control" style="padding:4px 8px; font-size:0.85rem; width:95px;" id="adminRoomAssigned_` + item.id + `" value="` + escapeHtml(item.assignedRoom || '') + `" placeholder="如：B209">
           </td>
           <td>
             <button class="btn btn-primary btn-sm" onclick="saveAdminRoomRow('` + item.id + `')">儲存</button>
@@ -2945,7 +3168,7 @@
     }
 
     // ==========================================
-    // 幹部後台：2. 團練管理（無場次代碼，預設 18:15~20:30、D0130、當天 12:00 截止）
+    // 幹部後台：2. 團練管理
     // ==========================================
     let allPracticesCache = [];
 
@@ -2964,9 +3187,9 @@
           <td><strong>` + p.date + `</strong></td>
           <td>週` + getWeekday(p.date) + `</td>
           <td>` + (p.startTime || '18:15') + ` - ` + (p.endTime || '20:30') + `</td>
-          <td>` + p.location + `</td>
+          <td>` + escapeHtml(p.location) + `</td>
           <td><span style="color:#b45309; font-weight:600;">` + formatDateTimeDisplay(p.deadline) + `</span></td>
-          <td style="font-size:0.86rem; color:#475569;">` + (p.notes || '-') + `</td>
+          <td style="min-width: 280px; max-width: 420px;">` + formatPracticeNotesHtml(p.notes, 'admin_' + p.id) + `</td>
           <td>
             <div style="display:flex; gap:6px;">
               <button class="btn btn-secondary btn-sm" onclick="editPracticeModal('` + p.id + `')">編輯</button>
@@ -2977,9 +3200,6 @@
       `).join('');
     }
 
-    /**
-     * 當幹部在新增團練選擇日期時，自動將「請假登記截止時間」設為當天中午 12:00
-     */
     function handlePracticeDateAutoDeadline() {
       const dateVal = document.getElementById('pracDateInput').value;
       if (dateVal) {
@@ -3097,9 +3317,9 @@
         const secRate = secTotal > 0 ? Math.round((secPresent / secTotal) * 100) : 0;
 
         return `
-          <div style="background:#ffffff; border:1px solid var(--border); border-radius:var(--radius-md); padding:12px; box-shadow:var(--shadow-sm);">
+          <div style="background:#ffffff; border:1px solid var(--border); border-radius:12px; padding:14px; box-shadow:var(--shadow-sm);">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-              <span style="font-weight:700; color:var(--primary);">` + sec.fullLabel + `</span>
+              <span style="font-weight:700; color:#0f172a;">` + sec.fullLabel + `</span>
               <span style="font-size:0.9rem; font-weight:700; color:` + (secRate >= 80 ? '#15803d' : '#b91c1c') + `;">` + secPresent + `/` + secTotal + ` 人 (` + secRate + `%)</span>
             </div>
             <div style="background:#e2e8f0; height:8px; border-radius:4px; overflow:hidden;">
@@ -3115,9 +3335,9 @@
       } else {
         tbody.innerHTML = currentAdminAbsences.map(a => `
           <tr>
-            <td><strong>` + a.name + `</strong></td>
+            <td><strong>` + escapeHtml(a.name) + `</strong></td>
             <td>` + formatInstrumentDisplay(a.instrument, a.section) + `</td>
-            <td>` + a.reason + `</td>
+            <td>` + escapeHtml(a.reason) + `</td>
             <td style="font-size:0.85rem; color:#64748b;">` + formatDateTimeDisplay(a.createdAt) + `</td>
           </tr>
         `).join('');
@@ -3141,7 +3361,7 @@
     }
 
     // ==========================================
-    // 幹部後台：5. 社員管理（合併負責樂器）
+    // 幹部後台：5. 社員管理（支援批次新增 & 刪除帳號）
     // ==========================================
     let allMembersCache = [];
 
@@ -3167,9 +3387,9 @@
 
       tbody.innerHTML = list.map(m => `
         <tr>
-          <td><strong>` + m.name + `</strong></td>
-          <td>` + (m.email || '<span style="color:var(--text-muted); font-size:0.85rem;">尚未綁定信箱</span>') + `</td>
-          <td><span class="badge" style="background:#e8eaf6; color:#1a237e;">` + formatInstrumentDisplay(m.instrument, m.section) + `</span></td>
+          <td><strong>` + escapeHtml(m.name) + `</strong></td>
+          <td>` + (m.email ? escapeHtml(m.email) : '<span style="color:var(--text-muted); font-size:0.85rem;">尚未綁定信箱</span>') + `</td>
+          <td><span class="badge" style="background:#eff6ff; color:#1d4ed8; border-color:#bfdbfe;">` + formatInstrumentDisplay(m.instrument, m.section) + `</span></td>
           <td>
             <select class="form-control" style="width:120px; padding:4px 8px; font-size:0.85rem;" onchange="changeMemberRole('` + m.email + `', '` + m.name + `', this.value)">
               <option value="member" ` + (m.role === 'member' ? 'selected' : '') + `>一般社員</option>
@@ -3180,9 +3400,14 @@
             ` + (m.isDefaultPassword ? '<span class="badge badge-rejected">預設 0000</span>' : '<span class="badge badge-approved">已變更密碼</span>') + `
           </td>
           <td>
-            <button class="btn btn-secondary btn-sm" onclick="resetMemberPasswordConfirm('` + m.email + `', '` + m.name + `')">
-              🔑 重設為 0000
-            </button>
+            <div style="display:flex; gap:6px;">
+              <button class="btn btn-secondary btn-sm" onclick="resetMemberPasswordConfirm('` + m.email + `', '` + m.name + `')">
+                🔑 重設密碼
+              </button>
+              <button class="btn btn-danger btn-sm" onclick="deleteMemberConfirm('` + m.email + `', '` + m.name + `')">
+                🗑️ 刪除
+              </button>
+            </div>
           </td>
         </tr>
       `).join('');
@@ -3221,6 +3446,20 @@
       } catch (err) {}
     }
 
+    async function deleteMemberConfirm(targetEmail, targetName) {
+      if (!confirm(`確定要刪除社員「${targetName}」的帳號嗎？此操作無法復原。`)) return;
+      try {
+        await api('deleteMember', {
+          adminEmail: session.email,
+          adminName: session.name,
+          targetEmail,
+          targetName
+        });
+        showToast(`已刪除社員「${targetName}」的帳號`, 'info');
+        renderAdminMembersTable();
+      } catch (err) {}
+    }
+
     function openAddMemberModal() {
       closeAllModals();
       document.getElementById('addMemberForm').reset();
@@ -3232,15 +3471,30 @@
 
     async function handleAddMemberSubmit(e) {
       e.preventDefault();
-      const name = document.getElementById('newMemberName').value.trim();
-      const email = document.getElementById('newMemberEmail').value.trim();
+      const rawNames = document.getElementById('newMemberName').value;
+      const names = rawNames.split(/[\n,，、\s]+/).map(n => n.trim()).filter(Boolean);
       const instrument = document.getElementById('newMemberInstrument').value;
       const section = extractSectionAbbr(instrument);
       const role = document.getElementById('newMemberRole').value;
 
+      if (names.length === 0) {
+        showToast('請至少輸入一位社員姓名！', 'error');
+        return;
+      }
+
       try {
-        await api('addMember', { adminEmail: session.email, adminName: session.name, name, email, section, instrument, role });
-        showToast('已成功新增社員！可直接以姓名登入，預設密碼：0000', 'success');
+        const res = await api('addMember', {
+          adminEmail: session.email,
+          adminName: session.name,
+          names,
+          name: rawNames,
+          section,
+          instrument,
+          role
+        });
+        const count = res.addedCount !== undefined ? res.addedCount : names.length;
+        const skipMsg = (res.skippedNames && res.skippedNames.length > 0) ? `（略過重複：${res.skippedNames.join('、')}）` : '';
+        showToast(`已成功建立 ${count} 位社員帳號！${skipMsg}`, 'success');
         closeAddMemberModal();
         renderAdminMembersTable();
       } catch (err) {}

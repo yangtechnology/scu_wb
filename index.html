@@ -51,7 +51,7 @@
       --shadow-sm: 0 4px 12px -2px rgba(15, 23, 42, 0.05);
       --shadow-card: 0 12px 32px -8px rgba(15, 23, 42, 0.06), 0 2px 6px -1px rgba(15, 23, 42, 0.03);
       --shadow-float: 0 20px 45px -10px rgba(15, 23, 42, 0.14), 0 0 1px 1px rgba(15, 23, 42, 0.04);
-      --ease-spring: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-spring: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     * {
@@ -230,7 +230,7 @@
     .navbar {
       max-width: 1200px;
       margin: 0 auto;
-      background: rgba(255, 255, 255, 0.82);
+      background: rgba(255, 255, 255, 0.85);
       backdrop-filter: blur(20px) saturate(180%);
       -webkit-backdrop-filter: blur(20px) saturate(180%);
       border: 1px solid rgba(255, 255, 255, 0.9);
@@ -300,6 +300,30 @@
       align-items: center;
       gap: 8px;
     }
+    /* 背景無感同步指示燈 */
+    .bg-sync-pill {
+      display: none;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 9999px;
+      background: #eff6ff;
+      color: #1d4ed8;
+      font-size: 0.75rem;
+      font-weight: 700;
+      border: 1px solid #bfdbfe;
+    }
+    .bg-sync-pill.active {
+      display: inline-flex;
+    }
+    .bg-sync-spinner {
+      width: 10px;
+      height: 10px;
+      border: 2px solid #93c5fd;
+      border-top-color: #1d4ed8;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+    }
     .user-info {
       display: flex;
       align-items: center;
@@ -364,7 +388,7 @@
       width: 100%;
     }
 
-    /* ==================== 主內容容器与卡片 ==================== */
+    /* ==================== 主內容容器與卡片 ==================== */
     .main-content {
       flex: 1;
       max-width: 1200px;
@@ -378,7 +402,7 @@
     }
     .page-section.active {
       display: block;
-      animation: fadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .card {
@@ -976,7 +1000,7 @@
     }
     .subtab-content.active {
       display: block;
-      animation: fadeIn 0.28s ease;
+      animation: fadeIn 0.22s ease;
     }
 
     /* ==================== 點陣舞台座位表畫布 ==================== */
@@ -1102,7 +1126,7 @@
     }
     .toast {
       min-width: 280px;
-      max-width: 400px;
+      max-width: 420px;
       padding: 14px 20px;
       border-radius: 14px;
       box-shadow: var(--shadow-float);
@@ -1125,6 +1149,7 @@
     .toast-error { border-left: 4px solid #f43f5e; }
     .toast-info { border-left: 4px solid var(--champagne); }
 
+    /* 全螢幕遮罩：現在僅在「送出表單 / 寫入資料」時出現，切換頁籤不再阻擋畫面！ */
     .loading-overlay {
       position: fixed;
       top: 0;
@@ -1154,7 +1179,7 @@
     }
 
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(8px); }
+      from { opacity: 0; transform: translateY(6px); }
       to { opacity: 1; transform: translateY(0); }
     }
     @keyframes modalSlide {
@@ -1196,10 +1221,10 @@
   <!-- 通知容器 -->
   <div id="toastContainer" class="toast-container"></div>
 
-  <!-- 讀取遮罩 -->
+  <!-- 讀取遮罩（僅在表單提交或強制動作時顯示） -->
   <div id="loadingOverlay" class="loading-overlay">
     <div class="spinner"></div>
-    <div style="font-weight:600; font-size:0.92rem; letter-spacing:1px;">同步資料中...</div>
+    <div id="loadingOverlayText" style="font-weight:600; font-size:0.92rem; letter-spacing:1px;">處理中...</div>
   </div>
 
   <!-- ==================== 1. 登入頁面 ==================== -->
@@ -1251,6 +1276,12 @@
         </ul>
 
         <div class="nav-user">
+          <!-- 背景靜默同步小燈號（不阻擋操作） -->
+          <div id="bgSyncIndicator" class="bg-sync-pill" title="正在背景同步最新資料">
+            <span class="bg-sync-spinner"></span>
+            <span>同步中</span>
+          </div>
+
           <div class="user-info">
             <span id="navRoleBadge" class="badge badge-member">社員</span>
             <span id="navUserName" class="user-name-text" style="font-weight: 700; color: var(--obsidian); padding-right: 4px;">使用者</span>
@@ -1480,7 +1511,7 @@
               <h3 class="card-title">📋 我的申請紀錄</h3>
               <div class="card-desc">依借用日期由近到遠排列</div>
             </div>
-            <button class="btn btn-secondary btn-sm" onclick="loadMyRoomRequests()">重新整理</button>
+            <button class="btn btn-secondary btn-sm" onclick="loadMyRoomRequests(true)">🔄 重新整理</button>
           </div>
 
           <div class="table-container">
@@ -1514,8 +1545,9 @@
           <div class="card-header">
             <div>
               <h2 class="card-title">📝 團練請假登記</h2>
-              <div class="card-desc">團練前 7 天開放登記，請於團練當天中午 12:00 前完成填寫；請假後座位表將自動重排。</div>
+              <div class="card-desc">團練前 7 天開放登記，請於團練當天中午 12:00 前完成填寫或取消請假；請假後座位表將自動重排。</div>
             </div>
+            <button class="btn btn-secondary btn-sm" onclick="loadAbsenceTab(true)">🔄 重新整理</button>
           </div>
 
           <div id="upcomingPracticesList">
@@ -1563,9 +1595,9 @@
             <div class="seating-controls">
               <div style="display: flex; align-items: center; gap: 8px;">
                 <label style="font-weight: 700; font-size: 0.88rem; color: var(--text-secondary);">場次：</label>
-                <select id="seatingPracticeSelect" class="form-control" style="width: auto; padding: 8px 14px;" onchange="handleSeatingChange()"></select>
+                <select id="seatingPracticeSelect" class="form-control" style="width: auto; padding: 8px 14px;" onchange="handleSeatingChange(false)"></select>
               </div>
-              <button class="btn btn-secondary btn-sm" onclick="handleSeatingChange()">重新整理</button>
+              <button class="btn btn-secondary btn-sm" onclick="loadSeatingTab(true)">🔄 重新整理</button>
             </div>
           </div>
 
@@ -1604,14 +1636,16 @@
                 <div class="card-desc">依借用日期由近到遠排列；可線上填寫審核狀態、可借用時間與核定教室。</div>
               </div>
               <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-                <select id="adminRoomFilterStatus" class="form-control" style="width: auto; padding: 8px 14px;" onchange="renderAdminRoomTable()">
+                <!-- 注意：改為呼叫純前端秒篩 filterAdminRoomTable()，不再重新發 API 卡畫面！ -->
+                <select id="adminRoomFilterStatus" class="form-control" style="width: auto; padding: 8px 14px;" onchange="filterAdminRoomTable()">
                   <option value="ALL">全部狀態</option>
                   <option value="已收件">已收件</option>
                   <option value="已通過">已通過</option>
                   <option value="未通過">未通過</option>
                   <option value="無教室">無教室</option>
                 </select>
-                <input type="date" id="adminRoomFilterDate" class="form-control" style="width: auto; padding: 7px 14px;" onchange="renderAdminRoomTable()">
+                <input type="date" id="adminRoomFilterDate" class="form-control" style="width: auto; padding: 7px 14px;" onchange="filterAdminRoomTable()">
+                <button class="btn btn-secondary btn-sm" onclick="renderAdminRoomTable(true)">🔄 重新整理</button>
                 <button class="btn btn-secondary btn-sm" onclick="exportRoomRequestsCSV()">📥 匯出報表</button>
               </div>
             </div>
@@ -1649,7 +1683,10 @@
                 <h3 class="card-title">🎺 團練場次排程管理</h3>
                 <div class="card-desc">依排練日期由近到遠排列；新增團練時系統將自動帶入預設時間、地點與當天中午 12:00 截止。</div>
               </div>
-              <button class="btn btn-primary btn-sm" onclick="openPracticeModal()">＋ 新增團練場次</button>
+              <div style="display: flex; gap: 8px;">
+                <button class="btn btn-secondary btn-sm" onclick="renderAdminPracticesTable(true)">🔄 重新整理</button>
+                <button class="btn btn-primary btn-sm" onclick="openPracticeModal()">＋ 新增團練場次</button>
+              </div>
             </div>
 
             <div class="table-container">
@@ -1681,7 +1718,8 @@
               </div>
               <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
                 <label style="font-weight: 700; font-size: 0.88rem; color: var(--text-secondary);">選取團練：</label>
-                <select id="adminAbsencePracticeSelect" class="form-control" style="width: auto; padding: 8px 14px;" onchange="renderAdminAbsenceStats()"></select>
+                <select id="adminAbsencePracticeSelect" class="form-control" style="width: auto; padding: 8px 14px;" onchange="renderAdminAbsenceStats(false)"></select>
+                <button class="btn btn-secondary btn-sm" onclick="renderAdminAbsenceStats(true)">🔄 重新整理</button>
                 <button class="btn btn-secondary btn-sm" onclick="exportAbsenceCSV()">📥 匯出假單</button>
               </div>
             </div>
@@ -1785,7 +1823,9 @@
                 <div class="card-desc">支援依樂器聲部一次批次建立多位社員帳號、變更角色權限、重設密碼或刪除退社帳號。</div>
               </div>
               <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-                <input type="text" id="adminMemberSearchInput" class="form-control" placeholder="搜尋姓名、信箱、樂器..." style="width: 220px; padding: 8px 14px;" oninput="renderAdminMembersTable()">
+                <!-- 搜尋改為純前端秒搜 filterAdminMembersTable() -->
+                <input type="text" id="adminMemberSearchInput" class="form-control" placeholder="搜尋姓名、信箱、樂器..." style="width: 220px; padding: 8px 14px;" oninput="filterAdminMembersTable()">
+                <button class="btn btn-secondary btn-sm" onclick="renderAdminMembersTable(true)">🔄 重新整理</button>
                 <button class="btn btn-primary btn-sm" onclick="openAddMemberModal()">＋ 批次新增社員</button>
               </div>
             </div>
@@ -2083,23 +2123,14 @@
     </div>
   </div>
 
-  <!-- ==================== 系統邏輯 ==================== -->
+  <!-- ==================== 系統核心邏輯（含極速快取與自動重試引擎） ==================== -->
   <script>
     const GAS_URL = 'https://script.google.com/macros/s/AKfycbzRYlRMKgd9LOsbk92ayqqtDrdOEbZZtSzfwU5UTXqeQULPtEEC_5AtIas-uiMfzBQ/exec';
 
     const PERIOD_LABELS = {
-      '1': '1節',
-      '2': '2節',
-      '3': '3節',
-      '4': '4節',
-      'E': 'E節',
-      '5': '5節',
-      '6': '6節',
-      '7': '7節',
-      '8': '8節',
-      '9': '9節',
-      'A': 'A節',
-      'B': 'B節'
+      '1': '1節', '2': '2節', '3': '3節', '4': '4節',
+      'E': 'E節', '5': '5節', '6': '6節', '7': '7節',
+      '8': '8節', '9': '9節', 'A': 'A節', 'B': 'B節'
     };
     const ALL_PERIOD_KEYS = ['1', '2', '3', '4', 'E', '5', '6', '7', '8', '9', 'A', 'B'];
 
@@ -2131,6 +2162,292 @@
 
     let session = null;
 
+    // =========================================================================
+    // 🚀 極速快取中心 (AppStore)：解決每次切換頁面都要「同步資料中...」轉圈圈的問題
+    // =========================================================================
+    const appStore = {
+      dashboard: null,
+      myRooms: null,
+      allRooms: null,
+      practices: null,
+      myAbsences: null,
+      absencesByPractice: {},
+      seatingLayouts: null,
+      members: null,
+      settings: null,
+      ts: {}
+    };
+
+    const CACHE_TTL_MS = 90 * 1000; // 90 秒內切換頁籤完全不重發請求，0 秒瞬開
+
+    function loadCacheFromStorage() {
+      try {
+        const raw = sessionStorage.getItem('scu_band_fast_cache');
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          Object.assign(appStore, parsed);
+        }
+      } catch (e) {}
+    }
+
+    function saveCacheToStorage() {
+      try {
+        sessionStorage.setItem('scu_band_fast_cache', JSON.stringify(appStore));
+      } catch (e) {}
+    }
+
+    function markCacheFresh(key) {
+      appStore.ts[key] = Date.now();
+      saveCacheToStorage();
+    }
+
+    function isCacheFresh(key) {
+      return appStore.ts[key] && (Date.now() - appStore.ts[key] < CACHE_TTL_MS);
+    }
+
+    function clearAllCache() {
+      appStore.dashboard = null;
+      appStore.myRooms = null;
+      appStore.allRooms = null;
+      appStore.practices = null;
+      appStore.myAbsences = null;
+      appStore.absencesByPractice = {};
+      appStore.seatingLayouts = null;
+      appStore.members = null;
+      appStore.settings = null;
+      appStore.ts = {};
+      sessionStorage.removeItem('scu_band_fast_cache');
+    }
+
+    // =========================================================================
+    // 🛡️ 防呆網路引擎：支援自動重試 (Auto-Retry)、同請求合併、背景靜默同步
+    // =========================================================================
+    let blockingLockCount = 0;
+    let bgSyncCount = 0;
+    const inflightRequests = new Map();
+
+    function updateLoadingIndicators() {
+      const overlay = document.getElementById('loadingOverlay');
+      const bgPill = document.getElementById('bgSyncIndicator');
+      if (overlay) {
+        overlay.classList.toggle('active', blockingLockCount > 0);
+      }
+      if (bgPill) {
+        bgPill.classList.toggle('active', bgSyncCount > 0 && blockingLockCount === 0);
+      }
+    }
+
+    /**
+     * @param {string} action 後端動作名稱
+     * @param {object} params 傳遞參數
+     * @param {object} options { silent: boolean (為 true 時不蓋黑幕轉圈圈), retries: number }
+     */
+    async function api(action, params = {}, options = {}) {
+      const { silent = false, retries = 2 } = options;
+
+      // 針對讀取類型的請求進行「併發合併」(Deduplication)，避免同時發出重複請求
+      const isReadAction = action.startsWith('get') || action === 'initAppBundle';
+      const reqKey = isReadAction ? `${action}:${JSON.stringify(params)}` : null;
+
+      if (reqKey && inflightRequests.has(reqKey)) {
+        return inflightRequests.get(reqKey);
+      }
+
+      if (silent) {
+        bgSyncCount++;
+      } else {
+        blockingLockCount++;
+      }
+      updateLoadingIndicators();
+
+      const taskPromise = (async () => {
+        try {
+          if (!GAS_URL || GAS_URL === 'YOUR_GAS_WEB_APP_URL_HERE') {
+            await new Promise(r => setTimeout(r, 80));
+            return executeMockApi(action, params);
+          }
+
+          let lastError = null;
+          for (let attempt = 0; attempt <= retries; attempt++) {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 22000); // 22秒超時保護
+
+            try {
+              const response = await fetch(GAS_URL, {
+                method: 'POST',
+                mode: 'cors',
+                redirect: 'follow',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify({ action, ...params }),
+                signal: controller.signal
+              });
+              clearTimeout(timeoutId);
+
+              if (!response.ok) {
+                throw new Error(`伺服器回應異常 (${response.status})`);
+              }
+
+              const data = await response.json();
+              if (data.success === false) {
+                const bizErr = new Error(data.message || '操作失敗');
+                bizErr.isBusinessError = true;
+                throw bizErr;
+              }
+              return data;
+            } catch (err) {
+              clearTimeout(timeoutId);
+              lastError = err;
+              if (err.isBusinessError) break; // 業務邏輯錯誤（如密碼錯、已截止）不重試
+
+              // 網路瞬斷或 Failed to fetch：自動等待後重試
+              if (attempt < retries) {
+                console.warn(`[API 自動重試 ${attempt + 1}/${retries}] ${action}:`, err.message);
+                await new Promise(r => setTimeout(r, 700 * (attempt + 1)));
+              }
+            }
+          }
+
+          throw lastError;
+        } catch (err) {
+          console.error('API Error:', err);
+          let friendlyMsg = err.message || '連線異常，請稍後再試';
+          if (friendlyMsg.includes('Failed to fetch') || friendlyMsg.includes('NetworkError') || err.name === 'AbortError') {
+            friendlyMsg = '網路連線不穩或伺服器忙碌中，請再試一次';
+          }
+          // 若是背景靜默更新失敗且畫面已有快取，不干擾使用者；否則顯示提示
+          if (!silent || err.isBusinessError) {
+            showToast(friendlyMsg, 'error');
+          }
+          throw err;
+        } finally {
+          if (reqKey) inflightRequests.delete(reqKey);
+          if (silent) {
+            bgSyncCount = Math.max(0, bgSyncCount - 1);
+          } else {
+            blockingLockCount = Math.max(0, blockingLockCount - 1);
+          }
+          updateLoadingIndicators();
+        }
+      })();
+
+      if (reqKey) {
+        inflightRequests.set(reqKey, taskPromise);
+      }
+      return taskPromise;
+    }
+
+    /**
+     * 🚀 打包預載引擎：支援新舊版 code.gs，一登入就在背景把常用資料全部拉好
+     */
+    async function preloadAllDataInBackground() {
+      if (!session) return;
+      try {
+        // 優先嘗試呼叫新版 code.gs 的單一打包 API (1次請求抵6次)
+        const res = await api('initAppBundle', { email: session.email, name: session.name }, { silent: true, retries: 1 });
+        if (res && res.bundle) {
+          const b = res.bundle;
+          if (b.settings) { appStore.settings = b.settings; cachedSettings = b.settings; markCacheFresh('settings'); }
+          if (b.practices) { appStore.practices = sortByDateClosestFirst(b.practices, 'date'); markCacheFresh('practices'); }
+          if (b.myRooms) { appStore.myRooms = sortByDateClosestFirst(b.myRooms, 'date'); markCacheFresh('myRooms'); }
+          if (b.myAbsences) { appStore.myAbsences = sortByDateClosestFirst(b.myAbsences, 'practiceDate'); markCacheFresh('myAbsences'); }
+          if (b.seatingLayouts) { appStore.seatingLayouts = b.seatingLayouts; currentLayouts = b.seatingLayouts; markCacheFresh('seatingLayouts'); }
+          if (b.dashboard) { appStore.dashboard = b.dashboard; markCacheFresh('dashboard'); }
+          if (b.allRooms) { appStore.allRooms = sortByDateClosestFirst(b.allRooms, 'date'); markCacheFresh('allRooms'); }
+          if (b.members) { appStore.members = b.members; markCacheFresh('members'); }
+          if (b.absencesByPractice) {
+            Object.assign(appStore.absencesByPractice, b.absencesByPractice);
+          }
+          // 如果當前在首頁，立即用最新資料刷新畫面
+          if (document.getElementById('tabHome').classList.contains('active')) {
+            renderDashboardUI(appStore.dashboard);
+          }
+          return;
+        }
+      } catch (e) {
+        // 若後端尚未更新 initAppBundle，自動退回平行預載主要資料
+        Promise.allSettled([
+          ensureSettingsLoaded(false),
+          ensurePracticesLoaded(false),
+          ensureMyAbsencesLoaded(false),
+          ensureSeatingLayoutsLoaded(false)
+        ]);
+      }
+    }
+
+    // 共用快取讀取器
+    async function ensureSettingsLoaded(force = false) {
+      if (!force && appStore.settings && isCacheFresh('settings')) {
+        cachedSettings = appStore.settings;
+        return appStore.settings;
+      }
+      const res = await api('getSettings', {}, { silent: true });
+      appStore.settings = res.settings;
+      cachedSettings = res.settings;
+      markCacheFresh('settings');
+      return appStore.settings;
+    }
+
+    async function ensurePracticesLoaded(force = false) {
+      if (!force && appStore.practices && isCacheFresh('practices')) {
+        allPracticesCache = appStore.practices;
+        return appStore.practices;
+      }
+      const res = await api('getPractices', {}, { silent: true });
+      appStore.practices = sortByDateClosestFirst(res.practices || [], 'date');
+      allPracticesCache = appStore.practices;
+      markCacheFresh('practices');
+      return appStore.practices;
+    }
+
+    async function ensureMyAbsencesLoaded(force = false) {
+      if (!force && appStore.myAbsences && isCacheFresh('myAbsences')) {
+        return appStore.myAbsences;
+      }
+      const res = await api('getAbsences', { email: session.email, name: session.name }, { silent: true });
+      appStore.myAbsences = sortByDateClosestFirst(res.absences || [], 'practiceDate');
+      markCacheFresh('myAbsences');
+      return appStore.myAbsences;
+    }
+
+    async function ensureSeatingLayoutsLoaded(force = false) {
+      if (!force && appStore.seatingLayouts && isCacheFresh('seatingLayouts')) {
+        currentLayouts = appStore.seatingLayouts;
+        return appStore.seatingLayouts;
+      }
+      const res = await api('getSeatingTemplates', {}, { silent: true });
+      appStore.seatingLayouts = res.templates || res.layouts || [];
+      currentLayouts = appStore.seatingLayouts;
+      markCacheFresh('seatingLayouts');
+      return appStore.seatingLayouts;
+    }
+
+    async function ensurePracticeAbsencesLoaded(practiceId, force = false) {
+      if (!practiceId) return [];
+      const cacheKey = 'abs_' + practiceId;
+      if (!force && appStore.absencesByPractice[practiceId] && isCacheFresh(cacheKey)) {
+        return appStore.absencesByPractice[practiceId];
+      }
+      const res = await api('getAbsences', { practiceId }, { silent: true });
+      appStore.absencesByPractice[practiceId] = res.absences || [];
+      markCacheFresh(cacheKey);
+      return appStore.absencesByPractice[practiceId];
+    }
+
+    async function ensureMembersLoaded(force = false) {
+      if (!force && appStore.members && isCacheFresh('members')) {
+        allMembersCache = appStore.members;
+        return appStore.members;
+      }
+      const res = await api('getMembers', { email: session.email, name: session.name }, { silent: true });
+      appStore.members = res.users || res.members || [];
+      allMembersCache = appStore.members;
+      markCacheFresh('members');
+      return appStore.members;
+    }
+
+    // =========================================================================
+    // 工具函式
+    // =========================================================================
     function escapeHtml(str) {
       return String(str || '')
         .replace(/&/g, '&amp;')
@@ -2139,9 +2456,6 @@
         .replace(/"/g, '&quot;');
     }
 
-    /**
-     * 智慧排版解析器：將 FB 社團公告自動拆解為條列式，並提供展開/收合功能
-     */
     function formatPracticeNotesHtml(rawNotes, uid) {
       let text = String(rawNotes || '全體合奏排練').trim();
       text = text.replace(/^["']|["']$/g, '').trim();
@@ -2247,44 +2561,6 @@
       return clean.substring(0, 16);
     }
 
-    async function api(action, params = {}) {
-      showLoading(true);
-      try {
-        if (GAS_URL && GAS_URL !== 'YOUR_GAS_WEB_APP_URL_HERE') {
-          const response = await fetch(GAS_URL, {
-            method: 'POST',
-            redirect: 'follow',
-            headers: { 'Content-Type': 'text/plain' },
-            body: JSON.stringify({ action, ...params })
-          });
-          if (!response.ok) {
-            throw new Error(`連線錯誤 (${response.status})`);
-          }
-          const data = await response.json();
-          if (data.success === false) {
-            const errMsg = data.message || '操作失敗，請稍後再試';
-            showToast(errMsg, 'error');
-            throw new Error(errMsg);
-          }
-          return data;
-        } else {
-          await new Promise(r => setTimeout(r, 120));
-          return executeMockApi(action, params);
-        }
-      } catch (err) {
-        console.error('API Error:', err);
-        if (!err.message || (!err.message.includes('連線錯誤') && err.message !== '操作失敗，請稍後再試')) {
-          const isAlreadyShown = err.message && (err.message.includes('找不到') || err.message.includes('密碼') || err.message.includes('已存在') || err.message.includes('已被') || err.message.includes('超過') || err.message.includes('截止') || err.message.includes('開放') || err.message.includes('無法刪除'));
-          if (!isAlreadyShown) {
-            showToast(err.message || '連線錯誤，請稍後再試', 'error');
-          }
-        }
-        throw err;
-      } finally {
-        showLoading(false);
-      }
-    }
-
     function showToast(msg, type = 'info') {
       const container = document.getElementById('toastContainer');
       const toast = document.createElement('div');
@@ -2301,12 +2577,6 @@
         toast.classList.add('hide');
         setTimeout(() => toast.remove(), 320);
       }, 3000);
-    }
-
-    function showLoading(show) {
-      const overlay = document.getElementById('loadingOverlay');
-      if (show) overlay.classList.add('active');
-      else overlay.classList.remove('active');
     }
 
     function showPage(pageId) {
@@ -2337,10 +2607,10 @@
       if (targetNav) targetNav.classList.add('active');
       if (targetMobNav) targetMobNav.classList.add('active');
 
-      if (tabId === 'tabHome') loadDashboard();
-      if (tabId === 'tabRoom') initRoomTab();
-      if (tabId === 'tabAbsence') loadAbsenceTab();
-      if (tabId === 'tabSeating') loadSeatingTab();
+      if (tabId === 'tabHome') loadDashboard(false);
+      if (tabId === 'tabRoom') initRoomTab(false);
+      if (tabId === 'tabAbsence') loadAbsenceTab(false);
+      if (tabId === 'tabSeating') loadSeatingTab(false);
       if (tabId === 'tabAdmin') initAdminTab();
     }
 
@@ -2358,12 +2628,12 @@
       if (targetBtn) targetBtn.classList.add('active');
       if (targetContent) targetContent.classList.add('active');
 
-      if (subtabId === 'adminRoom') renderAdminRoomTable();
-      if (subtabId === 'adminPractice') renderAdminPracticesTable();
-      if (subtabId === 'adminAbsence') renderAdminAbsenceStats();
-      if (subtabId === 'adminSeating') loadAdminSeatingTab();
-      if (subtabId === 'adminMembers') renderAdminMembersTable();
-      if (subtabId === 'adminSettings') renderAdminSettingsTab();
+      if (subtabId === 'adminRoom') renderAdminRoomTable(false);
+      if (subtabId === 'adminPractice') renderAdminPracticesTable(false);
+      if (subtabId === 'adminAbsence') renderAdminAbsenceStats(false);
+      if (subtabId === 'adminSeating') loadAdminSeatingTab(false);
+      if (subtabId === 'adminMembers') renderAdminMembersTable(false);
+      if (subtabId === 'adminSettings') renderAdminSettingsTab(false);
     }
 
     function getWeekday(dateStr) {
@@ -2388,8 +2658,9 @@
       const password = document.getElementById('loginPassword').value;
 
       try {
-        const res = await api('login', { identifier, email: identifier, password });
+        const res = await api('login', { identifier, email: identifier, password }, { silent: false });
         if (res.success) {
+          clearAllCache();
           session = res.user;
           session.instrument = formatInstrumentDisplay(session.instrument, session.section);
           session.section = extractSectionAbbr(session.instrument, session.section);
@@ -2399,6 +2670,7 @@
           setupUserSessionUI();
           showPage('mainApp');
           showTab('tabHome');
+          preloadAllDataInBackground();
 
           if (password === '0000' || res.mustChangePassword || !session.email) {
             setTimeout(() => openChangePasswordModal(true), 350);
@@ -2409,6 +2681,7 @@
 
     function handleLogout() {
       session = null;
+      clearAllCache();
       document.body.classList.remove('is-admin');
       localStorage.removeItem('band_session');
       document.getElementById('loginPassword').value = '';
@@ -2438,16 +2711,31 @@
     }
 
     // ==========================================
-    // 首頁
+    // 1. 首頁 (SWR 秒開架構)
     // ==========================================
-    async function loadDashboard() {
+    async function loadDashboard(force = false) {
       if (!session) return;
       const cleanInst = formatInstrumentDisplay(session.instrument, session.section);
       document.getElementById('homeWelcomeTitle').innerText = '歡迎回來，' + session.name + '！';
       document.getElementById('homeWelcomeSubtitle').innerText = '東吳管樂社  ・負責樂器：' + cleanInst;
 
-      const data = await api('getDashboard', { email: session.email, name: session.name });
+      // 1. 若有快取，0 秒立即渲染！
+      if (appStore.dashboard) {
+        renderDashboardUI(appStore.dashboard);
+        if (!force && isCacheFresh('dashboard')) return;
+      }
 
+      // 2. 背景靜默更新
+      try {
+        const data = await api('getDashboard', { email: session.email, name: session.name }, { silent: true });
+        appStore.dashboard = data;
+        markCacheFresh('dashboard');
+        renderDashboardUI(data);
+      } catch (err) {}
+    }
+
+    function renderDashboardUI(data) {
+      if (!data) return;
       const nextPrac = data.nextPractice;
       const upcomingEl = document.getElementById('homeUpcomingPracticeContent');
       if (nextPrac) {
@@ -2514,7 +2802,7 @@
     }
 
     // ==========================================
-    // 借教室
+    // 2. 借教室
     // ==========================================
     let cachedSettings = null;
 
@@ -2550,12 +2838,21 @@
       };
     }
 
-    async function initRoomTab() {
-      if (!cachedSettings) {
-        const res = await api('getSettings');
-        cachedSettings = res.settings;
-      }
+    async function initRoomTab(force = false) {
+      // 先用預設或現有快取瞬間渲染表單與節次，完全不等待網路
+      applyRoomBookingWindowUI();
+      handleRoomDateChange();
+      loadMyRoomRequests(force);
 
+      // 背景確保設定為最新
+      try {
+        await ensureSettingsLoaded(force);
+        applyRoomBookingWindowUI();
+        handleRoomDateChange();
+      } catch (e) {}
+    }
+
+    function applyRoomBookingWindowUI() {
       const win = getNextWeekBookingWindow();
       const banner = document.getElementById('roomBookingRuleBanner');
       const dateInput = document.getElementById('roomDateInput');
@@ -2580,31 +2877,25 @@
         banner.innerHTML = `💡 <strong>借教室開放時間規則：</strong> 當週僅開放預約下週 <strong>${win.minDateStr}（一）～ ${win.maxDateStr}（日）</strong> 之教室，請於本週 <strong>${win.deadlineLabel}</strong> 前完成填寫。`;
         submitBtn.disabled = false;
       }
-
-      handleRoomDateChange();
-      loadMyRoomRequests();
     }
 
-    async function handleRoomDateChange() {
+    function handleRoomDateChange() {
       const dateVal = document.getElementById('roomDateInput').value;
       if (!dateVal) return;
       const weekday = getWeekday(dateVal);
       const indicator = document.getElementById('roomWeekdayIndicator');
       indicator.innerText = '📅 預約日期：' + dateVal + '（星期' + weekday + '）';
-
-      if (!cachedSettings) {
-        const res = await api('getSettings');
-        cachedSettings = res.settings;
-      }
-
       renderPeriodOptions(dateVal, weekday);
     }
 
     function renderPeriodOptions(dateVal, weekday) {
       const grid = document.getElementById('roomPeriodGrid');
       const weekendNote = document.getElementById('roomPeriodWeekendNote');
-      grid.innerHTML = '';
+      // 保留目前已勾選的節次
+      const previouslyChecked = new Set();
+      document.querySelectorAll('input[name="roomPeriodCheckbox"]:checked').forEach(cb => previouslyChecked.add(cb.value));
 
+      grid.innerHTML = '';
       let allowedPeriods = ALL_PERIOD_KEYS;
 
       if (weekday === '六') {
@@ -2627,10 +2918,11 @@
       ALL_PERIOD_KEYS.forEach(key => {
         if (!allowedPeriods.includes(key)) return;
         const label = PERIOD_LABELS[key] || key + '節';
+        const isChecked = previouslyChecked.has(key);
         const chip = document.createElement('label');
-        chip.className = 'period-chip';
+        chip.className = 'period-chip' + (isChecked ? ' selected' : '');
         chip.innerHTML = `
-          <input type="checkbox" name="roomPeriodCheckbox" value="` + key + `" onchange="this.parentElement.classList.toggle('selected', this.checked)">
+          <input type="checkbox" name="roomPeriodCheckbox" value="` + key + `" ${isChecked ? 'checked' : ''} onchange="this.parentElement.classList.toggle('selected', this.checked)">
           <span>` + label + `</span>
         `;
         grid.appendChild(chip);
@@ -2690,7 +2982,7 @@
           doNotDisturb,
           needs,
           notes
-        });
+        }, { silent: false });
 
         showToast('借用申請已成功送出！', 'success');
         document.getElementById('roomNotes').value = '';
@@ -2702,16 +2994,33 @@
           cb.parentElement.classList.remove('selected');
         });
         toggleAllPeriods(false);
-        loadMyRoomRequests();
+
+        // 清除相關快取並重新載入
+        appStore.ts.myRooms = 0;
+        appStore.ts.allRooms = 0;
+        appStore.ts.dashboard = 0;
+        loadMyRoomRequests(true);
       } catch (err) {}
     }
 
-    async function loadMyRoomRequests() {
+    async function loadMyRoomRequests(force = false) {
       if (!session) return;
-      const res = await api('getRoomRequests', { email: session.email, name: session.name });
+      if (appStore.myRooms) {
+        renderMyRoomRequestsTable(appStore.myRooms);
+        if (!force && isCacheFresh('myRooms')) return;
+      }
+
+      try {
+        const res = await api('getRoomRequests', { email: session.email, name: session.name }, { silent: true });
+        appStore.myRooms = sortByDateClosestFirst(res.requests || [], 'date');
+        markCacheFresh('myRooms');
+        renderMyRoomRequestsTable(appStore.myRooms);
+      } catch (err) {}
+    }
+
+    function renderMyRoomRequestsTable(list) {
       const tbody = document.getElementById('myRoomRequestsTableBody');
-      const list = sortByDateClosestFirst(res.requests || [], 'date');
-      if (list.length === 0) {
+      if (!list || list.length === 0) {
         tbody.innerHTML = '<tr><td colspan="11" style="text-align:center; color:var(--text-muted);">目前無借用申請紀錄</td></tr>';
         return;
       }
@@ -2734,22 +3043,35 @@
     }
 
     // ==========================================
-    // 請假
+    // 3. 請假（含新增「取消請假 / 銷假」按鈕）
     // ==========================================
-    async function loadAbsenceTab() {
+    async function loadAbsenceTab(force = false) {
       if (!session) return;
-      const res = await api('getPractices');
-      const practices = sortByDateClosestFirst(res.practices || [], 'date');
-      const myAbsencesRes = await api('getAbsences', { email: session.email, name: session.name });
-      const myAbsences = sortByDateClosestFirst(myAbsencesRes.absences || [], 'practiceDate');
 
+      // 1. 快取優先秒開
+      if (appStore.practices && appStore.myAbsences) {
+        renderAbsenceTabUI(appStore.practices, appStore.myAbsences);
+        if (!force && isCacheFresh('practices') && isCacheFresh('myAbsences')) return;
+      }
+
+      // 2. 平行請求更新（不再排隊等兩次！）
+      try {
+        const [practices, myAbsences] = await Promise.all([
+          ensurePracticesLoaded(force),
+          ensureMyAbsencesLoaded(force)
+        ]);
+        renderAbsenceTabUI(practices, myAbsences);
+      } catch (err) {}
+    }
+
+    function renderAbsenceTabUI(practices, myAbsences) {
       const container = document.getElementById('upcomingPracticesList');
-      if (practices.length === 0) {
+      if (!practices || practices.length === 0) {
         container.innerHTML = '<p style="color:var(--text-muted); text-align:center; padding:20px;">目前尚無已排定之團練場次。</p>';
       } else {
         const now = new Date();
         container.innerHTML = practices.map(p => {
-          const myRec = myAbsences.find(a => a.practiceId === p.id);
+          const myRec = (myAbsences || []).find(a => a.practiceId === p.id);
           const deadlineDate = new Date(String(p.deadline).replace(' ', 'T'));
           const isExpired = !isNaN(deadlineDate.getTime()) && deadlineDate < now;
 
@@ -2763,7 +3085,7 @@
           let actionBtnText = '📝 我要請假';
           if (myRec) {
             statusHtml = '<span class="badge badge-rejected">已請假 (' + escapeHtml(myRec.reason) + ')</span>';
-            actionBtnText = '✏️ 修改請假事由';
+            actionBtnText = '✏️ 修改事由';
           } else if (isTooEarly) {
             actionBtnText = `⏳ ${openDateStr} 開放請假`;
           } else if (isExpired) {
@@ -2771,6 +3093,7 @@
           }
 
           const disableBtn = isExpired || isTooEarly;
+          const safeReason = myRec ? String(myRec.reason || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'") : '';
 
           return `
             <div class="practice-card">
@@ -2786,9 +3109,16 @@
 
               <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
                 <span class="practice-deadline-badge">⏰ 請假截止時間：` + formatDateTimeDisplay(p.deadline) + (isExpired ? ' (已截止)' : '') + `</span>
-                <button type="button" class="btn btn-outline btn-sm" ` + (disableBtn ? 'disabled' : '') + ` onclick="openSubmitAbsenceModal('` + p.id + `', '` + p.date + `', '` + (myRec ? myRec.reason.replace(/'/g, "\\'") : '') + `')">
-                  ` + actionBtnText + `
-                </button>
+                <div style="display:flex; gap:8px; align-items:center;">
+                  ${myRec && !disableBtn ? `
+                    <button type="button" class="btn btn-danger btn-sm" onclick="cancelMyAbsenceConfirm('${myRec.id}', '${p.id}', '${p.date}')">
+                      🗑️ 取消請假（恢復出席）
+                    </button>
+                  ` : ''}
+                  <button type="button" class="btn btn-outline btn-sm" ` + (disableBtn ? 'disabled' : '') + ` onclick="openSubmitAbsenceModal('` + p.id + `', '` + p.date + `', '` + safeReason + `')">
+                    ` + actionBtnText + `
+                  </button>
+                </div>
               </div>
             </div>
           `;
@@ -2796,7 +3126,7 @@
       }
 
       const historyTbody = document.getElementById('myAbsenceHistoryTableBody');
-      if (myAbsences.length === 0) {
+      if (!myAbsences || myAbsences.length === 0) {
         historyTbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:var(--text-muted);">無請假紀錄，全勤出席！🎺</td></tr>';
       } else {
         historyTbody.innerHTML = myAbsences.map(a => {
@@ -2839,16 +3169,38 @@
           section: session.section,
           instrument: session.instrument,
           reason
-        });
+        }, { silent: false });
 
         showToast('請假事由已登記！', 'success');
         closeSubmitAbsenceModal();
-        loadAbsenceTab();
+
+        // 使請假與首頁快取失效並重新載入
+        appStore.ts.myAbsences = 0;
+        appStore.ts.dashboard = 0;
+        appStore.ts['abs_' + practiceId] = 0;
+        loadAbsenceTab(true);
+      } catch (err) {}
+    }
+
+    async function cancelMyAbsenceConfirm(absenceId, practiceId, dateStr) {
+      if (!confirm(`確定要取消 ${dateStr} 團練的請假登記，恢復為「出席」嗎？`)) return;
+      try {
+        await api('deleteAbsence', {
+          email: session.email,
+          name: session.name,
+          id: absenceId
+        }, { silent: false });
+
+        showToast('已取消請假，恢復為出席狀態！', 'success');
+        appStore.ts.myAbsences = 0;
+        appStore.ts.dashboard = 0;
+        appStore.ts['abs_' + practiceId] = 0;
+        loadAbsenceTab(true);
       } catch (err) {}
     }
 
     // ==========================================
-    // 座位表
+    // 4. 座位表 (平行載入與快取秒開)
     // ==========================================
     let currentLayouts = [];
 
@@ -2867,12 +3219,30 @@
       return layout;
     }
 
-    async function loadSeatingTab() {
-      const pRes = await api('getPractices');
-      const practices = sortByDateClosestFirst(pRes.practices || [], 'date');
-      const pSelect = document.getElementById('seatingPracticeSelect');
+    async function loadSeatingTab(force = false) {
+      // 1. 快取優先渲染
+      if (appStore.practices && appStore.seatingLayouts) {
+        populateSeatingPracticeSelect(appStore.practices);
+        currentLayouts = appStore.seatingLayouts;
+        handleSeatingChange(force);
+        if (!force && isCacheFresh('practices') && isCacheFresh('seatingLayouts')) return;
+      }
 
-      if (practices.length === 0) {
+      // 2. 平行載入團練與座位表模板
+      try {
+        const [practices, layouts] = await Promise.all([
+          ensurePracticesLoaded(force),
+          ensureSeatingLayoutsLoaded(force)
+        ]);
+        populateSeatingPracticeSelect(practices);
+        currentLayouts = layouts;
+        await handleSeatingChange(force);
+      } catch (err) {}
+    }
+
+    function populateSeatingPracticeSelect(practices) {
+      const pSelect = document.getElementById('seatingPracticeSelect');
+      if (!practices || practices.length === 0) {
         pSelect.innerHTML = '<option value="">目前無團練場次</option>';
       } else {
         pSelect.innerHTML = practices.map((p, idx) => {
@@ -2881,10 +3251,6 @@
           return `<option value="${p.id}" ${isNearest ? 'selected' : 'disabled'}>${p.date} (週${getWeekday(p.date)}) - ${p.location} ${note}</option>`;
         }).join('');
       }
-
-      const tRes = await api('getSeatingTemplates');
-      currentLayouts = tRes.templates || tRes.layouts || [];
-      handleSeatingChange();
     }
 
     function getLayoutForPractice(practiceId) {
@@ -2895,19 +3261,30 @@
       return getDefaultLayoutConfig();
     }
 
-    async function handleSeatingChange() {
+    async function handleSeatingChange(force = false) {
       const practiceId = document.getElementById('seatingPracticeSelect').value;
       const layout = sanitizeLayoutConfig(getLayoutForPractice(practiceId));
 
-      let absences = [];
-      if (practiceId) {
-        const absRes = await api('getAbsences', { practiceId });
-        absences = absRes.absences || [];
+      // 若已有快取請假名單，先秒畫座位圖
+      const cachedAbs = practiceId ? (appStore.absencesByPractice[practiceId] || null) : [];
+      if (cachedAbs) {
+        drawPublicSeatingWithAbsences(layout, cachedAbs);
       }
 
+      if (practiceId) {
+        try {
+          const absences = await ensurePracticeAbsencesLoaded(practiceId, force);
+          drawPublicSeatingWithAbsences(layout, absences);
+        } catch (e) {}
+      } else {
+        drawPublicSeatingWithAbsences(layout, []);
+      }
+    }
+
+    function drawPublicSeatingWithAbsences(layout, absences) {
       const absentBySection = {};
       SECTION_DEFS.forEach(s => absentBySection[s.abbr] = []);
-      absences.forEach(a => {
+      (absences || []).forEach(a => {
         if (!absentBySection[a.section]) absentBySection[a.section] = [];
         absentBySection[a.section].push(a);
       });
@@ -3102,18 +3479,23 @@
     let adminPracticeAbsences = {};
     let draggingSecId = null;
 
-    async function loadAdminSeatingTab() {
-      const pRes = await api('getPractices');
-      const practices = sortByDateClosestFirst(pRes.practices || [], 'date');
-      const tRes = await api('getSeatingTemplates');
-      currentLayouts = tRes.templates || tRes.layouts || [];
+    async function loadAdminSeatingTab(force = false) {
+      const [practices, layouts] = await Promise.all([
+        ensurePracticesLoaded(force),
+        ensureSeatingLayoutsLoaded(force)
+      ]);
+      currentLayouts = layouts;
 
       const select = document.getElementById('adminSeatingTargetSelect');
+      const prevVal = select.value;
       let optionsHtml = `<option value="default">📌 全團預設座位表（所有場次通用基準）</option>`;
       practices.forEach(p => {
         optionsHtml += `<option value="practice_${p.id}">🎺 ${p.date} (週${getWeekday(p.date)}) 單場團練座位表</option>`;
       });
       select.innerHTML = optionsHtml;
+      if (prevVal && Array.from(select.options).some(o => o.value === prevVal)) {
+        select.value = prevVal;
+      }
 
       await handleAdminSeatingTargetChange();
     }
@@ -3134,8 +3516,8 @@
       SECTION_DEFS.forEach(s => adminPracticeAbsences[s.abbr] = []);
       if (targetId.startsWith('practice_')) {
         const practiceId = targetId.replace('practice_', '');
-        const absRes = await api('getAbsences', { practiceId });
-        (absRes.absences || []).forEach(a => {
+        const absList = await ensurePracticeAbsencesLoaded(practiceId, false);
+        absList.forEach(a => {
           if (!adminPracticeAbsences[a.section]) adminPracticeAbsences[a.section] = [];
           adminPracticeAbsences[a.section].push(a);
         });
@@ -3239,27 +3621,42 @@
     async function saveAdminSeatingLayout() {
       if (!adminEditingLayout) return;
       try {
-        await api('saveSeatingTemplate', { email: session.email, adminName: session.name, template: adminEditingLayout });
+        await api('saveSeatingTemplate', { email: session.email, adminName: session.name, template: adminEditingLayout }, { silent: false });
         showToast('座位表位置與設定已儲存！', 'success');
-        const tRes = await api('getSeatingTemplates');
-        currentLayouts = tRes.templates || tRes.layouts || [];
+        await ensureSeatingLayoutsLoaded(true);
       } catch (err) {}
     }
 
     // ==========================================
-    // 幹部後台：1. 借教室管理
+    // 幹部後台：1. 借教室管理（純前端秒篩 + 樂觀更新）
     // ==========================================
     let allRoomRequestsCache = [];
 
-    async function renderAdminRoomTable() {
-      const res = await api('getRoomRequests', { email: session.email, name: session.name, all: true });
-      allRoomRequestsCache = sortByDateClosestFirst(res.requests || [], 'date');
+    async function renderAdminRoomTable(force = false) {
+      // 1. 若有快取，直接秒篩顯示，完全不卡畫面！
+      if (appStore.allRooms) {
+        allRoomRequestsCache = appStore.allRooms;
+        filterAdminRoomTable();
+        if (!force && isCacheFresh('allRooms')) return;
+      }
 
+      // 2. 背景靜默拉取最新資料
+      try {
+        const res = await api('getRoomRequests', { email: session.email, name: session.name, all: true }, { silent: true });
+        allRoomRequestsCache = sortByDateClosestFirst(res.requests || [], 'date');
+        appStore.allRooms = allRoomRequestsCache;
+        markCacheFresh('allRooms');
+        filterAdminRoomTable();
+      } catch (err) {}
+    }
+
+    // 純前端秒篩函式（切換狀態或日期時 0 延遲，不再發網路請求！）
+    function filterAdminRoomTable() {
       const statusFilter = document.getElementById('adminRoomFilterStatus').value;
       const dateFilter = document.getElementById('adminRoomFilterDate').value;
       const tbody = document.getElementById('adminRoomTableBody');
 
-      let list = allRoomRequestsCache;
+      let list = allRoomRequestsCache || [];
       if (statusFilter !== 'ALL') {
         list = list.filter(r => r.status === statusFilter);
       }
@@ -3298,7 +3695,7 @@
             <input type="text" class="form-control" style="padding:5px 8px; font-size:0.84rem; width:95px;" id="adminRoomAssigned_` + item.id + `" value="` + escapeHtml(item.assignedRoom || '') + `" placeholder="如：B209">
           </td>
           <td>
-            <button class="btn btn-primary btn-sm" onclick="saveAdminRoomRow('` + item.id + `')">儲存</button>
+            <button class="btn btn-primary btn-sm" id="adminRoomSaveBtn_` + item.id + `" onclick="saveAdminRoomRow('` + item.id + `')">儲存</button>
           </td>
         </tr>
       `).join('');
@@ -3308,6 +3705,12 @@
       const status = document.getElementById('adminRoomStatus_' + id).value;
       const approvedTime = document.getElementById('adminRoomTime_' + id).value.trim();
       const assignedRoom = document.getElementById('adminRoomAssigned_' + id).value.trim();
+      const saveBtn = document.getElementById('adminRoomSaveBtn_' + id);
+
+      if (saveBtn) {
+        saveBtn.disabled = true;
+        saveBtn.innerText = '儲存中...';
+      }
 
       try {
         const res = await api('updateRoomRequest', {
@@ -3317,7 +3720,19 @@
           status,
           approvedTime,
           assignedRoom
-        });
+        }, { silent: true });
+
+        // 直接更新本地快取，免去整張表重抓的等待時間
+        const target = allRoomRequestsCache.find(r => r.id === id);
+        if (target) {
+          target.status = status;
+          target.approvedTime = approvedTime;
+          target.assignedRoom = assignedRoom;
+          saveCacheToStorage();
+        }
+        appStore.ts.myRooms = 0;
+        appStore.ts.dashboard = 0;
+
         if (res.emailSent) {
           showToast('審查結果已更新，並已寄發通知信給申請人！', 'success');
         } else if (res.emailError) {
@@ -3325,8 +3740,13 @@
         } else {
           showToast('審查結果已更新！', 'success');
         }
-        renderAdminRoomTable();
-      } catch (err) {}
+        filterAdminRoomTable();
+      } catch (err) {
+        if (saveBtn) {
+          saveBtn.disabled = false;
+          saveBtn.innerText = '儲存';
+        }
+      }
     }
 
     function exportRoomRequestsCSV() {
@@ -3358,17 +3778,27 @@
     // ==========================================
     let allPracticesCache = [];
 
-    async function renderAdminPracticesTable() {
-      const res = await api('getPractices');
-      allPracticesCache = sortByDateClosestFirst(res.practices || [], 'date');
-      const tbody = document.getElementById('adminPracticesTableBody');
+    async function renderAdminPracticesTable(force = false) {
+      if (appStore.practices) {
+        allPracticesCache = appStore.practices;
+        drawAdminPracticesTableUI(allPracticesCache);
+        if (!force && isCacheFresh('practices')) return;
+      }
 
-      if (allPracticesCache.length === 0) {
+      try {
+        const practices = await ensurePracticesLoaded(force);
+        drawAdminPracticesTableUI(practices);
+      } catch (err) {}
+    }
+
+    function drawAdminPracticesTableUI(list) {
+      const tbody = document.getElementById('adminPracticesTableBody');
+      if (!list || list.length === 0) {
         tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:var(--text-muted);">尚無團練場次，請點擊上方按鈕建立</td></tr>';
         return;
       }
 
-      tbody.innerHTML = allPracticesCache.map(p => `
+      tbody.innerHTML = list.map(p => `
         <tr>
           <td><strong>` + p.date + `</strong></td>
           <td>週` + getWeekday(p.date) + `</td>
@@ -3439,52 +3869,60 @@
       const notes = document.getElementById('pracNotesInput').value.trim();
 
       try {
-        await api('submitPractice', { email: session.email, name: session.name, id, date, startTime, endTime, location, deadline, notes });
+        await api('submitPractice', { email: session.email, name: session.name, id, date, startTime, endTime, location, deadline, notes }, { silent: false });
         showToast('團練場次已成功儲存！', 'success');
         closePracticeModal();
-        renderAdminPracticesTable();
+        appStore.ts.practices = 0;
+        appStore.ts.dashboard = 0;
+        renderAdminPracticesTable(true);
       } catch (err) {}
     }
 
     async function deletePracticeConfirm(id) {
       if (!confirm('確定要刪除此團練場次嗎？')) return;
       try {
-        await api('deletePractice', { email: session.email, name: session.name, id });
+        await api('deletePractice', { email: session.email, name: session.name, id }, { silent: false });
         showToast('該團練場次已刪除', 'info');
-        renderAdminPracticesTable();
+        appStore.ts.practices = 0;
+        appStore.ts.dashboard = 0;
+        renderAdminPracticesTable(true);
       } catch (err) {}
     }
 
     // ==========================================
-    // 幹部後台：3. 請假統計
+    // 幹部後台：3. 請假統計（平行請求優化）
     // ==========================================
     let currentAdminAbsences = [];
 
-    async function renderAdminAbsenceStats() {
-      const pRes = await api('getPractices');
-      const practices = sortByDateClosestFirst(pRes.practices || [], 'date');
+    async function renderAdminAbsenceStats(force = false) {
       const select = document.getElementById('adminAbsencePracticeSelect');
+      const prevSelectedId = select.value;
 
-      if (practices.length === 0) {
+      // 平行載入團練場次與全體社員名冊
+      const [practices, allMembers] = await Promise.all([
+        ensurePracticesLoaded(force),
+        ensureMembersLoaded(force)
+      ]);
+
+      if (!practices || practices.length === 0) {
         select.innerHTML = '<option value="">無團練場次</option>';
         return;
       }
 
-      if (select.children.length !== practices.length) {
-        select.innerHTML = practices.map(p => `
-          <option value="` + p.id + `">` + p.date + ` (週` + getWeekday(p.date) + `) - ` + p.location + `</option>
-        `).join('');
+      select.innerHTML = practices.map(p => `
+        <option value="` + p.id + `">` + p.date + ` (週` + getWeekday(p.date) + `) - ` + p.location + `</option>
+      `).join('');
+
+      if (prevSelectedId && practices.some(p => p.id === prevSelectedId)) {
+        select.value = prevSelectedId;
       }
 
-      const practiceId = select.value || (practices[0] && practices[0].id);
+      const practiceId = select.value || practices[0].id;
       if (!practiceId) return;
 
-      const memRes = await api('getMembers', { email: session.email, name: session.name });
-      const allMembers = memRes.users || memRes.members || [];
-      const totalMembers = allMembers.length;
+      currentAdminAbsences = await ensurePracticeAbsencesLoaded(practiceId, force);
 
-      const absRes = await api('getAbsences', { email: session.email, name: session.name, practiceId });
-      currentAdminAbsences = absRes.absences || [];
+      const totalMembers = allMembers.length;
       const absentCount = currentAdminAbsences.length;
       const presentCount = Math.max(0, totalMembers - absentCount);
       const rate = totalMembers > 0 ? Math.round((presentCount / totalMembers) * 100) : 0;
@@ -3547,17 +3985,28 @@
     }
 
     // ==========================================
-    // 幹部後台：5. 社員管理
+    // 幹部後台：5. 社員管理（純前端秒搜）
     // ==========================================
     let allMembersCache = [];
 
-    async function renderAdminMembersTable() {
-      const res = await api('getMembers', { email: session.email, name: session.name });
-      allMembersCache = res.users || res.members || [];
+    async function renderAdminMembersTable(force = false) {
+      if (appStore.members) {
+        allMembersCache = appStore.members;
+        filterAdminMembersTable();
+        if (!force && isCacheFresh('members')) return;
+      }
+
+      try {
+        await ensureMembersLoaded(force);
+        filterAdminMembersTable();
+      } catch (err) {}
+    }
+
+    function filterAdminMembersTable() {
       const search = (document.getElementById('adminMemberSearchInput').value || '').toLowerCase();
       const tbody = document.getElementById('adminMembersTableBody');
 
-      let list = allMembersCache;
+      let list = allMembersCache || [];
       if (search) {
         list = list.filter(m => 
           m.name.toLowerCase().includes(search) || 
@@ -3607,14 +4056,19 @@
           targetEmail,
           targetName,
           role: newRole
-        });
+        }, { silent: true });
+
+        const m = allMembersCache.find(x => (targetEmail && x.email === targetEmail) || (targetName && x.name === targetName));
+        if (m) m.role = newRole;
+        saveCacheToStorage();
+
         showToast('社員角色身分已變更！', 'success');
         if (session.name === targetName || (session.email && session.email === targetEmail)) {
           session.role = newRole;
           localStorage.setItem('band_session', JSON.stringify(session));
           setupUserSessionUI();
         }
-        renderAdminMembersTable();
+        filterAdminMembersTable();
       } catch (err) {}
     }
 
@@ -3626,9 +4080,9 @@
           adminName: session.name,
           targetEmail,
           targetName
-        });
+        }, { silent: false });
         showToast('「' + targetName + '」的密碼已重設為 0000！', 'success');
-        renderAdminMembersTable();
+        renderAdminMembersTable(true);
       } catch (err) {}
     }
 
@@ -3640,9 +4094,9 @@
           adminName: session.name,
           targetEmail,
           targetName
-        });
+        }, { silent: false });
         showToast(`已刪除社員「${targetName}」的帳號`, 'info');
-        renderAdminMembersTable();
+        renderAdminMembersTable(true);
       } catch (err) {}
     }
 
@@ -3677,31 +4131,41 @@
           section,
           instrument,
           role
-        });
+        }, { silent: false });
         const count = res.addedCount !== undefined ? res.addedCount : names.length;
         const skipMsg = (res.skippedNames && res.skippedNames.length > 0) ? `（略過重複：${res.skippedNames.join('、')}）` : '';
         showToast(`已成功建立 ${count} 位社員帳號！${skipMsg}`, 'success');
         closeAddMemberModal();
-        renderAdminMembersTable();
+        renderAdminMembersTable(true);
       } catch (err) {}
     }
 
     // ==========================================
-    // 幹部後台：6. 系統設定
+    // 幹部後台：6. 系統設定（補齊幹部權限驗證參數）
     // ==========================================
-    async function renderAdminSettingsTab() {
-      const res = await api('getSettings');
-      cachedSettings = res.settings;
+    async function renderAdminSettingsTab(force = false) {
+      if (appStore.settings) {
+        cachedSettings = appStore.settings;
+        drawAdminSettingsUI(cachedSettings);
+        if (!force && isCacheFresh('settings')) return;
+      }
 
-      document.getElementById('settingsBookingDeadlineDay').value = cachedSettings.bookingDeadlineDay || '5';
+      try {
+        const settings = await ensureSettingsLoaded(force);
+        drawAdminSettingsUI(settings);
+      } catch (err) {}
+    }
+
+    function drawAdminSettingsUI(settings) {
+      document.getElementById('settingsBookingDeadlineDay').value = (settings && settings.bookingDeadlineDay) || '5';
 
       const satGrid = document.getElementById('settingsSatPeriodsGrid');
       const sunGrid = document.getElementById('settingsSunPeriodsGrid');
       satGrid.innerHTML = '';
       sunGrid.innerHTML = '';
 
-      const satChecked = cachedSettings.satPeriods || [];
-      const sunChecked = cachedSettings.sunPeriods || [];
+      const satChecked = (settings && settings.satPeriods) || [];
+      const sunChecked = (settings && settings.sunPeriods) || [];
 
       ALL_PERIOD_KEYS.forEach(key => {
         const label = PERIOD_LABELS[key] || key + '節';
@@ -3740,8 +4204,16 @@
       document.querySelectorAll('input[name="setSunPeriod"]:checked').forEach(cb => sunPeriods.push(cb.value));
 
       try {
-        await api('saveSettings', { satPeriods, sunPeriods, bookingDeadlineDay });
+        await api('saveSettings', {
+          email: session.email,
+          name: session.name,
+          satPeriods,
+          sunPeriods,
+          bookingDeadlineDay
+        }, { silent: false });
         cachedSettings = { satPeriods, sunPeriods, bookingDeadlineDay };
+        appStore.settings = cachedSettings;
+        markCacheFresh('settings');
         showToast('系統設定已儲存！', 'success');
       } catch (err) {}
     }
@@ -3828,7 +4300,7 @@
           newEmail: isForcedPasswordChange ? newEmail : session.email,
           oldPassword,
           newPassword
-        });
+        }, { silent: false });
 
         if (isForcedPasswordChange && newEmail) {
           session.email = res.email || newEmail.toLowerCase();
@@ -3877,7 +4349,7 @@
           section,
           instrument,
           notifyEmail
-        });
+        }, { silent: false });
 
         session.name = name;
         session.email = newEmail.toLowerCase();
@@ -3889,7 +4361,8 @@
         setupUserSessionUI();
         showToast('個人資料已儲存！', 'success');
         closeProfileModal();
-        loadDashboard();
+        appStore.ts.members = 0;
+        loadDashboard(false);
       } catch (err) {}
     }
 
@@ -3937,6 +4410,7 @@
 
     function initApp() {
       initMockDatabase();
+      loadCacheFromStorage();
       const savedSession = localStorage.getItem('band_session');
       if (savedSession) {
         try {
@@ -3944,6 +4418,7 @@
           setupUserSessionUI();
           showPage('mainApp');
           showTab('tabHome');
+          preloadAllDataInBackground();
           return;
         } catch (e) {
           localStorage.removeItem('band_session');

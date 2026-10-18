@@ -2,7 +2,7 @@
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
   <title>東吳管樂社 管理系統</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -18,7 +18,7 @@
       --champagne-light: #fef3c7;
 
       --bg-base: #f4f5f8;
-      --card-bg: rgba(255, 255, 255, 0.92);
+      --card-bg: rgba(255, 255, 255, 0.94);
       --text-main: #0f172a;
       --text-secondary: #475569;
       --text-muted: #94a3b8;
@@ -41,8 +41,8 @@
       --status-orange-bg: #fffbeb;
       --status-orange-dot: #f59e0b;
 
-      --radius-2xl: 28px;
-      --radius-xl: 22px;
+      --radius-2xl: 26px;
+      --radius-xl: 20px;
       --radius-lg: 16px;
       --radius-md: 12px;
       --radius-sm: 8px;
@@ -58,6 +58,11 @@
       box-sizing: border-box;
       margin: 0;
       padding: 0;
+    }
+
+    html, body {
+      width: 100%;
+      overflow-x: hidden;
     }
 
     body {
@@ -92,8 +97,8 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
-      padding: 11px 22px;
+      gap: 6px;
+      padding: 11px 20px;
       border-radius: var(--radius-md);
       font-size: 0.92rem;
       font-weight: 600;
@@ -103,6 +108,7 @@
       text-decoration: none;
       white-space: nowrap;
       letter-spacing: 0.2px;
+      flex-shrink: 0;
     }
     .btn:active:not(:disabled) {
       transform: scale(0.97);
@@ -174,6 +180,7 @@
       font-weight: 700;
       letter-spacing: 0.2px;
       white-space: nowrap;
+      flex-shrink: 0;
     }
     .badge::before {
       content: '';
@@ -181,6 +188,7 @@
       height: 6px;
       border-radius: 50%;
       display: inline-block;
+      flex-shrink: 0;
     }
     .badge-received {
       background-color: var(--status-blue-bg);
@@ -219,51 +227,55 @@
     }
     .badge-member::before { background-color: #64748b; }
 
-    /* ==================== 頂部懸浮毛玻璃導覽島 (Floating Island) ==================== */
+    /* ==================== 頂部懸浮毛玻璃導覽島 (修正手機擠壓破版) ==================== */
     .navbar-wrapper {
       position: sticky;
-      top: 14px;
+      top: 10px;
       z-index: 100;
-      padding: 0 20px;
-      margin-bottom: 8px;
+      padding: 0 14px;
+      margin-bottom: 6px;
     }
     .navbar {
       max-width: 1200px;
       margin: 0 auto;
-      background: rgba(255, 255, 255, 0.85);
+      background: rgba(255, 255, 255, 0.88);
       backdrop-filter: blur(20px) saturate(180%);
       -webkit-backdrop-filter: blur(20px) saturate(180%);
-      border: 1px solid rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.95);
       border-radius: 9999px;
-      padding: 8px 12px 8px 20px;
-      height: 64px;
+      padding: 6px 10px 6px 14px;
+      height: 60px;
       display: flex;
       align-items: center;
       justify-content: space-between;
+      gap: 8px;
       box-shadow: 0 10px 30px -10px rgba(15, 23, 42, 0.08), 0 0 0 1px rgba(15, 23, 42, 0.04);
     }
     .nav-brand {
       display: flex;
       align-items: center;
-      gap: 12px;
-      font-size: 1.08rem;
+      gap: 10px;
+      font-size: 1.05rem;
       font-weight: 800;
       color: var(--obsidian);
       text-decoration: none;
       letter-spacing: -0.2px;
       cursor: pointer;
+      white-space: nowrap;
+      flex-shrink: 0;
     }
     .nav-brand .music-note {
-      width: 38px;
-      height: 38px;
+      width: 36px;
+      height: 36px;
       border-radius: 50%;
       background: var(--obsidian);
       color: var(--champagne);
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.1rem;
+      font-size: 1.05rem;
       box-shadow: 0 4px 12px rgba(11, 15, 25, 0.2);
+      flex-shrink: 0;
     }
     .nav-menu {
       display: flex;
@@ -273,11 +285,12 @@
       background: rgba(241, 245, 249, 0.8);
       padding: 4px;
       border-radius: 9999px;
+      flex-shrink: 0;
     }
     .nav-item {
-      padding: 7px 18px;
+      padding: 7px 16px;
       border-radius: 9999px;
-      font-size: 0.9rem;
+      font-size: 0.88rem;
       font-weight: 600;
       cursor: pointer;
       color: var(--text-secondary);
@@ -286,6 +299,7 @@
       align-items: center;
       gap: 6px;
       user-select: none;
+      white-space: nowrap;
     }
     .nav-item:hover {
       color: var(--obsidian);
@@ -298,52 +312,60 @@
     .nav-user {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
+      flex-shrink: 0;
     }
-    /* 背景無感同步指示燈 */
+    /* 背景無感同步指示燈（不換行、不擠壓） */
     .bg-sync-pill {
       display: none;
       align-items: center;
-      gap: 6px;
-      padding: 4px 10px;
+      gap: 5px;
+      padding: 5px 10px;
       border-radius: 9999px;
       background: #eff6ff;
       color: #1d4ed8;
       font-size: 0.75rem;
       font-weight: 700;
       border: 1px solid #bfdbfe;
+      white-space: nowrap;
+      flex-shrink: 0;
     }
     .bg-sync-pill.active {
       display: inline-flex;
     }
     .bg-sync-spinner {
-      width: 10px;
-      height: 10px;
+      width: 11px;
+      height: 11px;
       border: 2px solid #93c5fd;
       border-top-color: #1d4ed8;
       border-radius: 50%;
       animation: spin 0.6s linear infinite;
+      flex-shrink: 0;
     }
     .user-info {
       display: flex;
       align-items: center;
-      gap: 8px;
-      font-size: 0.88rem;
-      padding: 4px 10px 4px 4px;
+      gap: 6px;
+      font-size: 0.86rem;
+      padding: 3px 8px 3px 4px;
       border-radius: 9999px;
       background: rgba(248, 250, 252, 0.9);
       border: 1px solid #e2e8f0;
+      white-space: nowrap;
+      flex-shrink: 0;
     }
     .nav-icon-btn {
       background: #ffffff;
       color: var(--text-main);
       border: 1px solid #e2e8f0;
-      padding: 7px 13px;
+      padding: 6px 12px;
       border-radius: 9999px;
       font-size: 0.84rem;
       font-weight: 600;
       cursor: pointer;
       transition: var(--ease-spring);
+      white-space: nowrap;
+      flex-shrink: 0;
     }
     .nav-icon-btn:hover {
       background: var(--obsidian);
@@ -353,28 +375,30 @@
     .nav-hamburger {
       display: none;
       background: #f1f5f9;
-      border: none;
+      border: 1px solid #e2e8f0;
       color: var(--obsidian);
-      width: 40px;
-      height: 40px;
+      width: 38px;
+      height: 38px;
       border-radius: 50%;
-      font-size: 1.3rem;
+      font-size: 1.15rem;
       cursor: pointer;
+      flex-shrink: 0;
     }
 
     .mobile-menu {
       display: none;
       position: fixed;
-      top: 86px;
-      left: 20px;
-      right: 20px;
-      background: rgba(255, 255, 255, 0.96);
+      top: 78px;
+      left: 14px;
+      right: 14px;
+      background: rgba(255, 255, 255, 0.98);
       backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
       border: 1px solid #e2e8f0;
       border-radius: var(--radius-xl);
-      padding: 14px;
+      padding: 12px;
       box-shadow: var(--shadow-float);
-      z-index: 99;
+      z-index: 999;
       flex-direction: column;
       gap: 6px;
     }
@@ -383,9 +407,21 @@
       animation: fadeIn 0.2s ease;
     }
     .mobile-menu .nav-item {
-      padding: 12px 18px;
+      padding: 12px 16px;
       border-radius: var(--radius-md);
       width: 100%;
+      font-size: 0.95rem;
+    }
+    .mobile-menu-divider {
+      height: 1px;
+      background: #e2e8f0;
+      margin: 4px 0;
+    }
+    .mobile-menu-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      padding-top: 4px;
     }
 
     /* ==================== 主內容容器與卡片 ==================== */
@@ -394,7 +430,7 @@
       max-width: 1200px;
       width: 100%;
       margin: 0 auto;
-      padding: 18px 20px 48px;
+      padding: 14px 16px 60px;
     }
 
     .page-section {
@@ -402,40 +438,43 @@
     }
     .page-section.active {
       display: block;
-      animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      animation: fadeIn 0.22s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .card {
       background: var(--card-bg);
       backdrop-filter: blur(16px);
       border-radius: var(--radius-xl);
-      padding: 28px 30px;
+      padding: 26px 28px;
       box-shadow: var(--shadow-card);
       border: 1px solid rgba(255, 255, 255, 0.9);
-      margin-bottom: 24px;
+      margin-bottom: 20px;
       transition: var(--ease-spring);
+      max-width: 100%;
+      overflow: hidden;
     }
     .card-header {
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       justify-content: space-between;
-      margin-bottom: 22px;
+      margin-bottom: 20px;
       flex-wrap: wrap;
       gap: 12px;
     }
     .card-title {
-      font-size: 1.22rem;
+      font-size: 1.2rem;
       font-weight: 800;
       color: var(--obsidian);
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
       letter-spacing: -0.3px;
     }
     .card-desc {
       color: var(--text-secondary);
-      font-size: 0.88rem;
+      font-size: 0.86rem;
       margin-top: 4px;
+      line-height: 1.5;
     }
 
     /* ==================== 首頁 Bento 視覺設計 ==================== */
@@ -443,8 +482,8 @@
       background: radial-gradient(circle at 85% 20%, #1e293b 0%, var(--obsidian) 65%);
       color: #ffffff;
       border-radius: var(--radius-2xl);
-      padding: 36px 40px;
-      margin-bottom: 26px;
+      padding: 32px 36px;
+      margin-bottom: 22px;
       box-shadow: 0 20px 40px -15px rgba(11, 15, 25, 0.35);
       position: relative;
       overflow: hidden;
@@ -467,7 +506,7 @@
       background: rgba(245, 158, 11, 0.15);
       border: 1px solid rgba(245, 158, 11, 0.35);
       color: #fcd34d;
-      font-size: 0.78rem;
+      font-size: 0.76rem;
       font-weight: 700;
       padding: 4px 12px;
       border-radius: 9999px;
@@ -475,13 +514,14 @@
       letter-spacing: 0.5px;
     }
     .welcome-title {
-      font-size: 1.85rem;
+      font-size: 1.75rem;
       font-weight: 800;
       margin-bottom: 6px;
       letter-spacing: -0.5px;
+      line-height: 1.3;
     }
     .welcome-subtitle {
-      font-size: 0.98rem;
+      font-size: 0.94rem;
       color: #94a3b8;
       font-weight: 500;
     }
@@ -490,16 +530,16 @@
     .upcoming-hero-box {
       display: flex;
       align-items: flex-start;
-      gap: 18px;
+      gap: 16px;
       background: #f8fafc;
       border: 1px solid #e2e8f0;
-      padding: 18px;
+      padding: 16px;
       border-radius: var(--radius-lg);
       margin-bottom: 14px;
     }
     .cal-badge {
-      min-width: 68px;
-      height: 72px;
+      min-width: 64px;
+      height: 68px;
       background: var(--obsidian);
       color: #ffffff;
       border-radius: 14px;
@@ -509,6 +549,7 @@
       justify-content: center;
       box-shadow: 0 8px 16px -4px rgba(11, 15, 25, 0.25);
       overflow: hidden;
+      flex-shrink: 0;
     }
     .cal-badge-month {
       background: var(--champagne);
@@ -521,7 +562,7 @@
       letter-spacing: 0.5px;
     }
     .cal-badge-day {
-      font-size: 1.5rem;
+      font-size: 1.45rem;
       font-weight: 800;
       line-height: 1.2;
       margin-top: 2px;
@@ -531,14 +572,14 @@
     .quick-tiles-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 14px;
+      gap: 12px;
     }
     .quick-tile {
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      padding: 18px;
-      min-height: 112px;
+      padding: 16px;
+      min-height: 106px;
       border-radius: var(--radius-lg);
       background: #f8fafc;
       border: 1px solid #e2e8f0;
@@ -552,7 +593,7 @@
       background: var(--obsidian);
       border-color: var(--obsidian);
       box-shadow: 0 14px 28px -8px rgba(11, 15, 25, 0.28);
-      transform: translateY(-3px);
+      transform: translateY(-2px);
     }
     .quick-tile-top {
       display: flex;
@@ -561,15 +602,15 @@
       width: 100%;
     }
     .quick-tile-icon {
-      width: 42px;
-      height: 42px;
+      width: 40px;
+      height: 40px;
       border-radius: 12px;
       background: #ffffff;
       border: 1px solid #e2e8f0;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.25rem;
+      font-size: 1.2rem;
       transition: var(--ease-spring);
     }
     .quick-tile:hover .quick-tile-icon {
@@ -587,18 +628,19 @@
     }
     .quick-tile-title {
       font-weight: 800;
-      font-size: 0.98rem;
+      font-size: 0.94rem;
       color: var(--obsidian);
-      margin-top: 14px;
+      margin-top: 12px;
       transition: var(--ease-spring);
     }
     .quick-tile:hover .quick-tile-title {
       color: #ffffff;
     }
 
-    /* ==================== 表單與無勾勾觸控磚 (Tactile Chips) ==================== */
+    /* ==================== 表單與 iOS 日期輸入框防破版 ==================== */
     .form-group {
-      margin-bottom: 20px;
+      margin-bottom: 18px;
+      max-width: 100%;
     }
     .form-label {
       display: block;
@@ -613,8 +655,12 @@
       margin-left: 3px;
     }
     .form-control {
+      display: block;
       width: 100%;
-      padding: 12px 16px;
+      max-width: 100%;
+      min-width: 0;
+      box-sizing: border-box;
+      padding: 11px 14px;
       border: 1.5px solid #e2e8f0;
       border-radius: var(--radius-md);
       font-size: 0.94rem;
@@ -623,6 +669,15 @@
       background-color: #f8fafc;
       transition: var(--ease-spring);
       outline: none;
+    }
+    /* 徹底修復 iOS Safari input[type="date"] 超出卡片右邊界的問題 */
+    input[type="date"].form-control,
+    input[type="time"].form-control,
+    input[type="datetime-local"].form-control {
+      -webkit-appearance: none;
+      appearance: none;
+      min-height: 46px;
+      line-height: 1.4;
     }
     .form-control:hover {
       border-color: #cbd5e1;
@@ -645,17 +700,19 @@
       display: flex;
       gap: 18px;
       flex-wrap: wrap;
+      width: 100%;
     }
     .form-col {
       flex: 1;
       min-width: 210px;
+      max-width: 100%;
     }
 
     /* 隱藏原生 Checkbox，打造一鍵點選發光方塊 */
     .period-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(95px, 1fr));
-      gap: 10px;
+      grid-template-columns: repeat(auto-fill, minmax(86px, 1fr));
+      gap: 8px;
       margin-top: 8px;
     }
     .period-chip {
@@ -664,16 +721,17 @@
       align-items: center;
       justify-content: center;
       gap: 6px;
-      padding: 12px 14px;
+      padding: 11px 12px;
       background-color: #f8fafc;
       border: 1.5px solid #e2e8f0;
       border-radius: var(--radius-md);
       cursor: pointer;
       user-select: none;
       transition: var(--ease-spring);
-      font-size: 0.92rem;
+      font-size: 0.9rem;
       font-weight: 600;
       color: var(--text-secondary);
+      max-width: 100%;
     }
     .period-chip input[type="checkbox"] {
       position: absolute;
@@ -684,15 +742,13 @@
       background-color: #ffffff;
       border-color: #94a3b8;
       color: var(--obsidian);
-      transform: translateY(-1.5px);
     }
     .period-chip.selected {
       background: var(--obsidian);
       border-color: var(--obsidian);
       color: #ffffff;
       font-weight: 700;
-      box-shadow: 0 8px 18px -4px rgba(11, 15, 25, 0.3);
-      transform: translateY(-1.5px);
+      box-shadow: 0 6px 14px -4px rgba(11, 15, 25, 0.25);
     }
     .period-chip.selected::after {
       content: '';
@@ -701,12 +757,14 @@
       border-radius: 50%;
       background: var(--champagne);
       display: inline-block;
+      flex-shrink: 0;
     }
 
     /* ==================== 空氣感無邊框表格 ==================== */
     .table-container {
       width: 100%;
       overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
       border-radius: var(--radius-lg);
       border: 1px solid #eef2f6;
       background: #ffffff;
@@ -715,23 +773,24 @@
       width: 100%;
       border-collapse: collapse;
       text-align: left;
-      font-size: 0.9rem;
+      font-size: 0.88rem;
     }
     th {
       background-color: #f8fafc;
       color: #64748b;
-      padding: 14px 18px;
+      padding: 13px 16px;
       font-weight: 700;
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       letter-spacing: 0.4px;
       border-bottom: 1px solid #e2e8f0;
       white-space: nowrap;
     }
     td {
-      padding: 16px 18px;
+      padding: 14px 16px;
       border-bottom: 1px solid #f1f5f9;
       color: var(--text-main);
       vertical-align: middle;
+      white-space: nowrap;
     }
     tbody tr {
       transition: background-color 0.15s ease;
@@ -769,7 +828,7 @@
     .login-card {
       background: rgba(255, 255, 255, 0.98);
       border-radius: var(--radius-2xl);
-      padding: 48px 40px;
+      padding: 40px 32px;
       width: 100%;
       max-width: 440px;
       box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.15);
@@ -778,29 +837,29 @@
       z-index: 2;
     }
     .login-logo {
-      width: 72px;
-      height: 72px;
+      width: 68px;
+      height: 68px;
       background: var(--obsidian);
       color: var(--champagne);
-      border-radius: 22px;
+      border-radius: 20px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 2.2rem;
-      margin: 0 auto 20px;
+      font-size: 2rem;
+      margin: 0 auto 18px;
       box-shadow: 0 14px 28px -6px rgba(11, 15, 25, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
     }
     .login-title {
-      font-size: 1.65rem;
+      font-size: 1.6rem;
       font-weight: 800;
       color: var(--obsidian);
       margin-bottom: 6px;
       letter-spacing: -0.5px;
     }
     .login-subtitle {
-      font-size: 0.92rem;
+      font-size: 0.9rem;
       color: var(--text-secondary);
-      margin-bottom: 30px;
+      margin-bottom: 26px;
     }
     .login-hint {
       background-color: #f8fafc;
@@ -809,7 +868,7 @@
       padding: 13px 16px;
       font-size: 0.84rem;
       color: var(--text-secondary);
-      margin-top: 24px;
+      margin-top: 22px;
       text-align: left;
       line-height: 1.55;
     }
@@ -817,39 +876,40 @@
     /* ==================== KPI 統計與團練卡片 ==================== */
     .dashboard-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 18px;
-      margin-bottom: 24px;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 14px;
+      margin-bottom: 22px;
     }
     .stat-card {
       background: #ffffff;
       border-radius: var(--radius-lg);
-      padding: 22px;
+      padding: 18px;
       border: 1px solid #eef2f6;
       box-shadow: var(--shadow-sm);
       display: flex;
       align-items: center;
-      gap: 16px;
+      gap: 14px;
     }
     .stat-icon {
-      width: 52px;
-      height: 52px;
-      border-radius: 14px;
+      width: 46px;
+      height: 46px;
+      border-radius: 12px;
       background-color: #f1f5f9;
       color: var(--obsidian);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.5rem;
+      font-size: 1.35rem;
+      flex-shrink: 0;
     }
     .stat-value {
-      font-size: 1.55rem;
+      font-size: 1.35rem;
       font-weight: 800;
       color: var(--obsidian);
       letter-spacing: -0.5px;
     }
     .stat-label {
-      font-size: 0.84rem;
+      font-size: 0.8rem;
       color: var(--text-secondary);
       font-weight: 500;
     }
@@ -857,53 +917,66 @@
     .practice-card {
       border: 1px solid #e2e8f0;
       border-radius: var(--radius-lg);
-      padding: 24px;
-      margin-bottom: 18px;
+      padding: 20px;
+      margin-bottom: 16px;
       background: #ffffff;
       box-shadow: var(--shadow-xs);
       transition: var(--ease-spring);
-    }
-    .practice-card:hover {
-      border-color: #cbd5e1;
-      box-shadow: var(--shadow-card);
-      transform: translateY(-2px);
+      max-width: 100%;
+      overflow: hidden;
     }
     .practice-header {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
       flex-wrap: wrap;
       gap: 8px;
     }
     .practice-date {
-      font-size: 1.22rem;
+      font-size: 1.12rem;
       font-weight: 800;
       color: var(--obsidian);
+      line-height: 1.35;
+    }
+    .practice-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 12px;
     }
     .practice-deadline-badge {
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       color: #92400e;
       background: #fef3c7;
-      padding: 6px 14px;
+      padding: 6px 12px;
       border-radius: 9999px;
       font-weight: 700;
+      max-width: 100%;
+    }
+    .practice-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
     }
 
-    /* 智慧條列式公告框（支援摺疊省空間） */
+    /* 智慧條列式公告框 */
     .notes-box {
       background: #f8fafc;
       border: 1px solid #e2e8f0;
       border-radius: var(--radius-md);
-      padding: 16px 18px;
-      margin: 12px 0 16px;
+      padding: 14px 16px;
+      margin: 12px 0;
       position: relative;
     }
     .notes-box-header {
       font-size: 0.82rem;
       font-weight: 800;
       color: var(--text-secondary);
-      margin-bottom: 10px;
+      margin-bottom: 8px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -912,15 +985,15 @@
     .notes-list {
       display: flex;
       flex-direction: column;
-      gap: 7px;
-      font-size: 0.92rem;
+      gap: 6px;
+      font-size: 0.9rem;
       color: var(--text-main);
-      line-height: 1.6;
+      line-height: 1.55;
       overflow: hidden;
       transition: max-height 0.35s ease;
     }
     .notes-list.collapsed {
-      max-height: 88px;
+      max-height: 86px;
       mask-image: linear-gradient(to bottom, black 55%, transparent 100%);
       -webkit-mask-image: linear-gradient(to bottom, black 55%, transparent 100%);
     }
@@ -929,6 +1002,7 @@
       align-items: flex-start;
       gap: 6px;
       word-break: break-word;
+      white-space: normal;
     }
     .note-line-highlight {
       font-weight: 700;
@@ -938,6 +1012,7 @@
       padding: 4px 10px;
       border-radius: 8px;
       width: fit-content;
+      max-width: 100%;
     }
     .note-line-section {
       font-weight: 800;
@@ -949,9 +1024,9 @@
       background: #ffffff;
       border: 1px solid #cbd5e1;
       color: var(--obsidian);
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       font-weight: 700;
-      padding: 5px 14px;
+      padding: 5px 12px;
       border-radius: 999px;
       cursor: pointer;
       display: inline-flex;
@@ -960,35 +1035,29 @@
       transition: var(--ease-spring);
       box-shadow: var(--shadow-xs);
     }
-    .notes-toggle-btn:hover {
-      background: var(--obsidian);
-      color: #ffffff;
-      border-color: var(--obsidian);
-    }
 
     /* ==================== 後台分段控制器 (Segmented Control) ==================== */
     .subtabs {
-      display: inline-flex;
+      display: flex;
       gap: 4px;
       background: #f1f5f9;
       padding: 5px;
       border-radius: 14px;
       overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
       max-width: 100%;
     }
     .subtab-item {
-      padding: 8px 18px;
+      padding: 8px 16px;
       border-radius: 10px;
       font-weight: 700;
-      font-size: 0.88rem;
+      font-size: 0.86rem;
       color: var(--text-secondary);
       cursor: pointer;
       user-select: none;
       transition: var(--ease-spring);
       white-space: nowrap;
-    }
-    .subtab-item:hover {
-      color: var(--obsidian);
+      flex-shrink: 0;
     }
     .subtab-item.active {
       color: var(--obsidian);
@@ -1003,42 +1072,51 @@
       animation: fadeIn 0.22s ease;
     }
 
-    /* ==================== 點陣舞台座位表畫布 ==================== */
+    /* ==================== 點陣舞台座位表畫布（100% 響應式完整顯示 + 絲滑觸控） ==================== */
     .seating-controls {
       display: flex;
-      gap: 12px;
+      gap: 10px;
       align-items: center;
       flex-wrap: wrap;
+      width: 100%;
     }
     .seating-wrapper {
       background-color: #ffffff;
       background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
-      background-size: 20px 20px;
+      background-size: 18px 18px;
       border: 1.5px solid #e2e8f0;
       border-radius: var(--radius-xl);
-      padding: 20px;
+      padding: 12px;
       box-shadow: inset 0 2px 10px rgba(15, 23, 42, 0.02);
-      overflow-x: auto;
+      width: 100%;
+      overflow: hidden;
       text-align: center;
       user-select: none;
+      -webkit-user-select: none;
     }
+    /* 移除原本導致手機只能看一半的 min-width: 680px，讓 SVG 自動 100% 等比例縮放適應手機螢幕 */
     .seating-svg {
-      max-width: 100%;
+      width: 100%;
+      max-width: 880px;
       height: auto;
-      min-width: 680px;
-      display: inline-block;
-      touch-action: none;
+      display: block;
+      margin: 0 auto;
+      touch-action: none; /* 防止拖曳座位時手機畫面跟著上下滾動 */
     }
     .draggable-section {
       cursor: grab;
+      touch-action: none;
     }
     .draggable-section:active {
       cursor: grabbing;
     }
     .draggable-section.selected-sec rect.sec-highlight,
     .draggable-section.selected-sec circle.sec-seat {
-      stroke: var(--accent-indigo);
-      stroke-width: 3.5px;
+      stroke: var(--accent-indigo) !important;
+      stroke-width: 4px !important;
+    }
+    .draggable-section.selected-sec text {
+      fill: var(--accent-indigo) !important;
     }
 
     /* ==================== 彈出視窗與通知 ==================== */
@@ -1054,7 +1132,7 @@
       align-items: center;
       justify-content: center;
       z-index: 1000;
-      padding: 16px;
+      padding: 14px;
     }
     .modal-overlay.open {
       display: flex;
@@ -1064,13 +1142,13 @@
       background: #ffffff;
       border-radius: var(--radius-2xl);
       width: 100%;
-      max-width: 520px;
+      max-width: 500px;
       box-shadow: var(--shadow-float);
       overflow: hidden;
       animation: modalSlide 0.28s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .modal-header {
-      padding: 22px 28px;
+      padding: 20px 24px;
       background: #ffffff;
       color: var(--obsidian);
       border-bottom: 1px solid #f1f5f9;
@@ -1079,7 +1157,7 @@
       align-items: center;
     }
     .modal-title {
-      font-size: 1.18rem;
+      font-size: 1.12rem;
       font-weight: 800;
       display: flex;
       align-items: center;
@@ -1094,19 +1172,14 @@
       border-radius: 50%;
       font-size: 1rem;
       cursor: pointer;
-      transition: var(--ease-spring);
-    }
-    .modal-close:hover {
-      background: var(--obsidian);
-      color: #ffffff;
     }
     .modal-body {
-      padding: 26px 28px;
-      max-height: 76vh;
+      padding: 22px 24px;
+      max-height: 75vh;
       overflow-y: auto;
     }
     .modal-footer {
-      padding: 18px 28px;
+      padding: 16px 24px;
       background: #f8fafc;
       border-top: 1px solid #f1f5f9;
       display: flex;
@@ -1116,24 +1189,26 @@
 
     .toast-container {
       position: fixed;
-      top: 24px;
-      right: 24px;
+      top: 18px;
+      right: 16px;
+      left: 16px;
       z-index: 9999;
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      align-items: flex-end;
+      gap: 8px;
       pointer-events: none;
     }
     .toast {
-      min-width: 280px;
-      max-width: 420px;
-      padding: 14px 20px;
+      width: auto;
+      max-width: 100%;
+      padding: 12px 18px;
       border-radius: 14px;
       box-shadow: var(--shadow-float);
       background: var(--obsidian);
       color: #ffffff;
       font-weight: 600;
-      font-size: 0.9rem;
+      font-size: 0.88rem;
       display: flex;
       align-items: center;
       gap: 10px;
@@ -1143,13 +1218,12 @@
     }
     .toast.hide {
       opacity: 0;
-      transform: translateX(30px);
+      transform: translateY(-15px);
     }
     .toast-success { border-left: 4px solid #10b981; }
     .toast-error { border-left: 4px solid #f43f5e; }
     .toast-info { border-left: 4px solid var(--champagne); }
 
-    /* 全螢幕遮罩：現在僅在「送出表單 / 寫入資料」時出現，切換頁籤不再阻擋畫面！ */
     .loading-overlay {
       position: fixed;
       top: 0;
@@ -1187,16 +1261,23 @@
       to { opacity: 1; transform: scale(1) translateY(0); }
     }
     @keyframes toastIn {
-      from { opacity: 0; transform: translateX(40px); }
-      to { opacity: 1; transform: translateX(0); }
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
     @keyframes spin {
       to { transform: rotate(360deg); }
     }
 
+    /* ==================== 📱 手機版專屬響應式優化 ==================== */
     @media (max-width: 880px) {
-      .nav-menu, .user-name-text {
-        display: none;
+      .nav-menu,
+      .user-name-text,
+      .desktop-only-btn,
+      .bg-sync-text {
+        display: none !important;
+      }
+      .bg-sync-pill {
+        padding: 6px;
       }
       .nav-hamburger {
         display: inline-flex;
@@ -1207,11 +1288,49 @@
         flex-direction: column;
         gap: 0;
       }
+      .form-col {
+        width: 100%;
+        min-width: 0;
+      }
       .welcome-banner {
-        padding: 28px 24px;
+        padding: 24px 20px;
+        border-radius: 22px;
+      }
+      .welcome-title {
+        font-size: 1.45rem;
       }
       .card {
-        padding: 22px 20px;
+        padding: 18px 16px;
+        border-radius: 18px;
+      }
+      .upcoming-hero-box {
+        padding: 14px;
+        gap: 12px;
+      }
+      .practice-card {
+        padding: 16px;
+      }
+      .practice-footer {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .practice-deadline-badge {
+        text-align: center;
+      }
+      .practice-actions {
+        width: 100%;
+        display: flex;
+      }
+      .practice-actions .btn {
+        flex: 1;
+        justify-content: center;
+      }
+      .seating-wrapper {
+        padding: 6px;
+        border-radius: 14px;
+      }
+      .toast-container {
+        align-items: center;
       }
     }
   </style>
@@ -1221,7 +1340,7 @@
   <!-- 通知容器 -->
   <div id="toastContainer" class="toast-container"></div>
 
-  <!-- 讀取遮罩（僅在表單提交或強制動作時顯示） -->
+  <!-- 讀取遮罩（僅在表單提交或寫入時顯示） -->
   <div id="loadingOverlay" class="loading-overlay">
     <div class="spinner"></div>
     <div id="loadingOverlayText" style="font-weight:600; font-size:0.92rem; letter-spacing:1px;">處理中...</div>
@@ -1259,7 +1378,7 @@
   <!-- ==================== 2. 社員主畫面 ==================== -->
   <div id="mainApp" style="display: none; flex-direction: column; min-height: 100vh;">
     
-    <!-- 懸浮膠囊導覽島 -->
+    <!-- 懸浮膠囊導覽島（手機版零擠壓設計） -->
     <div class="navbar-wrapper">
       <header class="navbar">
         <div class="nav-brand" onclick="showTab('tabHome')">
@@ -1276,30 +1395,35 @@
         </ul>
 
         <div class="nav-user">
-          <!-- 背景靜默同步小燈號（不阻擋操作） -->
-          <div id="bgSyncIndicator" class="bg-sync-pill" title="正在背景同步最新資料">
+          <!-- 背景靜默同步小燈號 -->
+          <div id="bgSyncIndicator" class="bg-sync-pill" title="正在同步最新資料">
             <span class="bg-sync-spinner"></span>
-            <span>同步中</span>
+            <span class="bg-sync-text">同步中</span>
           </div>
 
           <div class="user-info">
             <span id="navRoleBadge" class="badge badge-member">社員</span>
             <span id="navUserName" class="user-name-text" style="font-weight: 700; color: var(--obsidian); padding-right: 4px;">使用者</span>
           </div>
-          <button type="button" class="nav-icon-btn" onclick="openProfileModal()" title="個人設定">設定</button>
-          <button type="button" class="nav-icon-btn" onclick="handleLogout()" title="登出">登出</button>
+          <button type="button" class="nav-icon-btn desktop-only-btn" onclick="openProfileModal()" title="個人設定">設定</button>
+          <button type="button" class="nav-icon-btn desktop-only-btn" onclick="handleLogout()" title="登出">登出</button>
           <button type="button" class="nav-hamburger" onclick="toggleMobileMenu()" aria-label="選單">☰</button>
         </div>
       </header>
     </div>
 
-    <!-- 手機版懸浮選單 -->
+    <!-- 手機版懸浮選單（含設定與登出按鈕） -->
     <div id="mobileMenu" class="mobile-menu">
-      <div class="nav-item active" id="mobNavItem-tabHome" onclick="showTab('tabHome'); toggleMobileMenu();">首頁總覽</div>
-      <div class="nav-item" id="mobNavItem-tabRoom" onclick="showTab('tabRoom'); toggleMobileMenu();">預約教室</div>
-      <div class="nav-item" id="mobNavItem-tabAbsence" onclick="showTab('tabAbsence'); toggleMobileMenu();">團練請假</div>
-      <div class="nav-item" id="mobNavItem-tabSeating" onclick="showTab('tabSeating'); toggleMobileMenu();">座位配置</div>
-      <div class="nav-item admin-only-nav" id="mobNavItem-tabAdmin" onclick="showTab('tabAdmin'); toggleMobileMenu();">幹部後台</div>
+      <div class="nav-item active" id="mobNavItem-tabHome" onclick="showTab('tabHome'); toggleMobileMenu();">🏠 首頁總覽</div>
+      <div class="nav-item" id="mobNavItem-tabRoom" onclick="showTab('tabRoom'); toggleMobileMenu();">🚪 預約教室</div>
+      <div class="nav-item" id="mobNavItem-tabAbsence" onclick="showTab('tabAbsence'); toggleMobileMenu();">📝 團練請假</div>
+      <div class="nav-item" id="mobNavItem-tabSeating" onclick="showTab('tabSeating'); toggleMobileMenu();">🎼 座位配置</div>
+      <div class="nav-item admin-only-nav" id="mobNavItem-tabAdmin" onclick="showTab('tabAdmin'); toggleMobileMenu();">⚙️ 幹部後台</div>
+      <div class="mobile-menu-divider"></div>
+      <div class="mobile-menu-actions">
+        <button type="button" class="btn btn-secondary btn-sm" onclick="toggleMobileMenu(); openProfileModal();">👤 個人設定</button>
+        <button type="button" class="btn btn-danger btn-sm" onclick="toggleMobileMenu(); handleLogout();">🚪 登出系統</button>
+      </div>
     </div>
 
     <main class="main-content">
@@ -1411,7 +1535,7 @@
             </div>
           </div>
 
-          <div id="roomBookingRuleBanner" style="background: #fffbeb; border: 1px solid #fde68a; border-radius: var(--radius-md); padding: 14px 18px; margin-bottom: 24px; font-size: 0.9rem; color: #92400e; line-height: 1.55;">
+          <div id="roomBookingRuleBanner" style="background: #fffbeb; border: 1px solid #fde68a; border-radius: var(--radius-md); padding: 14px 16px; margin-bottom: 20px; font-size: 0.88rem; color: #92400e; line-height: 1.55;">
             載入借用規則中...
           </div>
 
@@ -1453,7 +1577,7 @@
                 <div class="form-group">
                   <label class="form-label">勿擾設定（點選切換）</label>
                   <div style="margin-top: 6px;">
-                    <label class="period-chip" style="display: inline-flex; width: auto; padding: 11px 20px;">
+                    <label class="period-chip" style="display: inline-flex; width: auto; padding: 11px 18px;">
                       <input type="checkbox" id="roomDoNotDisturb" onchange="this.parentElement.classList.toggle('selected', this.checked)">
                       <span>🔒 勿擾（不開放他人併間練習）</span>
                     </label>
@@ -1465,11 +1589,11 @@
                 <div class="form-group">
                   <label class="form-label">器材需求（可複選）</label>
                   <div style="display: flex; gap: 10px; margin-top: 6px; flex-wrap: wrap;">
-                    <label class="period-chip" style="display: inline-flex; width: auto; padding: 11px 20px;">
+                    <label class="period-chip" style="display: inline-flex; width: auto; padding: 11px 18px;">
                       <input type="checkbox" name="roomNeedCheckbox" value="鋼琴" onchange="this.parentElement.classList.toggle('selected', this.checked)">
                       <span>🎹 鋼琴</span>
                     </label>
-                    <label class="period-chip" style="display: inline-flex; width: auto; padding: 11px 20px;">
+                    <label class="period-chip" style="display: inline-flex; width: auto; padding: 11px 18px;">
                       <input type="checkbox" name="roomNeedCheckbox" value="打擊樂器" onchange="this.parentElement.classList.toggle('selected', this.checked)">
                       <span>🥁 打擊樂器</span>
                     </label>
@@ -1479,7 +1603,7 @@
             </div>
 
             <div class="form-group">
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; flex-wrap: wrap; gap: 8px;">
                 <label class="form-label" style="margin-bottom:0;">點選借用節次<span class="required">*</span></label>
                 <div style="display: flex; gap: 6px;">
                   <button type="button" class="btn btn-secondary btn-sm" onclick="toggleAllPeriods(true)">全選節次</button>
@@ -1498,7 +1622,7 @@
             </div>
 
             <div style="text-align: right;">
-              <button type="submit" id="roomSubmitBtn" class="btn btn-primary" style="padding: 13px 32px;">
+              <button type="submit" id="roomSubmitBtn" class="btn btn-primary" style="padding: 13px 32px; width: 100%; max-width: 260px;">
                 送出借用申請 →
               </button>
             </div>
@@ -1509,7 +1633,7 @@
           <div class="card-header">
             <div>
               <h3 class="card-title">📋 我的申請紀錄</h3>
-              <div class="card-desc">依借用日期由近到遠排列</div>
+              <div class="card-desc">依借用日期由近到遠排列（切換至此頁時自動同步最新審核結果）</div>
             </div>
             <button class="btn btn-secondary btn-sm" onclick="loadMyRoomRequests(true)">🔄 重新整理</button>
           </div>
@@ -1593,9 +1717,9 @@
             </div>
             
             <div class="seating-controls">
-              <div style="display: flex; align-items: center; gap: 8px;">
-                <label style="font-weight: 700; font-size: 0.88rem; color: var(--text-secondary);">場次：</label>
-                <select id="seatingPracticeSelect" class="form-control" style="width: auto; padding: 8px 14px;" onchange="handleSeatingChange(false)"></select>
+              <div style="display: flex; align-items: center; gap: 8px; flex: 1; min-width: 220px;">
+                <label style="font-weight: 700; font-size: 0.88rem; color: var(--text-secondary); white-space: nowrap;">場次：</label>
+                <select id="seatingPracticeSelect" class="form-control" style="padding: 8px 12px;" onchange="handleSeatingChange(false)"></select>
               </div>
               <button class="btn btn-secondary btn-sm" onclick="loadSeatingTab(true)">🔄 重新整理</button>
             </div>
@@ -1603,14 +1727,14 @@
 
           <div class="seating-wrapper" id="seatingChartContainer"></div>
 
-          <div id="seatingSectionSummary" style="margin-top: 24px; display: grid; grid-template-columns: repeat(auto-fill, minmax(185px, 1fr)); gap: 14px;"></div>
+          <div id="seatingSectionSummary" style="margin-top: 20px; display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px;"></div>
         </div>
       </div>
 
       <!-- ================= 5. 幹部後台 ================= -->
       <div id="tabAdmin" class="page-section">
-        <div class="card" style="padding: 22px 28px;">
-          <div class="card-header" style="margin-bottom: 16px;">
+        <div class="card" style="padding: 20px 22px;">
+          <div class="card-header" style="margin-bottom: 14px;">
             <div>
               <h2 class="card-title">⚙️ 幹部後台管理中心</h2>
               <div class="card-desc">借教室審批、團練排程、請假統計、座位拖曳調整、社員批次建檔與系統設定</div>
@@ -1633,18 +1757,17 @@
             <div class="card-header">
               <div>
                 <h3 class="card-title">🚪 全社借教室申請審查</h3>
-                <div class="card-desc">依借用日期由近到遠排列；可線上填寫審核狀態、可借用時間與核定教室。</div>
+                <div class="card-desc">依借用日期由近到遠排列；儲存審核後系統將自動寄信通知社員。</div>
               </div>
-              <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-                <!-- 注意：改為呼叫純前端秒篩 filterAdminRoomTable()，不再重新發 API 卡畫面！ -->
-                <select id="adminRoomFilterStatus" class="form-control" style="width: auto; padding: 8px 14px;" onchange="filterAdminRoomTable()">
+              <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap; width: 100%;">
+                <select id="adminRoomFilterStatus" class="form-control" style="flex: 1; min-width: 120px; padding: 8px 12px;" onchange="filterAdminRoomTable()">
                   <option value="ALL">全部狀態</option>
                   <option value="已收件">已收件</option>
                   <option value="已通過">已通過</option>
                   <option value="未通過">未通過</option>
                   <option value="無教室">無教室</option>
                 </select>
-                <input type="date" id="adminRoomFilterDate" class="form-control" style="width: auto; padding: 7px 14px;" onchange="filterAdminRoomTable()">
+                <input type="date" id="adminRoomFilterDate" class="form-control" style="flex: 1; min-width: 140px; padding: 7px 12px;" onchange="filterAdminRoomTable()">
                 <button class="btn btn-secondary btn-sm" onclick="renderAdminRoomTable(true)">🔄 重新整理</button>
                 <button class="btn btn-secondary btn-sm" onclick="exportRoomRequestsCSV()">📥 匯出報表</button>
               </div>
@@ -1683,7 +1806,7 @@
                 <h3 class="card-title">🎺 團練場次排程管理</h3>
                 <div class="card-desc">依排練日期由近到遠排列；新增團練時系統將自動帶入預設時間、地點與當天中午 12:00 截止。</div>
               </div>
-              <div style="display: flex; gap: 8px;">
+              <div style="display: flex; gap: 8px; flex-wrap: wrap;">
                 <button class="btn btn-secondary btn-sm" onclick="renderAdminPracticesTable(true)">🔄 重新整理</button>
                 <button class="btn btn-primary btn-sm" onclick="openPracticeModal()">＋ 新增團練場次</button>
               </div>
@@ -1716,15 +1839,14 @@
                 <h3 class="card-title">📊 團練請假與出席統計</h3>
                 <div class="card-desc">選取團練場次，即時統計全體與各樂器出缺席狀態，並可匯出名單。</div>
               </div>
-              <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-                <label style="font-weight: 700; font-size: 0.88rem; color: var(--text-secondary);">選取團練：</label>
-                <select id="adminAbsencePracticeSelect" class="form-control" style="width: auto; padding: 8px 14px;" onchange="renderAdminAbsenceStats(false)"></select>
+              <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap; width: 100%;">
+                <select id="adminAbsencePracticeSelect" class="form-control" style="flex: 1; min-width: 180px; padding: 8px 12px;" onchange="renderAdminAbsenceStats(false)"></select>
                 <button class="btn btn-secondary btn-sm" onclick="renderAdminAbsenceStats(true)">🔄 重新整理</button>
                 <button class="btn btn-secondary btn-sm" onclick="exportAbsenceCSV()">📥 匯出假單</button>
               </div>
             </div>
 
-            <div class="dashboard-grid" style="margin-bottom: 24px;">
+            <div class="dashboard-grid" style="margin-bottom: 22px;">
               <div class="stat-card">
                 <div class="stat-icon">👥</div>
                 <div>
@@ -1756,7 +1878,7 @@
             </div>
 
             <h4 style="margin-bottom: 12px; color: var(--obsidian); font-size: 1rem; font-weight: 800;">各樂器出席率分佈</h4>
-            <div id="adminSectionBreakdownGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; margin-bottom: 26px;"></div>
+            <div id="adminSectionBreakdownGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; margin-bottom: 24px;"></div>
 
             <h4 style="margin-bottom: 12px; color: var(--obsidian); font-size: 1rem; font-weight: 800;">請假詳細名冊</h4>
             <div class="table-container">
@@ -1781,30 +1903,30 @@
             <div class="card-header">
               <div>
                 <h3 class="card-title">🎼 座位表視覺化拖曳調整</h3>
-                <div class="card-desc">直接在下方畫布「按住滑鼠或手指拖曳」即可移動聲部位置；點選聲部可微調人數與角度。</div>
+                <div class="card-desc">直接在下方畫布「按住滑鼠或手指拖曳」即可絲滑移動聲部位置；點選聲部可微調人數與角度。</div>
               </div>
-              <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-                <select id="adminSeatingTargetSelect" class="form-control" style="width: auto; padding: 8px 14px;" onchange="handleAdminSeatingTargetChange()"></select>
+              <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap; width: 100%;">
+                <select id="adminSeatingTargetSelect" class="form-control" style="flex: 1; min-width: 200px; padding: 8px 12px;" onchange="handleAdminSeatingTargetChange()"></select>
                 <button type="button" class="btn btn-secondary btn-sm" onclick="resetAdminSeatingToDefault()">恢復預設</button>
                 <button type="button" class="btn btn-primary btn-sm" onclick="saveAdminSeatingLayout()">💾 儲存座位表</button>
               </div>
             </div>
 
-            <div id="adminSeatingQuickBar" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: var(--radius-md); padding: 14px 18px; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
-              <div style="display: flex; align-items: center; gap: 10px;">
-                <span style="font-weight: 700; color: var(--obsidian);" id="selectedSecTitle">💡 請點擊或按住拖曳下方任一聲部進行調整</span>
+            <div id="adminSeatingQuickBar" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: var(--radius-md); padding: 12px 16px; margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="font-weight: 700; font-size: 0.9rem; color: var(--obsidian);" id="selectedSecTitle">💡 請點擊或按住拖曳下方任一聲部進行位置移動</span>
               </div>
-              <div id="selectedSecControls" style="display: none; align-items: center; gap: 16px; flex-wrap: wrap;">
+              <div id="selectedSecControls" style="display: none; align-items: center; gap: 12px; flex-wrap: wrap;">
                 <div style="display: flex; align-items: center; gap: 6px;">
-                  <span style="font-size: 0.88rem; font-weight: 700; color: var(--text-secondary);">編制人數：</span>
+                  <span style="font-size: 0.85rem; font-weight: 700; color: var(--text-secondary);">人數：</span>
                   <button type="button" class="btn btn-secondary btn-sm" onclick="adjustSelectedSection('count', -1)">－</button>
-                  <span id="selectedSecCountVal" style="font-weight: 800; min-width: 28px; text-align: center;">0</span>
+                  <span id="selectedSecCountVal" style="font-weight: 800; min-width: 24px; text-align: center;">0</span>
                   <button type="button" class="btn btn-secondary btn-sm" onclick="adjustSelectedSection('count', 1)">＋</button>
                 </div>
                 <div style="display: flex; align-items: center; gap: 6px;">
-                  <span style="font-size: 0.88rem; font-weight: 700; color: var(--text-secondary);">傾斜角度：</span>
+                  <span style="font-size: 0.85rem; font-weight: 700; color: var(--text-secondary);">角度：</span>
                   <button type="button" class="btn btn-secondary btn-sm" onclick="adjustSelectedSection('angle', -5)">↺ 左轉</button>
-                  <span id="selectedSecAngleVal" style="font-weight: 800; min-width: 40px; text-align: center;">0°</span>
+                  <span id="selectedSecAngleVal" style="font-weight: 800; min-width: 36px; text-align: center;">0°</span>
                   <button type="button" class="btn btn-secondary btn-sm" onclick="adjustSelectedSection('angle', 5)">↻ 右轉</button>
                 </div>
               </div>
@@ -1822,9 +1944,8 @@
                 <h3 class="card-title">👥 全社社員名冊管理</h3>
                 <div class="card-desc">支援依樂器聲部一次批次建立多位社員帳號、變更角色權限、重設密碼或刪除退社帳號。</div>
               </div>
-              <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-                <!-- 搜尋改為純前端秒搜 filterAdminMembersTable() -->
-                <input type="text" id="adminMemberSearchInput" class="form-control" placeholder="搜尋姓名、信箱、樂器..." style="width: 220px; padding: 8px 14px;" oninput="filterAdminMembersTable()">
+              <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap; width: 100%;">
+                <input type="text" id="adminMemberSearchInput" class="form-control" placeholder="搜尋姓名、信箱、樂器..." style="flex: 1; min-width: 160px; padding: 8px 14px;" oninput="filterAdminMembersTable()">
                 <button class="btn btn-secondary btn-sm" onclick="renderAdminMembersTable(true)">🔄 重新整理</button>
                 <button class="btn btn-primary btn-sm" onclick="openAddMemberModal()">＋ 批次新增社員</button>
               </div>
@@ -1871,7 +1992,7 @@
             <hr style="border: 0; border-top: 1px solid #f1f5f9; margin: 24px 0;">
 
             <div style="margin-bottom: 24px;">
-              <h4 style="font-size: 1rem; color: var(--obsidian); margin-bottom: 12px; display: flex; align-items: center; gap: 10px;">
+              <h4 style="font-size: 1rem; color: var(--obsidian); margin-bottom: 12px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
                 <span>📅 星期六開放節次（點選啟用）</span>
                 <button type="button" class="btn btn-secondary btn-sm" onclick="toggleWeekendPeriods('sat', true)">全選</button>
                 <button type="button" class="btn btn-secondary btn-sm" onclick="toggleWeekendPeriods('sat', false)">全關</button>
@@ -1882,7 +2003,7 @@
             <hr style="border: 0; border-top: 1px solid #f1f5f9; margin: 24px 0;">
 
             <div style="margin-bottom: 16px;">
-              <h4 style="font-size: 1rem; color: var(--obsidian); margin-bottom: 12px; display: flex; align-items: center; gap: 10px;">
+              <h4 style="font-size: 1rem; color: var(--obsidian); margin-bottom: 12px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
                 <span>📅 星期日開放節次（點選啟用）</span>
                 <button type="button" class="btn btn-secondary btn-sm" onclick="toggleWeekendPeriods('sun', true)">全選</button>
                 <button type="button" class="btn btn-secondary btn-sm" onclick="toggleWeekendPeriods('sun', false)">全關</button>
@@ -2123,7 +2244,7 @@
     </div>
   </div>
 
-  <!-- ==================== 系統核心邏輯（含極速快取與自動重試引擎） ==================== -->
+  <!-- ==================== 系統核心邏輯（SWR 即時對帳 + 絲滑觸控拖曳） ==================== -->
   <script>
     const GAS_URL = 'https://script.google.com/macros/s/AKfycbzRYlRMKgd9LOsbk92ayqqtDrdOEbZZtSzfwU5UTXqeQULPtEEC_5AtIas-uiMfzBQ/exec';
 
@@ -2163,7 +2284,7 @@
     let session = null;
 
     // =========================================================================
-    // 🚀 極速快取中心 (AppStore)：解決每次切換頁面都要「同步資料中...」轉圈圈的問題
+    // 🚀 SWR 即時快取中心：0秒瞬開 + 每次切換分頁自動背景對帳最新資料
     // =========================================================================
     const appStore = {
       dashboard: null,
@@ -2178,7 +2299,8 @@
       ts: {}
     };
 
-    const CACHE_TTL_MS = 90 * 1000; // 90 秒內切換頁籤完全不重發請求，0 秒瞬開
+    // 設為 4 秒防抖：4秒內連續狂點不重複發請求；超過4秒切換頁籤會「先0秒顯示快取，同時背景抓最新資料」！
+    const CACHE_DEBOUNCE_MS = 4 * 1000;
 
     function loadCacheFromStorage() {
       try {
@@ -2202,7 +2324,7 @@
     }
 
     function isCacheFresh(key) {
-      return appStore.ts[key] && (Date.now() - appStore.ts[key] < CACHE_TTL_MS);
+      return appStore.ts[key] && (Date.now() - appStore.ts[key] < CACHE_DEBOUNCE_MS);
     }
 
     function clearAllCache() {
@@ -2218,6 +2340,13 @@
       appStore.ts = {};
       sessionStorage.removeItem('scu_band_fast_cache');
     }
+
+    // 當使用者從手機 LINE 或其他分頁切回本系統時，自動在背景靜默同步最新狀態
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible' && session) {
+        preloadAllDataInBackground();
+      }
+    });
 
     // =========================================================================
     // 🛡️ 防呆網路引擎：支援自動重試 (Auto-Retry)、同請求合併、背景靜默同步
@@ -2237,15 +2366,9 @@
       }
     }
 
-    /**
-     * @param {string} action 後端動作名稱
-     * @param {object} params 傳遞參數
-     * @param {object} options { silent: boolean (為 true 時不蓋黑幕轉圈圈), retries: number }
-     */
     async function api(action, params = {}, options = {}) {
       const { silent = false, retries = 2 } = options;
 
-      // 針對讀取類型的請求進行「併發合併」(Deduplication)，避免同時發出重複請求
       const isReadAction = action.startsWith('get') || action === 'initAppBundle';
       const reqKey = isReadAction ? `${action}:${JSON.stringify(params)}` : null;
 
@@ -2270,7 +2393,7 @@
           let lastError = null;
           for (let attempt = 0; attempt <= retries; attempt++) {
             const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 22000); // 22秒超時保護
+            const timeoutId = setTimeout(() => controller.abort(), 22000);
 
             try {
               const response = await fetch(GAS_URL, {
@@ -2297,12 +2420,10 @@
             } catch (err) {
               clearTimeout(timeoutId);
               lastError = err;
-              if (err.isBusinessError) break; // 業務邏輯錯誤（如密碼錯、已截止）不重試
+              if (err.isBusinessError) break;
 
-              // 網路瞬斷或 Failed to fetch：自動等待後重試
               if (attempt < retries) {
-                console.warn(`[API 自動重試 ${attempt + 1}/${retries}] ${action}:`, err.message);
-                await new Promise(r => setTimeout(r, 700 * (attempt + 1)));
+                await new Promise(r => setTimeout(r, 650 * (attempt + 1)));
               }
             }
           }
@@ -2314,7 +2435,6 @@
           if (friendlyMsg.includes('Failed to fetch') || friendlyMsg.includes('NetworkError') || err.name === 'AbortError') {
             friendlyMsg = '網路連線不穩或伺服器忙碌中，請再試一次';
           }
-          // 若是背景靜默更新失敗且畫面已有快取，不干擾使用者；否則顯示提示
           if (!silent || err.isBusinessError) {
             showToast(friendlyMsg, 'error');
           }
@@ -2336,13 +2456,9 @@
       return taskPromise;
     }
 
-    /**
-     * 🚀 打包預載引擎：支援新舊版 code.gs，一登入就在背景把常用資料全部拉好
-     */
     async function preloadAllDataInBackground() {
       if (!session) return;
       try {
-        // 優先嘗試呼叫新版 code.gs 的單一打包 API (1次請求抵6次)
         const res = await api('initAppBundle', { email: session.email, name: session.name }, { silent: true, retries: 1 });
         if (res && res.bundle) {
           const b = res.bundle;
@@ -2352,29 +2468,38 @@
           if (b.myAbsences) { appStore.myAbsences = sortByDateClosestFirst(b.myAbsences, 'practiceDate'); markCacheFresh('myAbsences'); }
           if (b.seatingLayouts) { appStore.seatingLayouts = b.seatingLayouts; currentLayouts = b.seatingLayouts; markCacheFresh('seatingLayouts'); }
           if (b.dashboard) { appStore.dashboard = b.dashboard; markCacheFresh('dashboard'); }
-          if (b.allRooms) { appStore.allRooms = sortByDateClosestFirst(b.allRooms, 'date'); markCacheFresh('allRooms'); }
-          if (b.members) { appStore.members = b.members; markCacheFresh('members'); }
+          if (b.allRooms) { appStore.allRooms = sortByDateClosestFirst(b.allRooms, 'date'); allRoomRequestsCache = appStore.allRooms; markCacheFresh('allRooms'); }
+          if (b.members) { appStore.members = b.members; allMembersCache = b.members; markCacheFresh('members'); }
           if (b.absencesByPractice) {
             Object.assign(appStore.absencesByPractice, b.absencesByPractice);
           }
-          // 如果當前在首頁，立即用最新資料刷新畫面
-          if (document.getElementById('tabHome').classList.contains('active')) {
-            renderDashboardUI(appStore.dashboard);
-          }
+          refreshCurrentActiveViewFromStore();
           return;
         }
       } catch (e) {
-        // 若後端尚未更新 initAppBundle，自動退回平行預載主要資料
         Promise.allSettled([
-          ensureSettingsLoaded(false),
-          ensurePracticesLoaded(false),
-          ensureMyAbsencesLoaded(false),
-          ensureSeatingLayoutsLoaded(false)
+          ensureSettingsLoaded(true),
+          ensurePracticesLoaded(true),
+          ensureMyAbsencesLoaded(true),
+          ensureSeatingLayoutsLoaded(true)
         ]);
       }
     }
 
-    // 共用快取讀取器
+    function refreshCurrentActiveViewFromStore() {
+      if (document.getElementById('tabHome').classList.contains('active') && appStore.dashboard) {
+        renderDashboardUI(appStore.dashboard);
+      } else if (document.getElementById('tabRoom').classList.contains('active') && appStore.myRooms) {
+        renderMyRoomRequestsTable(appStore.myRooms);
+      } else if (document.getElementById('tabAbsence').classList.contains('active') && appStore.practices && appStore.myAbsences) {
+        renderAbsenceTabUI(appStore.practices, appStore.myAbsences);
+      } else if (document.getElementById('tabAdmin').classList.contains('active')) {
+        if (document.getElementById('subtab-adminRoom').classList.contains('active') && appStore.allRooms) {
+          filterAdminRoomTable();
+        }
+      }
+    }
+
     async function ensureSettingsLoaded(force = false) {
       if (!force && appStore.settings && isCacheFresh('settings')) {
         cachedSettings = appStore.settings;
@@ -2711,7 +2836,7 @@
     }
 
     // ==========================================
-    // 1. 首頁 (SWR 秒開架構)
+    // 1. 首頁 (0秒快取 + 自動背景對帳)
     // ==========================================
     async function loadDashboard(force = false) {
       if (!session) return;
@@ -2719,13 +2844,11 @@
       document.getElementById('homeWelcomeTitle').innerText = '歡迎回來，' + session.name + '！';
       document.getElementById('homeWelcomeSubtitle').innerText = '東吳管樂社  ・負責樂器：' + cleanInst;
 
-      // 1. 若有快取，0 秒立即渲染！
       if (appStore.dashboard) {
         renderDashboardUI(appStore.dashboard);
         if (!force && isCacheFresh('dashboard')) return;
       }
 
-      // 2. 背景靜默更新
       try {
         const data = await api('getDashboard', { email: session.email, name: session.name }, { silent: true });
         appStore.dashboard = data;
@@ -2755,15 +2878,15 @@
               <div class="cal-badge-month">${monthNum}月</div>
               <div class="cal-badge-day">${dayNum}</div>
             </div>
-            <div style="flex: 1;">
-              <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:4px;">
-                <div style="font-size:1.15rem; font-weight:800; color:var(--obsidian);">
+            <div style="flex: 1; min-width: 0;">
+              <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px; margin-bottom:4px;">
+                <div style="font-size:1.08rem; font-weight:800; color:var(--obsidian);">
                   ${nextPrac.date}（週${getWeekday(nextPrac.date)}）${nextPrac.startTime || '18:15'} - ${nextPrac.endTime || '20:30'}
                 </div>
                 ${statusBadgeHtml}
               </div>
-              <div style="font-size:0.88rem; color:var(--text-secondary);">
-                📍 地點：<strong>${escapeHtml(nextPrac.location)}</strong> &nbsp;・&nbsp; 請假截止：<span style="color:#b45309; font-weight:700;">${formatDateTimeDisplay(nextPrac.deadline)}</span>
+              <div style="font-size:0.86rem; color:var(--text-secondary);">
+                📍 地點：<strong>${escapeHtml(nextPrac.location)}</strong> ・ 請假截止：<span style="color:#b45309; font-weight:700;">${formatDateTimeDisplay(nextPrac.deadline)}</span>
               </div>
             </div>
           </div>
@@ -2839,12 +2962,10 @@
     }
 
     async function initRoomTab(force = false) {
-      // 先用預設或現有快取瞬間渲染表單與節次，完全不等待網路
       applyRoomBookingWindowUI();
       handleRoomDateChange();
       loadMyRoomRequests(force);
 
-      // 背景確保設定為最新
       try {
         await ensureSettingsLoaded(force);
         applyRoomBookingWindowUI();
@@ -2891,7 +3012,6 @@
     function renderPeriodOptions(dateVal, weekday) {
       const grid = document.getElementById('roomPeriodGrid');
       const weekendNote = document.getElementById('roomPeriodWeekendNote');
-      // 保留目前已勾選的節次
       const previouslyChecked = new Set();
       document.querySelectorAll('input[name="roomPeriodCheckbox"]:checked').forEach(cb => previouslyChecked.add(cb.value));
 
@@ -2995,7 +3115,6 @@
         });
         toggleAllPeriods(false);
 
-        // 清除相關快取並重新載入
         appStore.ts.myRooms = 0;
         appStore.ts.allRooms = 0;
         appStore.ts.dashboard = 0;
@@ -3043,18 +3162,16 @@
     }
 
     // ==========================================
-    // 3. 請假（含新增「取消請假 / 銷假」按鈕）
+    // 3. 請假（含完整防破版「取消請假」與「修改事由」按鈕）
     // ==========================================
     async function loadAbsenceTab(force = false) {
       if (!session) return;
 
-      // 1. 快取優先秒開
       if (appStore.practices && appStore.myAbsences) {
         renderAbsenceTabUI(appStore.practices, appStore.myAbsences);
         if (!force && isCacheFresh('practices') && isCacheFresh('myAbsences')) return;
       }
 
-      // 2. 平行請求更新（不再排隊等兩次！）
       try {
         const [practices, myAbsences] = await Promise.all([
           ensurePracticesLoaded(force),
@@ -3100,16 +3217,16 @@
               <div class="practice-header">
                 <div>
                   <div class="practice-date">🎺 ` + p.date + `（週` + getWeekday(p.date) + `）` + (p.startTime || '18:15') + ` - ` + (p.endTime || '20:30') + `</div>
-                  <div style="font-size:0.9rem; color:var(--text-secondary); margin-top:4px;">📍 排練地點：<strong>` + escapeHtml(p.location) + `</strong></div>
+                  <div style="font-size:0.88rem; color:var(--text-secondary); margin-top:4px;">📍 排練地點：<strong>` + escapeHtml(p.location) + `</strong></div>
                 </div>
                 <div>` + statusHtml + `</div>
               </div>
 
               ` + formatPracticeNotesHtml(p.notes, 'abs_' + p.id) + `
 
-              <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+              <div class="practice-footer">
                 <span class="practice-deadline-badge">⏰ 請假截止時間：` + formatDateTimeDisplay(p.deadline) + (isExpired ? ' (已截止)' : '') + `</span>
-                <div style="display:flex; gap:8px; align-items:center;">
+                <div class="practice-actions">
                   ${myRec && !disableBtn ? `
                     <button type="button" class="btn btn-danger btn-sm" onclick="cancelMyAbsenceConfirm('${myRec.id}', '${p.id}', '${p.date}')">
                       🗑️ 取消請假（恢復出席）
@@ -3174,7 +3291,6 @@
         showToast('請假事由已登記！', 'success');
         closeSubmitAbsenceModal();
 
-        // 使請假與首頁快取失效並重新載入
         appStore.ts.myAbsences = 0;
         appStore.ts.dashboard = 0;
         appStore.ts['abs_' + practiceId] = 0;
@@ -3200,7 +3316,7 @@
     }
 
     // ==========================================
-    // 4. 座位表 (平行載入與快取秒開)
+    // 4. 座位表 (手機 100% 完整縮放 + 絲滑 Pointer 拖曳引擎)
     // ==========================================
     let currentLayouts = [];
 
@@ -3220,7 +3336,6 @@
     }
 
     async function loadSeatingTab(force = false) {
-      // 1. 快取優先渲染
       if (appStore.practices && appStore.seatingLayouts) {
         populateSeatingPracticeSelect(appStore.practices);
         currentLayouts = appStore.seatingLayouts;
@@ -3228,7 +3343,6 @@
         if (!force && isCacheFresh('practices') && isCacheFresh('seatingLayouts')) return;
       }
 
-      // 2. 平行載入團練與座位表模板
       try {
         const [practices, layouts] = await Promise.all([
           ensurePracticesLoaded(force),
@@ -3265,7 +3379,6 @@
       const practiceId = document.getElementById('seatingPracticeSelect').value;
       const layout = sanitizeLayoutConfig(getLayoutForPractice(practiceId));
 
-      // 若已有快取請假名單，先秒畫座位圖
       const cachedAbs = practiceId ? (appStore.absencesByPractice[practiceId] || null) : [];
       if (cachedAbs) {
         drawPublicSeatingWithAbsences(layout, cachedAbs);
@@ -3334,7 +3447,7 @@
             </filter>
           </defs>
 
-          <rect x="20" y="20" width="860" height="580" rx="18" fill="#ffffff" stroke="#0f172a" stroke-width="2" filter="url(#seatShadow)"/>
+          <rect x="20" y="20" width="860" height="580" rx="18" fill="#ffffff" stroke="#0f172a" stroke-width="2.5" filter="url(#seatShadow)"/>
 
           <g transform="translate(85, 36)">
             <rect x="0" y="0" width="130" height="44" rx="6" fill="#f8fafc" stroke="#0f172a" stroke-width="2"/>
@@ -3378,16 +3491,14 @@
         }
 
         const isSelected = interactive && adminSelectedSecId === group.id;
-        const dragAttrs = interactive
-          ? `class="draggable-section ${isSelected ? 'selected-sec' : ''}" data-secid="${group.id}" onmousedown="startDragSection(evt, '${group.id}')" ontouchstart="startDragSection(evt, '${group.id}')"`
-          : '';
+        const dragClass = interactive ? `draggable-section ${isSelected ? 'selected-sec' : ''}` : '';
 
-        svg += `<g ${dragAttrs} transform="translate(${cx}, ${cy})">`;
+        svg += `<g class="${dragClass}" data-secid="${group.id}" transform="translate(${cx}, ${cy})">`;
 
         if (group.type === 'box') {
           svg += `
             <g transform="rotate(${angle})">
-              <rect class="sec-highlight" x="-95" y="-36" width="190" height="72" rx="6" fill="#ffffff" stroke="#0f172a" stroke-width="2" filter="url(#seatShadow)"/>
+              <rect class="sec-highlight" x="-95" y="-36" width="190" height="72" rx="6" fill="#ffffff" stroke="#0f172a" stroke-width="2.5" filter="url(#seatShadow)"/>
             </g>
             <text x="0" y="6" font-size="20" font-weight="800" fill="#0f172a" text-anchor="middle">${group.label}</text>
           `;
@@ -3395,16 +3506,21 @@
           const r = 17;
           const spacing = 44;
           const drawCount = presentCount;
+          const totalW = Math.max(0, drawCount - 1) * spacing;
+          const hitW = Math.max(90, totalW + 76);
 
           svg += `<g transform="rotate(${angle})">`;
+          // 透明大範圍觸控熱區，讓幹部在手機上用手指超好按住拖曳！
+          if (interactive) {
+            svg += `<rect x="${-hitW / 2}" y="-34" width="${hitW}" height="68" fill="rgba(0,0,0,0.001)" stroke="none"/>`;
+          }
           if (drawCount > 0) {
-            const totalW = (drawCount - 1) * spacing;
             const lineHalf = (totalW / 2) + r + 14;
-            svg += `<line x1="${-lineHalf}" y1="0" x2="${lineHalf}" y2="0" stroke="#0f172a" stroke-width="2"/>`;
+            svg += `<line x1="${-lineHalf}" y1="0" x2="${lineHalf}" y2="0" stroke="#0f172a" stroke-width="2.5"/>`;
 
             for (let i = 0; i < drawCount; i++) {
               const dotX = -(totalW / 2) + i * spacing;
-              svg += `<circle class="sec-seat" cx="${dotX}" cy="0" r="${r}" fill="#ffffff" stroke="#0f172a" stroke-width="2" filter="url(#seatShadow)"/>`;
+              svg += `<circle class="sec-seat" cx="${dotX}" cy="0" r="${r}" fill="#ffffff" stroke="#0f172a" stroke-width="2.5" filter="url(#seatShadow)"/>`;
             }
           } else if (interactive) {
             svg += `<rect class="sec-highlight" x="-30" y="-18" width="60" height="36" rx="6" stroke="#94a3b8" stroke-dasharray="4,4" fill="none"/>`;
@@ -3414,7 +3530,6 @@
           let labelX = 0;
           let labelY = -28;
           if (group.labelPos === 'left') {
-            const totalW = Math.max(0, drawCount - 1) * spacing;
             labelX = -(totalW / 2) - 42;
             labelY = 6;
           } else if (group.labelPos === 'bottom') {
@@ -3472,12 +3587,11 @@
     }
 
     // ==========================================
-    // 幹部後台：4. 座位表拖曳設定
+    // 幹部後台：4. 座位表拖曳設定（全新 Pointer Events 1:1 跟手不亂跳）
     // ==========================================
     let adminEditingLayout = null;
     let adminSelectedSecId = null;
     let adminPracticeAbsences = {};
-    let draggingSecId = null;
 
     async function loadAdminSeatingTab(force = false) {
       const [practices, layouts] = await Promise.all([
@@ -3528,53 +3642,93 @@
       renderSeatingChart('adminSeatingPreviewContainer', adminEditingLayout, adminPracticeAbsences, true);
     }
 
-    function startDragSection(evt, secId) {
-      evt.stopPropagation();
-      draggingSecId = secId;
-      adminSelectedSecId = secId;
-      updateSelectedSecUI();
-      renderSeatingChart('adminSeatingPreviewContainer', adminEditingLayout, adminPracticeAbsences, true);
-    }
-
+    /**
+     * 🎯 全新絲滑拖曳引擎：
+     * 1. 按下瞬間只切換 CSS class，絕不重繪整個 SVG（解決手指觸控斷開亂跳問題）
+     * 2. 記錄手指按下處與聲部中心的相對偏移量 (dragOffset)，按哪裡就從哪裡平滑移動，0 瞬間跳動！
+     */
     function bindSvgDragEvents(containerId) {
       const svg = document.getElementById('svg_' + containerId);
       if (!svg) return;
 
-      const onMove = (evt) => {
-        if (!draggingSecId || !adminEditingLayout) return;
-        evt.preventDefault();
+      let activeSecId = null;
+      let activeGEl = null;
+      let activePointerId = null;
+      let offsetX = 0;
+      let offsetY = 0;
+
+      const toSvgCoords = (clientX, clientY) => {
         const pt = svg.createSVGPoint();
-        const clientX = evt.touches ? evt.touches[0].clientX : evt.clientX;
-        const clientY = evt.touches ? evt.touches[0].clientY : evt.clientY;
         pt.x = clientX;
         pt.y = clientY;
-        const svgP = pt.matrixTransform(svg.getScreenCTM().inverse());
+        const ctm = svg.getScreenCTM();
+        return ctm ? pt.matrixTransform(ctm.inverse()) : { x: 0, y: 0 };
+      };
 
-        const newX = Math.max(6, Math.min(92, Math.round((svgP.x / 900) * 100 * 10) / 10));
-        const newY = Math.max(10, Math.min(82, Math.round((svgP.y / 620) * 100 * 10) / 10));
+      svg.addEventListener('pointerdown', (evt) => {
+        const gEl = evt.target.closest('g.draggable-section');
+        if (!gEl || !adminEditingLayout) return;
 
-        if (!adminEditingLayout.sections[draggingSecId]) {
-          const g = SEATING_GROUPS.find(x => x.id === draggingSecId);
-          adminEditingLayout.sections[draggingSecId] = { x: newX, y: newY, count: g.defaultCount, angle: g.angle };
-        } else {
-          adminEditingLayout.sections[draggingSecId].x = newX;
-          adminEditingLayout.sections[draggingSecId].y = newY;
+        evt.preventDefault();
+        evt.stopPropagation();
+
+        const secId = gEl.getAttribute('data-secid');
+        activeSecId = secId;
+        activeGEl = gEl;
+        activePointerId = evt.pointerId;
+        adminSelectedSecId = secId;
+
+        // 直接更新選取框高亮，不重新 innerHTML 整個 SVG！
+        svg.querySelectorAll('g.draggable-section').forEach(el => {
+          el.classList.toggle('selected-sec', el === gEl);
+        });
+        updateSelectedSecUI();
+
+        const gDef = SEATING_GROUPS.find(x => x.id === secId);
+        if (!adminEditingLayout.sections[secId]) {
+          adminEditingLayout.sections[secId] = { x: gDef.x, y: gDef.y, count: gDef.defaultCount, angle: gDef.angle };
         }
+        const conf = adminEditingLayout.sections[secId];
+        const curSvgX = (conf.x / 100) * 900;
+        const curSvgY = (conf.y / 100) * 620;
 
-        const gEl = svg.querySelector(`g[data-secid="${draggingSecId}"]`);
-        if (gEl) {
-          gEl.setAttribute('transform', `translate(${(newX / 100) * 900}, ${(newY / 100) * 620})`);
+        const p = toSvgCoords(evt.clientX, evt.clientY);
+        offsetX = curSvgX - p.x;
+        offsetY = curSvgY - p.y;
+
+        try { svg.setPointerCapture(evt.pointerId); } catch (e) {}
+      });
+
+      svg.addEventListener('pointermove', (evt) => {
+        if (!activeSecId || evt.pointerId !== activePointerId || !adminEditingLayout) return;
+        evt.preventDefault();
+
+        const p = toSvgCoords(evt.clientX, evt.clientY);
+        const targetSvgX = p.x + offsetX;
+        const targetSvgY = p.y + offsetY;
+
+        const newX = Math.max(6, Math.min(92, Math.round((targetSvgX / 900) * 100 * 10) / 10));
+        const newY = Math.max(10, Math.min(82, Math.round((targetSvgY / 620) * 100 * 10) / 10));
+
+        adminEditingLayout.sections[activeSecId].x = newX;
+        adminEditingLayout.sections[activeSecId].y = newY;
+
+        if (activeGEl) {
+          activeGEl.setAttribute('transform', `translate(${(newX / 100) * 900}, ${(newY / 100) * 620})`);
+        }
+      });
+
+      const endDrag = (evt) => {
+        if (activePointerId !== null && evt.pointerId === activePointerId) {
+          try { svg.releasePointerCapture(evt.pointerId); } catch (e) {}
+          activeSecId = null;
+          activeGEl = null;
+          activePointerId = null;
         }
       };
 
-      const onEnd = () => {
-        draggingSecId = null;
-      };
-
-      svg.addEventListener('mousemove', onMove);
-      svg.addEventListener('touchmove', onMove, { passive: false });
-      window.addEventListener('mouseup', onEnd, { once: true });
-      window.addEventListener('touchend', onEnd, { once: true });
+      svg.addEventListener('pointerup', endDrag);
+      svg.addEventListener('pointercancel', endDrag);
     }
 
     function updateSelectedSecUI() {
@@ -3633,14 +3787,12 @@
     let allRoomRequestsCache = [];
 
     async function renderAdminRoomTable(force = false) {
-      // 1. 若有快取，直接秒篩顯示，完全不卡畫面！
       if (appStore.allRooms) {
         allRoomRequestsCache = appStore.allRooms;
         filterAdminRoomTable();
         if (!force && isCacheFresh('allRooms')) return;
       }
 
-      // 2. 背景靜默拉取最新資料
       try {
         const res = await api('getRoomRequests', { email: session.email, name: session.name, all: true }, { silent: true });
         allRoomRequestsCache = sortByDateClosestFirst(res.requests || [], 'date');
@@ -3650,7 +3802,6 @@
       } catch (err) {}
     }
 
-    // 純前端秒篩函式（切換狀態或日期時 0 延遲，不再發網路請求！）
     function filterAdminRoomTable() {
       const statusFilter = document.getElementById('adminRoomFilterStatus').value;
       const dateFilter = document.getElementById('adminRoomFilterDate').value;
@@ -3679,7 +3830,7 @@
           <td>` + (item.headcount || 1) + `</td>
           <td>` + (item.doNotDisturb ? '<span class="badge badge-rejected">是</span>' : 'X') + `</td>
           <td>` + (item.needs && item.needs.length > 0 ? item.needs.join('、') : '-') + `</td>
-          <td style="font-size:0.82rem; color:#64748b; max-width:140px;">` + escapeHtml(item.notes || '-') + `</td>
+          <td style="font-size:0.82rem; color:#64748b; max-width:140px; white-space:normal;">` + escapeHtml(item.notes || '-') + `</td>
           <td>
             <select class="form-control" style="padding:5px 8px; font-size:0.84rem; width:96px;" id="adminRoomStatus_` + item.id + `">
               <option value="已收件" ` + (item.status === '已收件' ? 'selected' : '') + `>已收件</option>
@@ -3722,7 +3873,6 @@
           assignedRoom
         }, { silent: true });
 
-        // 直接更新本地快取，免去整張表重抓的等待時間
         const target = allRoomRequestsCache.find(r => r.id === id);
         if (target) {
           target.status = status;
@@ -3805,7 +3955,7 @@
           <td>` + (p.startTime || '18:15') + ` - ` + (p.endTime || '20:30') + `</td>
           <td>` + escapeHtml(p.location) + `</td>
           <td><span style="color:#b45309; font-weight:700;">` + formatDateTimeDisplay(p.deadline) + `</span></td>
-          <td style="min-width: 280px; max-width: 420px;">` + formatPracticeNotesHtml(p.notes, 'admin_' + p.id) + `</td>
+          <td style="min-width: 260px; max-width: 400px; white-space: normal;">` + formatPracticeNotesHtml(p.notes, 'admin_' + p.id) + `</td>
           <td>
             <div style="display:flex; gap:6px;">
               <button class="btn btn-secondary btn-sm" onclick="editPracticeModal('` + p.id + `')">編輯</button>
@@ -3890,7 +4040,7 @@
     }
 
     // ==========================================
-    // 幹部後台：3. 請假統計（平行請求優化）
+    // 幹部後台：3. 請假統計（每次開啟自動對帳最新假單）
     // ==========================================
     let currentAdminAbsences = [];
 
@@ -3898,7 +4048,6 @@
       const select = document.getElementById('adminAbsencePracticeSelect');
       const prevSelectedId = select.value;
 
-      // 平行載入團練場次與全體社員名冊
       const [practices, allMembers] = await Promise.all([
         ensurePracticesLoaded(force),
         ensureMembersLoaded(force)
@@ -3961,7 +4110,7 @@
           <tr>
             <td><strong>` + escapeHtml(a.name) + `</strong></td>
             <td>` + formatInstrumentDisplay(a.instrument, a.section) + `</td>
-            <td>` + escapeHtml(a.reason) + `</td>
+            <td style="white-space:normal;">` + escapeHtml(a.reason) + `</td>
             <td style="font-size:0.85rem; color:#64748b;">` + formatDateTimeDisplay(a.createdAt) + `</td>
           </tr>
         `).join('');
@@ -3985,7 +4134,7 @@
     }
 
     // ==========================================
-    // 幹部後台：5. 社員管理（純前端秒搜）
+    // 幹部後台：5. 社員管理
     // ==========================================
     let allMembersCache = [];
 
@@ -4141,7 +4290,7 @@
     }
 
     // ==========================================
-    // 幹部後台：6. 系統設定（補齊幹部權限驗證參數）
+    // 幹部後台：6. 系統設定
     // ==========================================
     async function renderAdminSettingsTab(force = false) {
       if (appStore.settings) {

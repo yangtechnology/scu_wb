@@ -128,6 +128,16 @@
       box-shadow: 0 12px 24px -4px rgba(11, 15, 25, 0.45);
       transform: translateY(-1.5px);
     }
+    .btn-accent {
+      background: linear-gradient(135deg, var(--accent-indigo) 0%, #3730a3 100%);
+      color: #ffffff;
+      box-shadow: 0 8px 18px -4px rgba(79, 70, 229, 0.35);
+    }
+    .btn-accent:hover:not(:disabled) {
+      background: linear-gradient(135deg, var(--accent-indigo-hover) 0%, #312e81 100%);
+      box-shadow: 0 12px 22px -4px rgba(79, 70, 229, 0.45);
+      transform: translateY(-1.5px);
+    }
     .btn-secondary {
       background: #ffffff;
       color: var(--text-main);
@@ -227,7 +237,7 @@
     }
     .badge-member::before { background-color: #64748b; }
 
-    /* ==================== 頂部懸浮毛玻璃導覽島 (修正手機擠壓破版) ==================== */
+    /* ==================== 頂部懸浮毛玻璃導覽島 ==================== */
     .navbar-wrapper {
       position: sticky;
       top: 10px;
@@ -315,7 +325,6 @@
       gap: 6px;
       flex-shrink: 0;
     }
-    /* 背景無感同步指示燈（不換行、不擠壓） */
     .bg-sync-pill {
       display: none;
       align-items: center;
@@ -670,7 +679,6 @@
       transition: var(--ease-spring);
       outline: none;
     }
-    /* 徹底修復 iOS Safari input[type="date"] 超出卡片右邊界的問題 */
     input[type="date"].form-control,
     input[type="time"].form-control,
     input[type="datetime-local"].form-control {
@@ -758,6 +766,31 @@
       background: var(--champagne);
       display: inline-block;
       flex-shrink: 0;
+    }
+
+    /* 借用流程須知折疊卡 */
+    .info-guide-card {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-radius: var(--radius-lg);
+      padding: 16px 18px;
+      margin-bottom: 20px;
+      font-size: 0.88rem;
+      color: var(--text-main);
+      line-height: 1.65;
+    }
+    .info-guide-title {
+      font-weight: 800;
+      font-size: 0.94rem;
+      color: var(--obsidian);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .info-guide-item {
+      margin-bottom: 6px;
+      padding-left: 4px;
     }
 
     /* ==================== 空氣感無邊框表格 ==================== */
@@ -1072,7 +1105,7 @@
       animation: fadeIn 0.22s ease;
     }
 
-    /* ==================== 點陣舞台座位表畫布（100% 響應式完整顯示 + 絲滑觸控） ==================== */
+    /* ==================== 點陣舞台座位表畫布 ==================== */
     .seating-controls {
       display: flex;
       gap: 10px;
@@ -1094,14 +1127,13 @@
       user-select: none;
       -webkit-user-select: none;
     }
-    /* 移除原本導致手機只能看一半的 min-width: 680px，讓 SVG 自動 100% 等比例縮放適應手機螢幕 */
     .seating-svg {
       width: 100%;
       max-width: 880px;
       height: auto;
       display: block;
       margin: 0 auto;
-      touch-action: none; /* 防止拖曳座位時手機畫面跟著上下滾動 */
+      touch-action: none;
     }
     .draggable-section {
       cursor: grab;
@@ -1378,7 +1410,7 @@
   <!-- ==================== 2. 社員主畫面 ==================== -->
   <div id="mainApp" style="display: none; flex-direction: column; min-height: 100vh;">
     
-    <!-- 懸浮膠囊導覽島（手機版零擠壓設計） -->
+    <!-- 懸浮膠囊導覽島 -->
     <div class="navbar-wrapper">
       <header class="navbar">
         <div class="nav-brand" onclick="showTab('tabHome')">
@@ -1412,7 +1444,7 @@
       </header>
     </div>
 
-    <!-- 手機版懸浮選單（含設定與登出按鈕） -->
+    <!-- 手機版懸浮選單 -->
     <div id="mobileMenu" class="mobile-menu">
       <div class="nav-item active" id="mobNavItem-tabHome" onclick="showTab('tabHome'); toggleMobileMenu();">🏠 首頁總覽</div>
       <div class="nav-item" id="mobNavItem-tabRoom" onclick="showTab('tabRoom'); toggleMobileMenu();">🚪 預約教室</div>
@@ -1531,12 +1563,20 @@
           <div class="card-header">
             <div>
               <h2 class="card-title">🚪 預約排練教室 / 琴房</h2>
-              <div class="card-desc">當週僅開放預約「下週」之時段，請直接點選下方節次與需求方塊進行申請。</div>
+              <div class="card-desc">當週僅開放預約「下週」之時段，請直接點選下方節次與需求方塊進行申請。審核結果將於每週日 15:00～16:00 寄信通知。</div>
             </div>
           </div>
 
-          <div id="roomBookingRuleBanner" style="background: #fffbeb; border: 1px solid #fde68a; border-radius: var(--radius-md); padding: 14px 16px; margin-bottom: 20px; font-size: 0.88rem; color: #92400e; line-height: 1.55;">
+          <div id="roomBookingRuleBanner" style="background: #fffbeb; border: 1px solid #fde68a; border-radius: var(--radius-md); padding: 14px 16px; margin-bottom: 14px; font-size: 0.88rem; color: #92400e; line-height: 1.55;">
             載入借用規則中...
+          </div>
+
+          <!-- 借用流程與冷氣資源卡重要須知 -->
+          <div class="info-guide-card">
+            <div class="info-guide-title">⚠️ 教室借用流程與冷氣資源卡重要須知</div>
+            <div class="info-guide-item">🔹 <strong>獲分配【B棟教室】者：</strong>請先至群美中心（B棟 2 樓）簽到並借教室鑰匙（需押學生證），開完教室門後將鑰匙還回、取回學生證。（若教室前一節有人使用、教室沒鎖，則不需借鑰匙，但仍須至群美簽到）</div>
+            <div class="info-guide-item">🔹 <strong>獲分配【D棟教室】者：</strong>可直接前往教室，借用期間會有管理室人員到教室找你簽名。</div>
+            <div class="info-guide-item" style="margin-bottom:0; color:#b45309; font-weight:600;">❄️ <strong>冷氣資源卡提醒：</strong>在借用教室開冷氣需使用「資源卡」，放在社辦辦公桌貼有「重要物品」的抽屜裡，借用教室前自行拿取，結束後請務必記得放回抽屜！</div>
           </div>
 
           <form id="roomRequestForm" onsubmit="handleRoomRequestSubmit(event)">
@@ -1737,7 +1777,7 @@
           <div class="card-header" style="margin-bottom: 14px;">
             <div>
               <h2 class="card-title">⚙️ 幹部後台管理中心</h2>
-              <div class="card-desc">借教室審批、團練排程、請假統計、座位拖曳調整、社員批次建檔與系統設定</div>
+              <div class="card-desc">借教室審批與批次寄信、團練排程、請假統計與代為補登、座位拖曳調整、社員批次建檔與系統設定</div>
             </div>
           </div>
 
@@ -1757,7 +1797,7 @@
             <div class="card-header">
               <div>
                 <h3 class="card-title">🚪 全社借教室申請審查</h3>
-                <div class="card-desc">依借用日期由近到遠排列；儲存審核後系統將自動寄信通知社員。</div>
+                <div class="card-desc">點擊「儲存」僅保存審核結果不立即寄信；填妥所有教室後可點選「📬 一鍵寄發待通知結果」，或由系統於每週日 15:00～16:00 自動寄發（信件會依 B/D 棟自動附上對應須知與冷氣資源卡提醒）。</div>
               </div>
               <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap; width: 100%;">
                 <select id="adminRoomFilterStatus" class="form-control" style="flex: 1; min-width: 120px; padding: 8px 12px;" onchange="filterAdminRoomTable()">
@@ -1768,6 +1808,7 @@
                   <option value="無教室">無教室</option>
                 </select>
                 <input type="date" id="adminRoomFilterDate" class="form-control" style="flex: 1; min-width: 140px; padding: 7px 12px;" onchange="filterAdminRoomTable()">
+                <button class="btn btn-accent btn-sm" id="batchSendEmailBtn" onclick="handleBatchSendRoomNotifications()">📬 一鍵寄發待通知結果</button>
                 <button class="btn btn-secondary btn-sm" onclick="renderAdminRoomTable(true)">🔄 重新整理</button>
                 <button class="btn btn-secondary btn-sm" onclick="exportRoomRequestsCSV()">📥 匯出報表</button>
               </div>
@@ -1789,6 +1830,7 @@
                     <th>審核</th>
                     <th>可借用時間</th>
                     <th>核定教室</th>
+                    <th>通知狀態</th>
                     <th>操作</th>
                   </tr>
                 </thead>
@@ -1831,16 +1873,17 @@
           </div>
         </div>
 
-        <!-- 5.3 請假統計 -->
+        <!-- 5.3 請假統計（新增幹部代為補登與取消請假功能） -->
         <div id="subtab-adminAbsence" class="subtab-content">
           <div class="card">
             <div class="card-header">
               <div>
                 <h3 class="card-title">📊 團練請假與出席統計</h3>
-                <div class="card-desc">選取團練場次，即時統計全體與各樂器出缺席狀態，並可匯出名單。</div>
+                <div class="card-desc">選取團練場次，即時統計全體與各樂器出缺席狀態；幹部可不受截止時間限制，手動幫社員補登或移除假單。</div>
               </div>
               <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap; width: 100%;">
                 <select id="adminAbsencePracticeSelect" class="form-control" style="flex: 1; min-width: 180px; padding: 8px 12px;" onchange="renderAdminAbsenceStats(false)"></select>
+                <button class="btn btn-primary btn-sm" onclick="openAdminAddAbsenceModal()">＋ 幹部代為補登請假</button>
                 <button class="btn btn-secondary btn-sm" onclick="renderAdminAbsenceStats(true)">🔄 重新整理</button>
                 <button class="btn btn-secondary btn-sm" onclick="exportAbsenceCSV()">📥 匯出假單</button>
               </div>
@@ -1880,7 +1923,7 @@
             <h4 style="margin-bottom: 12px; color: var(--obsidian); font-size: 1rem; font-weight: 800;">各樂器出席率分佈</h4>
             <div id="adminSectionBreakdownGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; margin-bottom: 24px;"></div>
 
-            <h4 style="margin-bottom: 12px; color: var(--obsidian); font-size: 1rem; font-weight: 800;">請假詳細名冊</h4>
+            <h4 style="margin-bottom: 12px; color: var(--obsidian); font-size: 1rem; font-weight: 800;">請假詳細名冊（可由幹部直接修改或取消請假）</h4>
             <div class="table-container">
               <table>
                 <thead>
@@ -1889,6 +1932,7 @@
                     <th>負責樂器</th>
                     <th>請假事由</th>
                     <th>登記時間</th>
+                    <th>管理操作</th>
                   </tr>
                 </thead>
                 <tbody id="adminAbsenceDetailTableBody"></tbody>
@@ -2060,7 +2104,7 @@
     </div>
   </div>
 
-  <!-- 2. 個人資料與通知設定 -->
+  <!-- 2. 個人資料與通知設定（新增 Bsn. 巴松管 與 Tuba 低音號） -->
   <div id="modalProfile" class="modal-overlay">
     <div class="modal-card">
       <div class="modal-header">
@@ -2085,11 +2129,13 @@
               <option value="Cl. 豎笛">Cl. 豎笛</option>
               <option value="Fl. 長笛">Fl. 長笛</option>
               <option value="Ob. 雙簧管">Ob. 雙簧管</option>
+              <option value="Bsn. 巴松管">Bsn. 巴松管</option>
               <option value="Sax. 薩克斯風">Sax. 薩克斯風</option>
               <option value="Hn. 法國號">Hn. 法國號</option>
               <option value="Tpt. 小號">Tpt. 小號</option>
               <option value="Tbn. 長號">Tbn. 長號</option>
               <option value="Euph. 上低音號">Euph. 上低音號</option>
+              <option value="Tuba 低音號">Tuba 低音號</option>
               <option value="Perc. 打擊">Perc. 打擊</option>
             </select>
           </div>
@@ -2168,7 +2214,7 @@
     </div>
   </div>
 
-  <!-- 4. 批次快速新增社員 -->
+  <!-- 4. 批次快速新增社員（新增 Bsn. 巴松管 與 Tuba 低音號） -->
   <div id="modalAddMember" class="modal-overlay">
     <div class="modal-card">
       <div class="modal-header">
@@ -2188,11 +2234,13 @@
               <option value="Cl. 豎笛">Cl. 豎笛</option>
               <option value="Fl. 長笛">Fl. 長笛</option>
               <option value="Ob. 雙簧管">Ob. 雙簧管</option>
+              <option value="Bsn. 巴松管">Bsn. 巴松管</option>
               <option value="Sax. 薩克斯風">Sax. 薩克斯風</option>
               <option value="Hn. 法國號">Hn. 法國號</option>
               <option value="Tpt. 小號">Tpt. 小號</option>
               <option value="Tbn. 長號">Tbn. 長號</option>
               <option value="Euph. 上低音號">Euph. 上低音號</option>
+              <option value="Tuba 低音號">Tuba 低音號</option>
               <option value="Perc. 打擊">Perc. 打擊</option>
             </select>
           </div>
@@ -2217,7 +2265,7 @@
     </div>
   </div>
 
-  <!-- 5. 登記請假 -->
+  <!-- 5. 社員自行登記請假 -->
   <div id="modalSubmitAbsence" class="modal-overlay">
     <div class="modal-card">
       <div class="modal-header">
@@ -2244,7 +2292,38 @@
     </div>
   </div>
 
-  <!-- ==================== 系統核心邏輯（SWR 即時對帳 + 絲滑觸控拖曳） ==================== -->
+  <!-- 6. 幹部手動代為補登 / 修改請假 -->
+  <div id="modalAdminAddAbsence" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title" id="adminAddAbsenceTitle">➕ 幹部代為補登 / 修改請假</div>
+        <button type="button" class="modal-close" onclick="closeAdminAddAbsenceModal()">✕</button>
+      </div>
+      <form id="adminAddAbsenceForm" onsubmit="handleAdminAbsenceSubmit(event)">
+        <div class="modal-body">
+          <div id="adminAbsencePracticeLabel" style="background: #eff6ff; border: 1px solid #bfdbfe; padding: 12px 16px; border-radius: 12px; margin-bottom: 18px; font-size: 0.9rem; font-weight: 700; color: #1d4ed8;">
+            目標團練場次：
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">選擇請假社員<span class="required">*</span></label>
+            <select id="adminAbsenceMemberSelect" class="form-control" required></select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">請假事由（選填，未填預設為「幹部代為登記」）</label>
+            <textarea id="adminAbsenceReasonInput" class="form-control" placeholder="例如：臨時身體不適（幹部補登）"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeAdminAddAbsenceModal()">取消</button>
+          <button type="submit" class="btn btn-primary">確認登記請假</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==================== 系統核心邏輯 ==================== -->
   <script>
     const GAS_URL = 'https://script.google.com/macros/s/AKfycbzRYlRMKgd9LOsbk92ayqqtDrdOEbZZtSzfwU5UTXqeQULPtEEC_5AtIas-uiMfzBQ/exec';
 
@@ -2255,36 +2334,42 @@
     };
     const ALL_PERIOD_KEYS = ['1', '2', '3', '4', 'E', '5', '6', '7', '8', '9', 'A', 'B'];
 
+    // 擴充至 11 個聲部（新增 Bsn. 巴松管、Tuba 低音號）
     const SECTION_DEFS = [
       { id: 'Cl',   name: '豎笛',     abbr: 'Cl.',   fullLabel: 'Cl. 豎笛',     defaultCount: 6 },
       { id: 'Fl',   name: '長笛',     abbr: 'Fl.',   fullLabel: 'Fl. 長笛',     defaultCount: 2 },
       { id: 'Ob',   name: '雙簧管',   abbr: 'Ob.',   fullLabel: 'Ob. 雙簧管',   defaultCount: 1 },
+      { id: 'Bsn',  name: '巴松管',   abbr: 'Bsn.',  fullLabel: 'Bsn. 巴松管',  defaultCount: 1 },
       { id: 'Sax',  name: '薩克斯風', abbr: 'Sax.',  fullLabel: 'Sax. 薩克斯風', defaultCount: 2 },
-      { id: 'Euph', name: '上低音號', abbr: 'Euph.', fullLabel: 'Euph. 上低音號',defaultCount: 2 },
       { id: 'Hn',   name: '法國號',   abbr: 'Hn.',   fullLabel: 'Hn. 法國號',   defaultCount: 3 },
       { id: 'Tpt',  name: '小號',     abbr: 'Tpt.',  fullLabel: 'Tpt. 小號',     defaultCount: 5 },
       { id: 'Tbn',  name: '長號',     abbr: 'Tbn.',  fullLabel: 'Tbn. 長號',     defaultCount: 4 },
+      { id: 'Euph', name: '上低音號', abbr: 'Euph.', fullLabel: 'Euph. 上低音號',defaultCount: 2 },
+      { id: 'Tuba', name: '低音號',   abbr: 'Tuba',  fullLabel: 'Tuba 低音號',   defaultCount: 2 },
       { id: 'Perc', name: '打擊',     abbr: 'Perc.', fullLabel: 'Perc. 打擊',   defaultCount: 4 }
     ];
 
+    // 座位表各區塊預設座標（與 code.gs getDefaultSeatingSections 對齊）
     const SEATING_GROUPS = [
       { id: 'Perc', label: 'perc', secAbbr: 'Perc.', defaultCount: 4, x: 12, y: 36, angle: -76, type: 'box' },
       { id: 'Tpt',  label: 'Tp',   secAbbr: 'Tpt.',  defaultCount: 5, x: 38, y: 23, angle: -2,  type: 'line', labelPos: 'top' },
-      { id: 'Tbn',  label: 'Tb',   secAbbr: 'Tbn.',  defaultCount: 4, x: 68, y: 23, angle: 2,   type: 'line', labelPos: 'top' },
+      { id: 'Tbn',  label: 'Tb',   secAbbr: 'Tbn.',  defaultCount: 4, x: 64, y: 23, angle: 2,   type: 'line', labelPos: 'top' },
+      { id: 'Tuba', label: 'Tuba', secAbbr: 'Tuba',  defaultCount: 2, x: 82, y: 27, angle: 18,  type: 'line', labelPos: 'top' },
       { id: 'Hn',   label: 'Hn',   secAbbr: 'Hn.',   defaultCount: 3, x: 54, y: 36, angle: 12,  type: 'line', labelPos: 'top' },
       { id: 'Cl3',  label: 'Cl.3', secAbbr: 'Cl.',   defaultCount: 2, x: 33, y: 40, angle: -26, type: 'line', labelPos: 'left' },
       { id: 'Cl2',  label: 'Cl.2', secAbbr: 'Cl.',   defaultCount: 2, x: 35, y: 52, angle: -26, type: 'line', labelPos: 'left' },
       { id: 'Cl1',  label: 'Cl.1', secAbbr: 'Cl.',   defaultCount: 2, x: 37, y: 64, angle: -26, type: 'line', labelPos: 'left' },
       { id: 'Sax',  label: 'Sax',  secAbbr: 'Sax.',  defaultCount: 2, x: 52, y: 49, angle: 0,   type: 'line', labelPos: 'top' },
-      { id: 'Euph', label: 'Eup',  secAbbr: 'Euph.', defaultCount: 2, x: 70, y: 46, angle: 28,  type: 'line', labelPos: 'bottom' },
+      { id: 'Euph', label: 'Eup',  secAbbr: 'Euph.', defaultCount: 2, x: 70, y: 45, angle: 28,  type: 'line', labelPos: 'bottom' },
+      { id: 'Bsn',  label: 'Bsn',  secAbbr: 'Bsn.',  defaultCount: 1, x: 68, y: 55, angle: 22,  type: 'line', labelPos: 'bottom' },
       { id: 'Fl',   label: 'fl',   secAbbr: 'Fl.',   defaultCount: 2, x: 54, y: 61, angle: 8,   type: 'line', labelPos: 'bottom' },
-      { id: 'Ob',   label: 'ob',   secAbbr: 'Ob.',   defaultCount: 1, x: 65, y: 64, angle: 28,  type: 'line', labelPos: 'bottom' }
+      { id: 'Ob',   label: 'ob',   secAbbr: 'Ob.',   defaultCount: 1, x: 65, y: 65, angle: 28,  type: 'line', labelPos: 'bottom' }
     ];
 
     let session = null;
 
     // =========================================================================
-    // 🚀 SWR 即時快取中心：0秒瞬開 + 每次切換分頁自動背景對帳最新資料
+    // 🚀 SWR 即時快取中心
     // =========================================================================
     const appStore = {
       dashboard: null,
@@ -2299,7 +2384,6 @@
       ts: {}
     };
 
-    // 設為 4 秒防抖：4秒內連續狂點不重複發請求；超過4秒切換頁籤會「先0秒顯示快取，同時背景抓最新資料」！
     const CACHE_DEBOUNCE_MS = 4 * 1000;
 
     function loadCacheFromStorage() {
@@ -2341,7 +2425,6 @@
       sessionStorage.removeItem('scu_band_fast_cache');
     }
 
-    // 當使用者從手機 LINE 或其他分頁切回本系統時，自動在背景靜默同步最新狀態
     document.addEventListener('visibilitychange', () => {
       if (document.visibilityState === 'visible' && session) {
         preloadAllDataInBackground();
@@ -2349,7 +2432,7 @@
     });
 
     // =========================================================================
-    // 🛡️ 防呆網路引擎：支援自動重試 (Auto-Retry)、同請求合併、背景靜默同步
+    // 🛡️ 防呆網路引擎
     // =========================================================================
     let blockingLockCount = 0;
     let bgSyncCount = 0;
@@ -2571,7 +2654,7 @@
     }
 
     // =========================================================================
-    // 工具函式
+    // 工具函式（精準區分上低音號 Euph. 與低音號 Tuba、新增 Bsn. 巴松管）
     // =========================================================================
     function escapeHtml(str) {
       return String(str || '')
@@ -2655,10 +2738,21 @@
     function extractSectionAbbr(instStr, fallbackSec) {
       const s = String(instStr || '').trim();
       for (const def of SECTION_DEFS) {
-        if (s.toLowerCase().startsWith(def.abbr.toLowerCase()) || s.includes(def.name)) {
+        if (s.toLowerCase().startsWith(def.abbr.toLowerCase())) {
           return def.abbr;
         }
       }
+      if (s.includes('豎笛') || s.includes('單簧管')) return 'Cl.';
+      if (s.includes('長笛') || s.includes('短笛')) return 'Fl.';
+      if (s.includes('雙簧管')) return 'Ob.';
+      if (s.includes('巴松') || s.includes('低音管')) return 'Bsn.';
+      if (s.includes('薩克斯')) return 'Sax.';
+      if (s.includes('法國號') || s.includes('圓號')) return 'Hn.';
+      if (s.includes('小號')) return 'Tpt.';
+      if (s.includes('長號')) return 'Tbn.';
+      if (s.includes('上低音號')) return 'Euph.';
+      if (s.includes('低音號') || s.toLowerCase().includes('tuba')) return 'Tuba';
+      if (s.includes('打擊')) return 'Perc.';
       return String(fallbackSec || 'Cl.').trim();
     }
 
@@ -2701,7 +2795,7 @@
       setTimeout(() => {
         toast.classList.add('hide');
         setTimeout(() => toast.remove(), 320);
-      }, 3000);
+      }, 3200);
     }
 
     function showPage(pageId) {
@@ -2836,7 +2930,7 @@
     }
 
     // ==========================================
-    // 1. 首頁 (0秒快取 + 自動背景對帳)
+    // 1. 首頁
     // ==========================================
     async function loadDashboard(force = false) {
       if (!session) return;
@@ -3162,7 +3256,7 @@
     }
 
     // ==========================================
-    // 3. 請假（含完整防破版「取消請假」與「修改事由」按鈕）
+    // 3. 請假
     // ==========================================
     async function loadAbsenceTab(force = false) {
       if (!session) return;
@@ -3316,7 +3410,7 @@
     }
 
     // ==========================================
-    // 4. 座位表 (手機 100% 完整縮放 + 絲滑 Pointer 拖曳引擎)
+    // 4. 座位表（自動補齊 Bsn 與 Tuba 座標）
     // ==========================================
     let currentLayouts = [];
 
@@ -3329,9 +3423,16 @@
     }
 
     function sanitizeLayoutConfig(layout) {
+      const def = getDefaultLayoutConfig();
       if (!layout || !layout.sections || !layout.sections.Cl1) {
-        return getDefaultLayoutConfig();
+        return def;
       }
+      // 確保新增之聲部（如 Bsn、Tuba）在既有座位表中也有預設座標
+      SEATING_GROUPS.forEach(g => {
+        if (!layout.sections[g.id]) {
+          layout.sections[g.id] = { x: g.x, y: g.y, count: g.defaultCount, angle: g.angle };
+        }
+      });
       return layout;
     }
 
@@ -3510,7 +3611,6 @@
           const hitW = Math.max(90, totalW + 76);
 
           svg += `<g transform="rotate(${angle})">`;
-          // 透明大範圍觸控熱區，讓幹部在手機上用手指超好按住拖曳！
           if (interactive) {
             svg += `<rect x="${-hitW / 2}" y="-34" width="${hitW}" height="68" fill="rgba(0,0,0,0.001)" stroke="none"/>`;
           }
@@ -3587,7 +3687,7 @@
     }
 
     // ==========================================
-    // 幹部後台：4. 座位表拖曳設定（全新 Pointer Events 1:1 跟手不亂跳）
+    // 幹部後台：4. 座位表拖曳設定
     // ==========================================
     let adminEditingLayout = null;
     let adminSelectedSecId = null;
@@ -3642,11 +3742,6 @@
       renderSeatingChart('adminSeatingPreviewContainer', adminEditingLayout, adminPracticeAbsences, true);
     }
 
-    /**
-     * 🎯 全新絲滑拖曳引擎：
-     * 1. 按下瞬間只切換 CSS class，絕不重繪整個 SVG（解決手指觸控斷開亂跳問題）
-     * 2. 記錄手指按下處與聲部中心的相對偏移量 (dragOffset)，按哪裡就從哪裡平滑移動，0 瞬間跳動！
-     */
     function bindSvgDragEvents(containerId) {
       const svg = document.getElementById('svg_' + containerId);
       if (!svg) return;
@@ -3678,7 +3773,6 @@
         activePointerId = evt.pointerId;
         adminSelectedSecId = secId;
 
-        // 直接更新選取框高亮，不重新 innerHTML 整個 SVG！
         svg.querySelectorAll('g.draggable-section').forEach(el => {
           el.classList.toggle('selected-sec', el === gEl);
         });
@@ -3782,7 +3876,7 @@
     }
 
     // ==========================================
-    // 幹部後台：1. 借教室管理（純前端秒篩 + 樂觀更新）
+    // 幹部後台：1. 借教室管理（先儲存審核 + 一鍵批次寄信 / 單筆補寄）
     // ==========================================
     let allRoomRequestsCache = [];
 
@@ -3802,10 +3896,39 @@
       } catch (err) {}
     }
 
+    function getRoomNotificationBadge(item) {
+      const notifyStatuses = ['已通過', '未通過', '無教室'];
+      if (!notifyStatuses.includes(item.status)) {
+        return '<span class="badge badge-member" title="審核狀態仍為已收件，不會寄送通知">待審核</span>';
+      }
+      if (item.isNotified || (item.notifiedStatus && item.notifiedStatus === item.status)) {
+        const timeHint = item.notifiedAt ? `寄送時間：${item.notifiedAt}` : '已寄出最新狀態通知信';
+        return `<span class="badge badge-approved" title="${escapeHtml(timeHint)}">已寄信</span>`;
+      }
+      return '<span class="badge badge-noroom" title="已儲存審核，等待週日排程或點選上方一鍵寄發">待寄信</span>';
+    }
+
+    function updateBatchSendButtonCounter() {
+      const btn = document.getElementById('batchSendEmailBtn');
+      if (!btn) return;
+      const todayStr = toLocalDateStr(new Date());
+      const notifyStatuses = ['已通過', '未通過', '無教室'];
+      const pendingList = (allRoomRequestsCache || []).filter(r =>
+        r.date >= todayStr &&
+        notifyStatuses.includes(r.status) &&
+        !(r.isNotified || (r.notifiedStatus && r.notifiedStatus === r.status))
+      );
+      btn.innerText = pendingList.length > 0
+        ? `📬 一鍵寄發待通知結果 (${pendingList.length})`
+        : `📬 一鍵寄發待通知結果`;
+    }
+
     function filterAdminRoomTable() {
       const statusFilter = document.getElementById('adminRoomFilterStatus').value;
       const dateFilter = document.getElementById('adminRoomFilterDate').value;
       const tbody = document.getElementById('adminRoomTableBody');
+
+      updateBatchSendButtonCounter();
 
       let list = allRoomRequestsCache || [];
       if (statusFilter !== 'ALL') {
@@ -3816,7 +3939,7 @@
       }
 
       if (list.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="13" style="text-align:center; color:var(--text-muted);">無符合條件之借教室申請紀錄</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="14" style="text-align:center; color:var(--text-muted);">無符合條件之借教室申請紀錄</td></tr>';
         return;
       }
 
@@ -3830,7 +3953,7 @@
           <td>` + (item.headcount || 1) + `</td>
           <td>` + (item.doNotDisturb ? '<span class="badge badge-rejected">是</span>' : 'X') + `</td>
           <td>` + (item.needs && item.needs.length > 0 ? item.needs.join('、') : '-') + `</td>
-          <td style="font-size:0.82rem; color:#64748b; max-width:140px; white-space:normal;">` + escapeHtml(item.notes || '-') + `</td>
+          <td style="font-size:0.82rem; color:#64748b; max-width:130px; white-space:normal;">` + escapeHtml(item.notes || '-') + `</td>
           <td>
             <select class="form-control" style="padding:5px 8px; font-size:0.84rem; width:96px;" id="adminRoomStatus_` + item.id + `">
               <option value="已收件" ` + (item.status === '已收件' ? 'selected' : '') + `>已收件</option>
@@ -3840,27 +3963,36 @@
             </select>
           </td>
           <td>
-            <input type="text" class="form-control" style="padding:5px 8px; font-size:0.84rem; width:95px;" id="adminRoomTime_` + item.id + `" value="` + escapeHtml(item.approvedTime || '') + `" placeholder="如：5678">
+            <input type="text" class="form-control" style="padding:5px 8px; font-size:0.84rem; width:92px;" id="adminRoomTime_` + item.id + `" value="` + escapeHtml(item.approvedTime || '') + `" placeholder="如：5678">
           </td>
           <td>
-            <input type="text" class="form-control" style="padding:5px 8px; font-size:0.84rem; width:95px;" id="adminRoomAssigned_` + item.id + `" value="` + escapeHtml(item.assignedRoom || '') + `" placeholder="如：B209">
+            <input type="text" class="form-control" style="padding:5px 8px; font-size:0.84rem; width:92px;" id="adminRoomAssigned_` + item.id + `" value="` + escapeHtml(item.assignedRoom || '') + `" placeholder="如：B209">
           </td>
+          <td>` + getRoomNotificationBadge(item) + `</td>
           <td>
-            <button class="btn btn-primary btn-sm" id="adminRoomSaveBtn_` + item.id + `" onclick="saveAdminRoomRow('` + item.id + `')">儲存</button>
+            <div style="display:flex; gap:6px; align-items:center;">
+              <button class="btn btn-primary btn-sm" id="adminRoomSaveBtn_` + item.id + `" onclick="saveAdminRoomRow('` + item.id + `', false)">儲存</button>
+              <button class="btn btn-secondary btn-sm" title="儲存並立即寄信給此社員" onclick="saveAdminRoomRow('` + item.id + `', true)">✉️ 寄信</button>
+            </div>
           </td>
         </tr>
       `).join('');
     }
 
-    async function saveAdminRoomRow(id) {
+    async function saveAdminRoomRow(id, sendEmailNow = false) {
       const status = document.getElementById('adminRoomStatus_' + id).value;
       const approvedTime = document.getElementById('adminRoomTime_' + id).value.trim();
       const assignedRoom = document.getElementById('adminRoomAssigned_' + id).value.trim();
       const saveBtn = document.getElementById('adminRoomSaveBtn_' + id);
 
+      if (sendEmailNow && status === '已收件') {
+        showToast('請先將審核狀態改為「已通過 / 未通過 / 無教室」再寄送通知信！', 'error');
+        return;
+      }
+
       if (saveBtn) {
         saveBtn.disabled = true;
-        saveBtn.innerText = '儲存中...';
+        saveBtn.innerText = '處理中...';
       }
 
       try {
@@ -3870,25 +4002,36 @@
           id,
           status,
           approvedTime,
-          assignedRoom
-        }, { silent: true });
+          assignedRoom,
+          sendEmailNow
+        }, { silent: !sendEmailNow });
 
         const target = allRoomRequestsCache.find(r => r.id === id);
         if (target) {
+          const changed = (target.status !== status || target.approvedTime !== approvedTime || target.assignedRoom !== assignedRoom);
           target.status = status;
           target.approvedTime = approvedTime;
           target.assignedRoom = assignedRoom;
+          if (res.emailSent) {
+            target.notifiedStatus = status;
+            target.isNotified = true;
+          } else if (changed) {
+            target.notifiedStatus = '';
+            target.isNotified = false;
+          }
           saveCacheToStorage();
         }
         appStore.ts.myRooms = 0;
         appStore.ts.dashboard = 0;
 
-        if (res.emailSent) {
-          showToast('審查結果已更新，並已寄發通知信給申請人！', 'success');
-        } else if (res.emailError) {
-          showToast('審查已更新（未寄信：' + res.emailError + '）', 'info');
+        if (sendEmailNow) {
+          if (res.emailSent) {
+            showToast('已儲存審核結果，並立即寄出通知信給該社員！', 'success');
+          } else {
+            showToast('已儲存審核（未寄出信件：' + (res.emailError || '該員關閉通知或未填信箱') + '）', 'info');
+          }
         } else {
-          showToast('審查結果已更新！', 'success');
+          showToast('審核結果已儲存！（可稍後點選上方「一鍵寄發」或由週日排程統一寄出）', 'success');
         }
         filterAdminRoomTable();
       } catch (err) {
@@ -3899,12 +4042,44 @@
       }
     }
 
+    async function handleBatchSendRoomNotifications() {
+      const dateFilter = document.getElementById('adminRoomFilterDate').value;
+      const scopeText = dateFilter
+        ? `指定日期（${dateFilter}）`
+        : '所有今天及未來已審核完畢（已通過 / 未通過 / 無教室）且尚未寄信';
+
+      if (!confirm(`確定要一鍵寄發「${scopeText}」的借教室結果通知信嗎？\n\n💡 系統會自動將同一位社員的多筆申請合併為一封信，並根據核定教室首字母（B棟 / D棟）附上對應借用流程與冷氣資源卡提醒。`)) {
+        return;
+      }
+
+      try {
+        const res = await api('sendRoomNotifications', {
+          email: session.email,
+          name: session.name,
+          dateFilter: dateFilter || '',
+          forceResend: false
+        }, { silent: false });
+
+        const errNote = (res.errors && res.errors.length > 0)
+          ? `（未寄出：${res.errors.join('、')}）`
+          : '';
+
+        if (res.sentCount > 0) {
+          showToast(`📬 已成功寄出 ${res.sentCount} 封審核通知信（共涵蓋 ${res.updatedRowCount} 筆申請）！${errNote}`, 'success');
+        } else {
+          showToast(`目前沒有待寄發的新審核結果。${errNote}`, 'info');
+        }
+
+        await renderAdminRoomTable(true);
+      } catch (err) {}
+    }
+
     function exportRoomRequestsCSV() {
       if (!allRoomRequestsCache || allRoomRequestsCache.length === 0) {
         showToast('目前無資料可供匯出', 'info');
         return;
       }
-      const headers = ['姓名', '借用日期', '星期', '節次', '類別', '人數', '勿擾', '需求', '備註', '審核', '可借用時間', '核定教室'];
+      const headers = ['姓名', '借用日期', '星期', '節次', '類別', '人數', '勿擾', '需求', '備註', '審核', '可借用時間', '核定教室', '通知狀態'];
       const rows = allRoomRequestsCache.map(r => [
         r.name,
         r.date,
@@ -3917,7 +4092,8 @@
         '"' + (r.notes || '').replace(/"/g, '""') + '"',
         r.status,
         '"' + (r.approvedTime || '') + '"',
-        r.assignedRoom || ''
+        r.assignedRoom || '',
+        (r.isNotified || (r.notifiedStatus && r.notifiedStatus === r.status)) ? '已寄信' : '未寄信'
       ]);
 
       downloadCSV('東吳管樂社_教室借用清單_' + toLocalDateStr(new Date()) + '.csv', headers, rows);
@@ -4040,7 +4216,7 @@
     }
 
     // ==========================================
-    // 幹部後台：3. 請假統計（每次開啟自動對帳最新假單）
+    // 幹部後台：3. 請假統計（支援幹部手動補登/修改/取消請假）
     // ==========================================
     let currentAdminAbsences = [];
 
@@ -4104,17 +4280,113 @@
 
       const tbody = document.getElementById('adminAbsenceDetailTableBody');
       if (currentAdminAbsences.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:var(--text-muted);">本場次目前全員出席，無人請假！🎺</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:var(--text-muted);">本場次目前全員出席，無人請假！🎺</td></tr>';
       } else {
-        tbody.innerHTML = currentAdminAbsences.map(a => `
-          <tr>
-            <td><strong>` + escapeHtml(a.name) + `</strong></td>
-            <td>` + formatInstrumentDisplay(a.instrument, a.section) + `</td>
-            <td style="white-space:normal;">` + escapeHtml(a.reason) + `</td>
-            <td style="font-size:0.85rem; color:#64748b;">` + formatDateTimeDisplay(a.createdAt) + `</td>
-          </tr>
-        `).join('');
+        tbody.innerHTML = currentAdminAbsences.map(a => {
+          const safeName = String(a.name || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+          const safeReason = String(a.reason || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+          return `
+            <tr>
+              <td><strong>` + escapeHtml(a.name) + `</strong></td>
+              <td>` + formatInstrumentDisplay(a.instrument, a.section) + `</td>
+              <td style="white-space:normal;">` + escapeHtml(a.reason) + `</td>
+              <td style="font-size:0.85rem; color:#64748b;">` + formatDateTimeDisplay(a.createdAt) + `</td>
+              <td>
+                <div style="display:flex; gap:6px;">
+                  <button class="btn btn-secondary btn-sm" onclick="openAdminAddAbsenceModal('${safeName}', '${safeReason}')">✏️ 修改事由</button>
+                  <button class="btn btn-danger btn-sm" onclick="adminDeleteAbsenceConfirm('${a.id}', '${safeName}')">🗑️ 取消請假</button>
+                </div>
+              </td>
+            </tr>
+          `;
+        }).join('');
       }
+    }
+
+    async function openAdminAddAbsenceModal(preselectName = '', existingReason = '') {
+      closeAllModals();
+      const practiceSelect = document.getElementById('adminAbsencePracticeSelect');
+      const practiceId = practiceSelect.value;
+      if (!practiceId) {
+        showToast('請先選擇團練場次！', 'error');
+        return;
+      }
+
+      const practiceText = practiceSelect.options[practiceSelect.selectedIndex]?.text || practiceId;
+      document.getElementById('adminAbsencePracticeLabel').innerText = '🎺 目標場次：' + practiceText;
+
+      const members = await ensureMembersLoaded(false);
+      const memSelect = document.getElementById('adminAbsenceMemberSelect');
+      const sortedMembers = [...members].sort((a, b) => (a.section || '').localeCompare(b.section || '') || a.name.localeCompare(b.name));
+
+      memSelect.innerHTML = sortedMembers.map(m => {
+        const isAbsent = currentAdminAbsences.some(a => a.name === m.name || (a.email && a.email === m.email));
+        const tag = isAbsent ? '（已請假 - 可覆寫修改事由）' : '';
+        return `<option value="${escapeHtml(m.name)}" data-email="${escapeHtml(m.email || '')}">${escapeHtml(m.name)} — ${formatInstrumentDisplay(m.instrument, m.section)} ${tag}</option>`;
+      }).join('');
+
+      if (preselectName) {
+        memSelect.value = preselectName;
+      }
+      document.getElementById('adminAbsenceReasonInput').value = existingReason || '';
+      document.getElementById('modalAdminAddAbsence').classList.add('open');
+    }
+
+    function closeAdminAddAbsenceModal() {
+      document.getElementById('modalAdminAddAbsence').classList.remove('open');
+    }
+
+    async function handleAdminAbsenceSubmit(e) {
+      e.preventDefault();
+      const practiceId = document.getElementById('adminAbsencePracticeSelect').value;
+      const memSelect = document.getElementById('adminAbsenceMemberSelect');
+      const targetName = memSelect.value;
+      const selectedOpt = memSelect.options[memSelect.selectedIndex];
+      const targetEmail = selectedOpt ? selectedOpt.getAttribute('data-email') : '';
+      const reason = document.getElementById('adminAbsenceReasonInput').value.trim() || '幹部代為登記';
+
+      if (!practiceId || !targetName) {
+        showToast('請選擇團練場次與社員！', 'error');
+        return;
+      }
+
+      try {
+        await api('adminSubmitAbsence', {
+          adminEmail: session.email,
+          adminName: session.name,
+          targetEmail,
+          targetName,
+          practiceId,
+          reason
+        }, { silent: false });
+
+        showToast(`已成功為「${targetName}」登記請假！`, 'success');
+        closeAdminAddAbsenceModal();
+
+        appStore.ts['abs_' + practiceId] = 0;
+        appStore.ts.myAbsences = 0;
+        appStore.ts.dashboard = 0;
+        await renderAdminAbsenceStats(true);
+      } catch (err) {}
+    }
+
+    async function adminDeleteAbsenceConfirm(absenceId, memberName) {
+      const practiceId = document.getElementById('adminAbsencePracticeSelect').value;
+      if (!confirm(`確定要移除「${memberName}」的請假紀錄，將其恢復為「出席」嗎？`)) return;
+
+      try {
+        await api('deleteAbsence', {
+          email: session.email,
+          name: session.name,
+          id: absenceId
+        }, { silent: false });
+
+        showToast(`已移除「${memberName}」的假單，恢復為出席狀態！`, 'success');
+        appStore.ts['abs_' + practiceId] = 0;
+        appStore.ts.myAbsences = 0;
+        appStore.ts.dashboard = 0;
+        await renderAdminAbsenceStats(true);
+      } catch (err) {}
     }
 
     function exportAbsenceCSV() {
@@ -4372,7 +4644,7 @@
     }
 
     // ==========================================
-    // 個人資料與修改密碼
+    // 個人資料與修改密碼（同步清除關聯快取）
     // ==========================================
     let isForcedPasswordChange = false;
 
@@ -4455,6 +4727,9 @@
           session.email = res.email || newEmail.toLowerCase();
           session.notifyEmail = true;
           localStorage.setItem('band_session', JSON.stringify(session));
+          appStore.ts.myRooms = 0;
+          appStore.ts.allRooms = 0;
+          appStore.ts.myAbsences = 0;
         }
 
         showToast('設定已成功儲存！', 'success');
@@ -4508,10 +4783,17 @@
         localStorage.setItem('band_session', JSON.stringify(session));
 
         setupUserSessionUI();
-        showToast('個人資料已儲存！', 'success');
+        showToast('個人資料與歷史關聯紀錄已同步更新！', 'success');
         closeProfileModal();
+
+        // 清除所有與個人姓名/信箱/樂器相關的快取，並背景同步最新資料
         appStore.ts.members = 0;
-        loadDashboard(false);
+        appStore.ts.myRooms = 0;
+        appStore.ts.allRooms = 0;
+        appStore.ts.myAbsences = 0;
+        appStore.ts.dashboard = 0;
+        appStore.absencesByPractice = {};
+        preloadAllDataInBackground();
       } catch (err) {}
     }
 
